@@ -95,7 +95,7 @@ class McuRam : public McuMmu
         QMap<QString, uint32_t> m_bitMasks;        // Access Bit mask by bit name
         QMap<QString, McuRegister*> m_bitRegs;     // Access Register by bit name
 
-        uint32_t m_sregAddr;                   // STATUS Reg Address
+        uint32_t m_sregAddr;                       // STATUS Reg Address
         QStringList m_statusBits;
 
 

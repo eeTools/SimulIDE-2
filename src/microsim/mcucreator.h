@@ -12,6 +12,7 @@ class Mcu;
 class eMcu;
 class McuMmu;
 class McuRam;
+class McuPgm;
 class Component;
 class QString;
 class QDomElement;
@@ -77,6 +78,7 @@ class McuCreator
         static eMcu* mcu;
 
         static McuRam* m_mcuRam;
+        static McuPgm* m_mcuPgm;
         static McuTwi* m_twi;
         static McuSpi* m_spi;
         static QList<Display*> m_displays;

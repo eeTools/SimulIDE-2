@@ -14,6 +14,7 @@
 #include "avrsleep.h"
 #include "simulator.h"
 #include "mcuram.h"
+#include "mcupgm.h"
 #include "mcuregister.h"
 
 AvrCore::AvrCore( eMcu* mcu )
@@ -65,7 +66,6 @@ inline void AvrCore::flags_sub( uint8_t res, uint8_t rd, uint8_t rr )
     write_S_Bit( S_C, sub_carry & (1<<7) );
 
     /* overflow */
-    /// SREG[S_V] = ( ((rd & ~rr & ~res) | (~rd & rr & res) ) >> 7) & 1;
     write_S_Bit( S_V, ((rd & ~rr & ~res) | (~rd & rr & res)) & (1<<7) );
 }
 inline void AvrCore::flags_sub_Rzns( uint8_t res, uint8_t rd, uint8_t rr )
@@ -80,8 +80,6 @@ inline void AvrCore::flags_add_zns( uint8_t res, uint8_t rd, uint8_t rr )
 
     write_S_Bit( S_H, add_carry & (1<<3) );
     write_S_Bit( S_C, add_carry & (1<<7) );
-
-    /// SREG[S_V] = (((rd & rr & ~res) | (~rd & ~rr & res)) >> 7) & 1; //overflow
     write_S_Bit( S_V, ((rd & rr & ~res) | (~rd & ~rr & res)) & (1<<7) );
 
     flags_zns( res ); //zns
@@ -106,11 +104,8 @@ inline void AvrCore::flags_zcnvs( uint8_t res, uint8_t vr )
     bool sn = (res & (1<<7)) != 0;
     write_S_Bit( S_N, sn );
 
-    /// SREG[S_V] = SREG[S_N] ^ SREG[S_C];
     uint8_t sv = sn != sc;
     write_S_Bit( S_V, sv );
-
-    /// SREG[S_S] = SREG[S_N] ^ SREG[S_V];
     write_S_Bit( S_S, sn != sv );
 }
 inline void AvrCore::flags_zcvs( uint8_t res, uint8_t vr )
@@ -122,11 +117,8 @@ inline void AvrCore::flags_zcvs( uint8_t res, uint8_t vr )
 
     bool sn = STATUS( S_N ) != 0;
 
-    /// SREG[S_V] = SREG[S_N] ^ SREG[S_C];
     bool sv = sn != sc;
     write_S_Bit( S_V, sv );
-
-    /// SREG[S_S] = SREG[S_N] ^ SREG[S_V];
     write_S_Bit( S_S, sn != sv );
 }
 inline void AvrCore::flags_zns16( uint16_t res )
@@ -137,7 +129,6 @@ inline void AvrCore::flags_zns16( uint16_t res )
     write_S_Bit( S_N, sn );
 
     bool sv = STATUS(S_V) != 0;
-    /// SREG[S_S] = SREG[S_N] ^ SREG[S_V];
     write_S_Bit( S_S, sn != sv );
 }
 inline int AvrCore::is_instr_32b( uint32_t pc )

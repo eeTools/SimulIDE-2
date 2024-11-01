@@ -5,13 +5,14 @@
 
 #include "mcucpu.h"
 #include "mcuram.h"
+#include "mcupgm.h"
 #include "watcher.h"
 
 McuCpu::McuCpu( eMcu* mcu )
       : CpuBase( mcu )
 {
     m_mcuRam = (McuRam*)m_mcu->getModule("ram");
-    m_mcuPgm = (McuMmu*)m_mcu->getModule("pgm");
+    m_mcuPgm = (McuPgm*)m_mcu->getModule("pgm");
 
     /// m_progAddrBytes = m_mcuPgm->wordBytes();
     /// m_progSize =

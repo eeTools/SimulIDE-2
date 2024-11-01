@@ -7,6 +7,7 @@
 #define PIC14ECORE_H
 
 #include "picmrcore.h"
+#include "mcupgm.h"
 
 class Pic14eCore : public PicMrCore
 {

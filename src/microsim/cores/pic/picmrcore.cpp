@@ -6,6 +6,7 @@
 #include "picmrcore.h"
 #include "datautils.h"
 #include "regwatcher.h"
+#include "mcupgm.h"
 
 PicMrCore::PicMrCore( eMcu* mcu )
          : McuCpu( mcu )

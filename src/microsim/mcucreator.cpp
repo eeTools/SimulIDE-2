@@ -16,6 +16,7 @@
 #include "e_mcu.h"
 #include "mcu.h"
 #include "mcuram.h"
+#include "mcupgm.h"
 #include "mcuport.h"
 #include "ioport.h"
 #include "mcupin.h"
@@ -100,7 +101,8 @@ Mcu*    McuCreator::m_mcuComp = nullptr;
 eMcu*   McuCreator::mcu = nullptr;
 McuTwi* McuCreator::m_twi = nullptr;
 McuSpi* McuCreator::m_spi = nullptr;
-McuRam* McuCreator::m_mcuRam= nullptr;
+McuRam* McuCreator::m_mcuRam = nullptr;
+McuPgm* McuCreator::m_mcuPgm = nullptr;
 bool    McuCreator::m_newStack;
 QDomElement McuCreator::m_stackEl;
 std::vector<ScriptPerif*> McuCreator::m_scriptPerif;
@@ -120,6 +122,7 @@ int McuCreator::createMcu( Mcu* mcuComp, QString name )
     m_twi = nullptr;
     m_spi = nullptr;
     m_mcuRam = nullptr;
+    m_mcuPgm = nullptr;
 
     mcu = &(mcuComp->m_eMcu);
     QString dataFile = mcuComp->m_dataFile;
@@ -322,14 +325,18 @@ void McuCreator::createCfgWord( QDomElement* e )
 
 void McuCreator::createPgm( QDomElement* e )
 {
-    McuMmu* pgm = new McuMmu( mcu, "pgm");
+    if( m_mcuPgm ){
+        qDebug() << "McuCreator::createPgm Warning Program Memory already exist";
+        return;
+    }
+    m_mcuPgm = new McuPgm( mcu, "pgm");
 
-    mcu->m_modules.emplace_back( pgm );
+    mcu->m_modules.emplace_back( m_mcuPgm );
 
-    /*int bits = e->attribute("bits").toInt();
+    int bits = e->attribute("bits").toInt();
     int size = e->attribute("size").toInt();
-    pgm->setWordBits( bits );
-    pgm->resize( size );*/
+    m_mcuPgm->setWordBits( bits );
+    m_mcuPgm->resize( size );
 }
 
 void McuCreator::createRam( QDomElement* e )
@@ -400,8 +407,7 @@ void McuCreator::createDataBlock( QDomElement* d )
 
     //-----------------------------------------------
 
-    if( m_mcuRam )
-    {
+    if( m_mcuRam ){
         McuMemBlock* dataBlock = new McuMemBlock( datStart, datEnd );
         m_mcuRam->addMemBlock( dataBlock, datStart );
     }

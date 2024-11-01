@@ -9,6 +9,8 @@
 #include "cpubase.h"
 #include "mcuram.h"
 
+class McuPgm;
+
 class McuCpu : public CpuBase
 {
     public:
@@ -21,7 +23,7 @@ class McuCpu : public CpuBase
 
     protected:
         McuRam* m_mcuRam;
-        McuMmu* m_mcuPgm;
+        McuPgm* m_mcuPgm;
 
         uint32_t  m_progAddrBytes;
 

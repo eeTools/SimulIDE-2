@@ -7,6 +7,7 @@
 #include "simulator.h"
 #include "mcuport.h"
 #include "mcupin.h"
+#include "mcupgm.h"
 #include "mcuregister.h"
 
 #define ACC  m_acc[0]

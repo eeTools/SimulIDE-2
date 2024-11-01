@@ -32,8 +32,8 @@ class McuPgm : public McuModule, public Memory, public eElement
 
     protected:
 
-        uint8_t* m_addressL; // Actual ram for counter Low address byte
-        uint8_t* m_addressH; // Actual ram for counter High address byte
+        uint8_t* m_addressL; // Pointer to data for counter Low address byte
+        uint8_t* m_addressH; // Pointer to data for counter High address byte
 
         uint32_t m_address;
         uint8_t* m_dataReg;
