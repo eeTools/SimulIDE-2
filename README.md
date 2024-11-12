@@ -6,7 +6,7 @@
 
 ## Don't use it for anything you want to keep, your circuits will become useless in a few days.
 
-## Last version of SimulIDE 1 is being developed here: [SimulIDE 1.2.0](https://github.com/Arcachofo/SimulIDE_1.2.0)
+## Last version of SimulIDE 1 is being developed here: [SimulIDE Dev](https://github.com/eeTools/SimulIDE-dev)
 
 ---
 
