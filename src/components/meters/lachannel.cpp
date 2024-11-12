@@ -39,7 +39,7 @@ void LaChannel::stamp()    // Called at Simulation Start
 
     if( m_pin->isBus() )
     {
-        bool connected = m_pin->connector();
+        bool connected = m_pin->wire();
         m_plotBase->display()->connectChannel( m_channel, connected );
 
         for( eNode* node : m_busNodes )
@@ -61,7 +61,7 @@ void LaChannel::setPin( Pin* p ) { m_ePin[0] = m_pin = p; }
 
 void LaChannel::setIsBus( bool b )
 {
-    m_pin->removeConnector();
+    m_pin->removeWire();
     m_pin->setIsBus( b );
     m_pin->setDataChannel( b? this : NULL );
 }

@@ -8,8 +8,7 @@
 #include "component.h"
 #include "label.h"
 #include "mainwindow.h"
-#include "connector.h"
-#include "connectorline.h"
+#include "wire.h"
 #include "circuitwidget.h"
 #include "circuit.h"
 #include "utils.h"
@@ -199,19 +198,18 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     {
         Circuit::self()->beginCircuitBatch();
 
-        m_conMoveList.clear();
+        m_wireMoveList.clear();
         m_compMoveList.clear();
 
         for( QGraphicsItem* item : itemlist )
         {
             if( item->type() == UserType+2 )          // ConnectorLine selected
             {
-                ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( item );
-                Connector* con = line->connector();
-                if( !m_conMoveList.contains( con ) )  // Connectors selected
+                Wire* wire =  qgraphicsitem_cast<Wire*>( item );
+                if( !m_wireMoveList.contains( wire ) )  // Connectors selected
                 {
-                    m_conMoveList.append( con );
-                    Circuit::self()->addCompChange( con->getUid(), "pointList", con->pListStr() );
+                    m_wireMoveList.append( wire );
+                    Circuit::self()->addCompChange( wire->getUid(), "pointList", wire->pListStr() );
                 }
             }
             else if( item->type() == UserType+1 )     // Component selected
@@ -223,10 +221,10 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
                 for( Pin* pin : pins )
                 {                                     // Connectors attached to selected Component
                     if( !pin ) continue;
-                    Connector* con = pin->connector();
-                    if( con && !m_conMoveList.contains( con ) ){
-                        m_conMoveList.append( con );
-                        Circuit::self()->addCompChange( con->getUid(), "pointList", con->pListStr() );
+                    Wire* wire = pin->wire();
+                    if( wire && !m_wireMoveList.contains( wire ) ){
+                        m_wireMoveList.append( wire );
+                        Circuit::self()->addCompChange( wire->getUid(), "pointList", wire->pListStr() );
         }   }   }   }
 
         m_moving = true;
@@ -234,15 +232,16 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     }
     for( QGraphicsItem* item : itemlist )                        // Move ConnectorLine
     {
-        if( item->type() != UserType+2 ) continue;
-        ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( item );
-        line->moveSimple( delta );
+        /// Fixme:
+        ///if( item->type() != UserType+2 ) continue;
+        ///ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( item );
+        ///line->moveSimple( delta );
     }
     for( Component* comp : m_compMoveList ) comp->move( delta ); // Move Components selected
-    for( Connector* con  : m_conMoveList )                       // Update Connectors
+    for( Wire* wire  : m_wireMoveList )                       // Update Connectors
     {
-        con->startPin()->isMoved();
-        con->endPin()->isMoved();
+        wire->startPin()->isMoved();
+        wire->endPin()->isMoved();
     }
 }
 
@@ -368,7 +367,7 @@ void Component::slotGroup()
 void Component::remove()
 {
     for( uint i=0; i<m_pin.size(); i++ )
-        if( m_pin[i] ) m_pin[i]->removeConnector();
+        if( m_pin[i] ) m_pin[i]->removeWire();
 
     if( m_linkedTo ) m_linkedTo->removeLinked( this );
 
@@ -377,7 +376,7 @@ void Component::remove()
 
 void Component::deletePin( Pin* pin )
 {
-    pin->removeConnector();
+    pin->removeWire();
     m_signalPin.removeAll( pin );
     delete pin;
 }

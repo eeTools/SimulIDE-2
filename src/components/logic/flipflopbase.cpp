@@ -80,8 +80,8 @@ void FlipFlopBase::usePinsRS( bool rs )
 {
     m_useRS = rs;
     if( !rs ){
-        m_setPin->removeConnector();
-        m_rstPin->removeConnector();
+        m_setPin->removeWire();
+        m_rstPin->removeWire();
     }
     m_setPin->setVisible( rs );
     m_rstPin->setVisible( rs );

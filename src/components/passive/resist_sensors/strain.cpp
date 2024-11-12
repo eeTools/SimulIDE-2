@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "strain.h"
-#include "connector.h"
 #include "circuit.h"
 
 #include "doubleprop.h"

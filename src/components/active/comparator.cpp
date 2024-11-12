@@ -9,7 +9,6 @@
 
 #include "comparator.h"
 #include "propdialog.h"
-#include "connector.h"
 #include "simulator.h"
 #include "e-node.h"
 #include "iopin.h"

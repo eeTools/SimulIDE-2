@@ -15,7 +15,6 @@
 #include "mainwindow.h"
 #include "circuitwidget.h"
 #include "comproperty.h"
-#include "connectorline.h"
 #include "componentlist.h"
 #include "node.h"
 #include "utils.h"
@@ -63,7 +62,7 @@ Circuit::Circuit( int width, int height, CircuitView* parent )
 
     m_creCompDialog = nullptr;
     m_board = nullptr;
-    m_newConnector = nullptr;
+    m_newWire = nullptr;
     m_seqNumber = 0;
     m_conNumber = 0;
     m_maxUndoSteps = 100;
@@ -161,7 +160,7 @@ Pin* Circuit::findPin( int x, int y, QString id )
     for( QGraphicsItem* it : list )
     {
         pin =  qgraphicsitem_cast<Pin*>( it );
-        if( pin && pin->pinId().left(1) == id.left(1) && !pin->connector() ) return pin; // Check if names start by same letter
+        if( pin && pin->pinId().left(1) == id.left(1) && !pin->wire() ) return pin; // Check if names start by same letter
     }
     for( QGraphicsItem* it : list ) // Not found by first letter, take first Pin
     {
@@ -199,7 +198,7 @@ void Circuit::loadStrDoc( QString &doc )
 
     QList<Linker*>    linkList;   // Linked  Component list
     QList<Component*> compList;   // Pasting Component list
-    QList<Connector*> connList;   // Pasting Connector list
+    QList<Wire*>      connList;   // Pasting Connector list
     QList<Node*>      nodeList;   // Pasting node list
 
     Component* lastComp = nullptr;
@@ -278,17 +277,17 @@ void Circuit::loadStrDoc( QString &doc )
                 int itemY = pointList.last().toInt();
                 endpin = findPin( itemX, itemY, endpinid );
             }
-            if( startpin && startpin->connector() ) startpin = nullptr;
-            if( endpin   && endpin->connector()   ) endpin   = nullptr;
+            if( startpin && startpin->wire() ) startpin = nullptr;
+            if( endpin   && endpin->wire()   ) endpin   = nullptr;
 
             if( startpin && endpin )    // Create Connector
             {
-                if( uid.isEmpty() ) uid = newConnectorId();
+                if( uid.isEmpty() ) uid = newWireId();
                 else{
                     int number = uid.split("-").last().toInt();
                     if( number > m_conNumber ) m_conNumber = number; // Adjust Connector counter: m_conNumber
                 }
-                Connector* con = new Connector( type, uid, startpin, endpin );
+                Wire* con = new Wire( type, uid, startpin, endpin );
                 con->setPointList( pointList );
                 connList.append( con );
             }
@@ -385,7 +384,7 @@ void Circuit::loadStrDoc( QString &doc )
 
         for( Component* comp : compList ){ comp->setSelected( true ); comp->move( m_deltaMove ); }
         for( Node*      node : nodeList ){ node->setSelected( true ); node->move( m_deltaMove ); }
-        for( Connector* conn : connList ){ conn->setSelected( true ); conn->move( m_deltaMove ); }
+        for( Wire* conn : connList ){ conn->setSelected( true ); conn->move( m_deltaMove ); }
     }
     else for( Component* comp : compList ) { comp->moveSignal(); }
 
@@ -442,7 +441,7 @@ QString Circuit::circuitToString()
     QString circuit = circuitHeader();
     for( Component* comp : m_compList ) circuit += comp->toString();
     for( Node* node      : m_nodeList ) circuit += node->toString();
-    for( Connector* conn : m_connList ) circuit += conn->toString();
+    for( Wire* conn : m_connList ) circuit += conn->toString();
     circuit += "\n";
 
     if( m_board && m_board->m_boardMode ) m_board->setBoardMode( true );
@@ -526,15 +525,14 @@ void Circuit::removeItems()                     // Remove Selected items
 
     beginUndoStep(); // Save current state
 
-    QList<Connector*> conns;
+    QList<Wire*> conns;
     QList<Component*> comps;
 
     for( QGraphicsItem* item : selectedItems() )    // Find all items to be removed
     {
         if( item->type() == QGraphicsItem::UserType+2 )      // ConnectorLine: add Connector to list
         {
-            ConnectorLine* line = qgraphicsitem_cast<ConnectorLine*>( item );
-            Connector* con = line->connector();
+            Wire* con = qgraphicsitem_cast<Wire*>( item );
             if( !conns.contains( con ) && m_oldConns.contains( con ) ) conns.append( con );
         }
         else if( item->type() == QGraphicsItem::UserType+1 ) // Component: add Component to list
@@ -543,7 +541,7 @@ void Circuit::removeItems()                     // Remove Selected items
             if( m_oldComps.contains( comp ) ) comps.append( comp );
         }
     }
-    for( Connector* conn : conns ) removeConnector( conn );         // Remove Connectors (does not delete)
+    for( Wire* conn : conns ) removeWire( conn );         // Remove Connectors (does not delete)
     for( Component* comp: comps ){
         if( comp->itemType() == "Node" ) removeNode( (Node*)comp ); // Remove Nodes (does not delete)
         else                             removeComp( comp );        // Remove Components (does not delete)
@@ -577,7 +575,7 @@ void Circuit::removeNode( Node* node )
     m_removedComps.append( node );
 }
 
-void Circuit::removeConnector( Connector* conn )
+void Circuit::removeWire( Wire* conn )
 {
     if( !m_connList.contains(conn) ) return;
     conn->remove();
@@ -693,7 +691,7 @@ void Circuit::beginUndoStep() // Save current state
     m_compStrMap.clear();      /// TODO: optimize this, we are saving the whole circuit every time
 
     //save all comps
-    for( Connector* conn : m_oldConns ) m_compStrMap.insert( conn, conn->toString() );
+    for( Wire* conn : m_oldConns ) m_compStrMap.insert( conn, conn->toString() );
     for( Node*      node : m_oldNodes ) m_compStrMap.insert( node, node->toString() );
     for( Component* comp : m_oldComps ) m_compStrMap.insert( comp, comp->toString() );
 }
@@ -707,22 +705,22 @@ void Circuit::endUndoStep()   //
 void Circuit::calcCircuitChanges()   // Calculates created/removed
 {
     // Items Removed /// qDebug() << "Circuit::calcCicuitChanges Removed:";
-    QList<Connector*> removedConns = substract( m_oldConns, m_connList );
+    QList<Wire*> removedConns = substract( m_oldConns, m_connList );
     QList<Node*>      removedNodes = substract( m_oldNodes, m_nodeList );
     QList<Component*> removedComps = substract( m_oldComps, m_compList );
 
-    for( Connector* conn : removedConns ) addCompChange( conn->getUid(), COMP_STATE_NEW, m_compStrMap.value(conn) );
+    for( Wire* conn : removedConns ) addCompChange( conn->getUid(), COMP_STATE_NEW, m_compStrMap.value(conn) );
     for( Node*      node : removedNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, m_compStrMap.value(node) );
     for( Component* comp : removedComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, m_compStrMap.value(comp) );
 
     // Items Created /// qDebug() << "Circuit::calcCicuitChanges Created:";
-    QList<Connector*> createdConns = substract( m_connList, m_oldConns );
+    QList<Wire*> createdConns = substract( m_connList, m_oldConns );
     QList<Node*>      createdNodes = substract( m_nodeList, m_oldNodes );
     QList<Component*> createdComps = substract( m_compList, m_oldComps );
 
     for( Component* comp : createdComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, "" );
     for( Node*      node : createdNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, "" );
-    for( Connector* conn : createdConns ) addCompChange( conn->getUid(), COMP_STATE_NEW, "" );
+    for( Wire* conn : createdConns ) addCompChange( conn->getUid(), COMP_STATE_NEW, "" );
 }
 
 void Circuit::saveCompChange( QString component, QString property, QString undoVal )
@@ -765,7 +763,7 @@ void Circuit::restoreState()
                 if( !comp ) continue;
                 if( m_undo && cChange->redoValue.isEmpty() ) cChange->redoValue = comp->toString();
 
-                if     ( comp->itemType() == "Connector" ) removeConnector( (Connector*)comp );
+                if     ( comp->itemType() == "Connector" ) removeWire( (Wire*)comp );
                 else if( comp->itemType() == "Node"      ) removeNode( (Node*)comp );
                 else                                       removeComp( (Component*)comp );
             }
@@ -779,8 +777,8 @@ void Circuit::restoreState()
     }
     m_busy = false;
     deleteRemoved();                      // Delete Removed Components;
-    for( Connector* con : m_connList ) {
-        if( m_board && m_board->m_boardMode ) con->setVisib( false );
+    for( Wire* con : m_connList ) {
+        if( m_board && m_board->m_boardMode ) con->setVisible( false );
         else{
             con->startPin()->isMoved();
             con->endPin()->isMoved();
@@ -827,8 +825,7 @@ void Circuit::copy( QPointF eventpoint )
         }
         else if( item->type() == QGraphicsItem::UserType+2 ) // ConnectorLine
         {
-            ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( item );
-            Connector* con = line->connector();
+            Wire* con = qgraphicsitem_cast<Wire*>( item );
             if( !conlist.contains( con ) ) conlist.append( con );
     }   }
     QString circuit;
@@ -867,33 +864,29 @@ void Circuit::paste( QPointF eventpoint )
     m_busy = false;
 }
 
-void Circuit::newconnector( Pin* startpin, bool save )
+void Circuit::newWire( Pin* startpin, bool save )
 {
     if( save ) beginUndoStep();
 
     m_conStarted = true;
 
-    QString id = newConnectorId() ;
+    QString id = newWireId() ;
 
-    m_newConnector = new Connector( "Wire", id, startpin );
-    m_connList.append( m_newConnector );
-
-    QPoint p1 = startpin->scenePos().toPoint();
-    QPoint p2 = startpin->scenePos().toPoint();
-    m_newConnector->addConLine( p1.x(), p1.y(), p2.x(), p2.y(), 0 );
+    m_newWire = new Wire( "Wire", id, startpin );
+    m_connList.append( m_newWire );
 }
 
-void Circuit::closeconnector( Pin* endpin, bool save )
+void Circuit::closeWire( Pin* endpin, bool save )
 {
     m_conStarted = false;
-    m_newConnector->closeCon( endpin );
+    m_newWire->closeCon( endpin );
     if( save ) endUndoStep();
 }
 
-void Circuit::deleteNewConnector()
+void Circuit::deleteNewWire()
 {
     if( !m_conStarted ) return;
-    removeConnector( m_newConnector );
+    removeWire( m_newWire );
     m_conStarted = false;
 
     cancelUndoStep();
@@ -967,7 +960,7 @@ void Circuit::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
     if( event->button() == Qt::LeftButton )
     {
-        if( m_conStarted )  m_newConnector->incActLine() ;
+        if( m_conStarted )  m_newWire->incActLine() ;
         QGraphicsScene::mouseReleaseEvent( event );
     }
     else if( event->button() == Qt::RightButton )
@@ -980,8 +973,8 @@ void Circuit::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     if( m_conStarted )
     {
         event->accept();
-        if( event->modifiers() & Qt::ShiftModifier) m_newConnector->m_freeLine = true;
-        m_newConnector->updateConRoute( 0l, event->scenePos() );
+        if( event->modifiers() & Qt::ShiftModifier) m_newWire->m_freeLine = true;
+        m_newWire->updateConRoute( event->scenePos() );
     }
     QGraphicsScene::mouseMoveEvent( event );
 }
@@ -997,7 +990,7 @@ void Circuit::keyPressEvent( QKeyEvent* event )
 
     if( m_conStarted )
     {
-        if( key == Qt::Key_Escape ) deleteNewConnector();
+        if( key == Qt::Key_Escape ) deleteNewWire();
         else QGraphicsScene::keyPressEvent( event );
         return;
     }
@@ -1062,7 +1055,7 @@ void Circuit::keyPressEvent( QKeyEvent* event )
         {
             for( Component* com : m_compList ) com->setSelected( true );
             for( Node*      nod : m_nodeList ) nod->setSelected( true );
-            for( Connector* con : m_connList ) con->setSelected( true );
+            for( Wire* con : m_connList ) con->setSelected( true );
         }
         else if( key == Qt::Key_R )
         {

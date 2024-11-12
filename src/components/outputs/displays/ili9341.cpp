@@ -6,7 +6,6 @@
 #include <QPainter>
 
 #include "ili9341.h"
-#include "connector.h"
 #include "simulator.h"
 
 listItem_t Ili9341::libraryItem(){

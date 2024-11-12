@@ -7,7 +7,7 @@
 #include <QDebug>
 
 #include "node.h"
-#include "connector.h"
+#include "wire.h"
 #include "circuit.h"
 
 #include "doubleprop.h"
@@ -21,6 +21,7 @@ Node::Node( QString type, QString id )
 
     m_color = QColor( Qt::black );
     m_isBus = false;
+    m_blocked = false;
 
     m_pin.resize( 3 );
     for( int i=0; i<3; i++ )
@@ -52,21 +53,23 @@ void Node::registerEnode( eNode* enode, int n )
 
 bool Node::checkRemove() // Only remove if there are less than 3 connectors
 {
+    if( m_blocked ) return false;
+
     int con[2] = { 0, 0 };
     int conectors = 0;
     int conecteds = 0;
 
     for( int i=0; i<3; i++ )
     {
-        Connector* co = m_pin[i]->connector();
-        if( co )
+        Wire* wire = m_pin[i]->wire();
+        if( wire )
         {
             Pin* coPin = m_pin[i]->conPin();
-            if( coPin->component() == this ) // Connector betwen 2 Pins of this node
+            if( coPin->component() == this ) // Wire betwen 2 Pins of this node
             {
-                co->setStartPin( NULL );
-                co->setEndPin( NULL );
-                Circuit::self()->removeConnector( co );
+                wire->setStartPin( nullptr );
+                wire->setEndPin( nullptr );
+                Circuit::self()->removeWire( wire );
                 continue;
             }
             if( conecteds == 0 ) { conecteds++; con[0] = i; }
@@ -76,7 +79,7 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
     if( conectors < 3 )
     {
         if( conectors == 2) joinConns( con[0], con[1] );  // 2 Conn
-        else                m_pin[con[0]]->removeConnector();
+        else                m_pin[con[0]]->removeWire();
 
         Circuit::self()->removeNode( this );
         return true;
@@ -86,51 +89,31 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
 
 void Node::joinConns( int c0, int c1 )
 {
+    m_blocked = true;
     Pin* pin0 = m_pin[c0];
     Pin* pin1 = m_pin[c1];
 
-    Connector* con0 = pin0->connector();
-    Connector* con1 = pin1->connector();
-    if( !con0 || !con1 ) return;
+    Wire* wire0 = pin0->wire();
+    Wire* wire1 = pin1->wire();
+    if( !wire0 || !wire1 ) return;
 
-    if( pin1->conPin() != pin0 )
-    {
-        Connector* con = new Connector( "Wire", Circuit::self()->newConnectorId(), pin0->conPin() );
-        Circuit::self()->conList()->append( con );
+    Pin* endPin = wire1->endPin();
 
-        QStringList list0 = con0->pointList();
-        QStringList list1 = con1->pointList();
-        QStringList plist;
+    if( pin0 == wire0->startPin() ) wire0->updateConRoute( pin0 );             // Forze Node pin to be endPin
+    if( pin1 == endPin            ) wire1->updateConRoute( wire1->startPin() ); // Forze Node pin to be startPin
 
-        if( pin0 == con0->startPin() ){
-            while( !list0.isEmpty() )
-            {
-                QString p2 = list0.takeLast();
-                plist.append(list0.takeLast());
-                plist.append(p2);
-        }   }
-        else while( !list0.isEmpty() ) plist.append( list0.takeFirst() );
+    QList<QPoint> pv1 = wire1->pointVector();
+    pv1.takeFirst();
+    QList<QPoint> pointVector = wire0->pointVector() + pv1;
+    pointVector.append( endPin->scenePos().toPoint() );
 
-        if( pin1 == con1->endPin() ){
-            while( !list1.isEmpty() )
-            {
-                QString p2 = list1.takeLast();
-                plist.append(list1.takeLast());
-                plist.append(p2);
-        }   }
-        else while( !list1.isEmpty() ) plist.append( list1.takeFirst() );
+    Circuit::self()->removeWire( wire1 );
 
-        con->setPointList( plist );
-        con->closeCon( pin1->conPin() );
-        if( this->isSelected() ) con->setSelected( true );
-    }
-    con0->setStartPin( NULL );
-    con0->setEndPin( NULL );
-    Circuit::self()->removeConnector( con0 );
+    wire0->setPointVector( pointVector );
+    wire0->setEndPin( endPin );
+    wire0->closeCon( endPin );
 
-    con1->setStartPin( NULL );
-    con1->setEndPin( NULL );
-    Circuit::self()->removeConnector( con1 );
+    m_blocked = false;
 }
 
 void Node::setHidden( bool hid, bool , bool )

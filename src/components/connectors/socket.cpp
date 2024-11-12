@@ -46,7 +46,7 @@ void Socket::updateConnections( bool connect )
 {
     for( int i=0; i<m_size; i++ )
     {
-        if( !m_sockPins[i]->connector() )
+        if( !m_sockPins[i]->wire() )
         {
             Pin* pin = m_sockPins[i]->connectPin( false );
             if( pin ){

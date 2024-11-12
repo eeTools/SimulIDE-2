@@ -7,7 +7,6 @@
 #include <QPainter>
 
 #include "volt_reg.h"
-#include "connector.h"
 #include "simulator.h"
 #include "pin.h"
 #include "e-node.h"

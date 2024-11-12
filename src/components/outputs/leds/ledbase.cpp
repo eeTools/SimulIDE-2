@@ -5,7 +5,6 @@
 
 #include "ledbase.h"
 #include "circuitwidget.h"
-#include "connector.h"
 #include "simulator.h"
 #include "e-node.h"
 #include "pin.h"
@@ -116,7 +115,7 @@ void LedBase::setGrounded( bool grounded )
     Pin* pin1 = static_cast<Pin*>(m_ePin[1]);
     pin1->setEnabled( !grounded );
     pin1->setVisible( !grounded );
-    if( grounded ) pin1->removeConnector();
+    if( grounded ) pin1->removeWire();
     else           pin1->setEnode( NULL );
 }
 

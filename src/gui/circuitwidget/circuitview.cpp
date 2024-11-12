@@ -225,7 +225,7 @@ void CircuitView::contextMenuEvent( QContextMenuEvent* event )
     QGuiApplication::restoreOverrideCursor();
     QGraphicsView::contextMenuEvent( event );
 
-    if( m_circuit->is_constarted() ) m_circuit->deleteNewConnector();
+    if( m_circuit->is_constarted() ) m_circuit->deleteNewWire();
     else if( !event->isAccepted() )
     {
         QPointF eventPos = mapToScene( event->globalPos() ) ;

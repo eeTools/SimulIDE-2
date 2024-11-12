@@ -6,7 +6,6 @@
 #include <QGraphicsProxyWidget>
 
 #include "oscope.h"
-#include "connector.h"
 #include "circuitwidget.h"
 #include "circuit.h"
 #include "simulator.h"
@@ -134,7 +133,7 @@ void Oscope::updateStep()
 
         for( int i=0; i<4; i++ )
         {
-            bool connected = m_pin[i]->connector();
+            bool connected = m_pin[i]->wire();
             if( !connected )
             {
                 QString chTunnel = m_channel[i]->m_chTunnel;

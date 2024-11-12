@@ -9,7 +9,6 @@
 
 #include "switchdip.h"
 #include "circuitwidget.h"
-#include "connector.h"
 #include "simulator.h"
 #include "circuit.h"
 #include "e-node.h"
@@ -238,7 +237,7 @@ void SwitchDip::setCommonPin( bool c )
 
     for( int i=2; i<m_size*2; i+=2 )
     {
-        if( c ) m_pin[i]->removeConnector();
+        if( c ) m_pin[i]->removeWire();
         m_pin[i]->setVisible( !c );
     }
 }

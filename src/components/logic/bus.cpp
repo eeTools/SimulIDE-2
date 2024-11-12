@@ -6,7 +6,6 @@
 #include <QPainter>
 
 #include "bus.h"
-#include "connector.h"
 #include "simulator.h"
 #include "circuit.h"
 #include "circuitwidget.h"

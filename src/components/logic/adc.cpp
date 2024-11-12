@@ -6,7 +6,6 @@
 #include <math.h>
 
 #include "adc.h"
-#include "connector.h"
 #include "simulator.h"
 #include "iopin.h"
 

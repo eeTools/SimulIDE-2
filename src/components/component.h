@@ -15,8 +15,7 @@
 class Pin;
 class eNode;
 class Label;
-class Connector;
-class ConnectorLine;
+class Wire;
 class Linker;
 class Component;
 
@@ -226,7 +225,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         Label* m_idLabel;
         Label* m_valLabel;
 
-        QList<Connector*> m_conMoveList;
+        QList<Wire*> m_wireMoveList;
         QList<Component*> m_compMoveList;
 
         std::vector<Pin*> m_pin;

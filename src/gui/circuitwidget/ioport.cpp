@@ -7,6 +7,7 @@
 #include <math.h>
 
 #include "ioport.h"
+#include "component.h"
 #include "simulator.h"
 
 IoPort::IoPort( QString name )

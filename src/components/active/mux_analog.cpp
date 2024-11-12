@@ -205,9 +205,9 @@ void MuxAnalog::deleteResistors( int d )
 
 void MuxAnalog::remove()
 {
-    m_zPin->removeConnector();
-    m_enPin->removeConnector();
-    for( Pin* pin :m_addrPin  ) pin->removeConnector();
+    m_zPin->removeWire();
+    m_enPin->removeWire();
+    for( Pin* pin :m_addrPin  ) pin->removeWire();
 
     deleteResistors( m_channels );
     deleteAddrBits( m_addrBits );

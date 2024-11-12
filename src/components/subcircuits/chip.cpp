@@ -7,7 +7,6 @@
 #include "circuitwidget.h"
 #include "mainwindow.h"
 #include "simulator.h"
-#include "connector.h"
 #include "circuit.h"
 #include "utils.h"
 #include "pin.h"

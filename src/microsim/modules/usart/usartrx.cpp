@@ -7,7 +7,6 @@
 #include "mcuinterrupts.h"
 #include "iopin.h"
 #include "simulator.h"
-#include "connector.h"
 
 UartRx::UartRx( UsartModule* usart, eMcu* mcu, QString name )
       : UartTR( usart, mcu, name )

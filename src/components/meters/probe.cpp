@@ -7,8 +7,7 @@
 #include <QPainter>
 
 #include "probe.h"
-#include "connector.h"
-#include "connectorline.h"
+#include "wire.h"
 #include "circuit.h"
 #include "simulator.h"
 #include "label.h"
@@ -89,9 +88,8 @@ void Probe::updateStep()
             break;
         }else if( it->type() == UserType+2 )        // ConnectorLine
         {
-            ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( it );
-            Connector* con = line->connector();
-            setVolt( con->getVoltage() );
+            Wire* wire =  qgraphicsitem_cast<Wire*>( it );
+            setVolt( wire->getVoltage() );
             break;
 }   }   }
 

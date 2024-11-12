@@ -58,7 +58,7 @@ void eClockedDevice::setTrigger( trigger_t trigger )
 
     if( m_trigger == None )
     {
-        m_clkPin->removeConnector();
+        m_clkPin->removeWire();
         m_clkPin->setLabelText( "" );
         m_clkPin->setVisible( false );
     }
@@ -77,5 +77,5 @@ void eClockedDevice::setTrigger( trigger_t trigger )
 
 void eClockedDevice::remove()
 {
-    if( m_clkPin) m_clkPin->removeConnector();
+    if( m_clkPin) m_clkPin->removeWire();
 }

@@ -9,7 +9,7 @@
 
 #include "op_amp.h"
 #include "propdialog.h"
-#include "connector.h"
+#include "wire.h"
 #include "simulator.h"
 #include "e-node.h"
 #include "iopin.h"
@@ -190,8 +190,8 @@ void OpAmp::setPowerPins( bool set )
     
     if( !set )
     {
-        m_pin[3]->removeConnector();
-        m_pin[4]->removeConnector();
+        m_pin[3]->removeWire();
+        m_pin[4]->removeWire();
     }
     m_powerPins = set;
     updtProperties();

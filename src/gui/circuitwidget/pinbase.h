@@ -1,0 +1,106 @@
+/***************************************************************************
+ *   Copyright (C) 2012 by Santiago González                               *
+ *                                                                         *
+ ***( see copyright.txt file at root folder )*******************************/
+
+#ifndef PINBASE_H
+#define PINBASE_H
+
+#include <QGraphicsItem>
+
+#include "updatable.h"
+
+class Wire;
+
+class PinBase : public QGraphicsItem, public Updatable
+{
+    public:
+        PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent=0, int length=8 );
+        ~PinBase();
+
+        enum pinType_t{
+            pinNormal=0,
+            pinSocket,
+            pinHeader,
+            pinNull,
+            pinRst
+        };
+
+        QRectF boundingRect() const override { return m_area; }
+
+        virtual QString pinId() { return ""; }
+        
+        bool unused() { return m_unused; }
+        void setUnused( bool unused );
+
+        int length() { return m_length; }
+        virtual void setLength( int length );
+
+        //void setColor( QColor color ) { m_color[0] = color; }
+        void setPinAngle( int angle );
+        int pinAngle() { return m_angle; }
+
+        void setY( qreal y );
+
+        void setBoundingRect( QRect area ) { m_area = area; }
+
+        Wire* wire() { return my_wire; }
+        void setWire( Wire* c );
+        virtual void removeWire();
+
+        QString getLabelText() { return m_labelText; }
+        virtual void setLabelText( QString label, bool over=true );
+        void setLabelPos();
+        void setLabelColor( QColor color );
+        void setFontSize( int size );
+        int  labelSizeX() { return m_labelWidth; }
+
+        void setSpace( double s );
+        double space() { return m_space; }
+
+        virtual void setPinId( QString id ) {;}
+        void setVisible( bool visible );
+
+        void moveBy( int dx, int dy );
+
+        virtual void wireRemoved();
+
+        void setPinType( pinType_t ty ) { m_pinType = ty; }
+        pinType_t pinType() { return m_pinType; }
+
+        void warning( bool w );
+        virtual void animate( bool an );
+
+        virtual void isMoved(){;}
+        void flip( int h, int v );
+
+    protected:
+        pinType_t  m_pinType;
+
+        int m_angle;
+        int m_length;
+        int m_Hflip;
+        int m_Vflip;
+        int m_overScore;
+        int m_labelheight;
+        int m_labelWidth;
+        double m_space;
+
+        bool m_blocked;
+        bool m_unused;
+        bool m_animate;
+        bool m_warning;
+
+        double  m_opCount; // Used by blinking Pin
+
+        QString m_labelText;
+        
+        QColor m_color[8];
+        QRectF m_area;
+
+        Wire*  my_wire;
+
+        QGraphicsSimpleTextItem m_label;
+};
+
+#endif

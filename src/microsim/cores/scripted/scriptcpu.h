@@ -13,6 +13,7 @@
 using namespace std;
 
 class ScriptPerif;
+class ComProperty;
 class Mcu;
 
 class ScriptCpu : public ScriptBase, public McuCpu

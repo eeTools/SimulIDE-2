@@ -5,7 +5,6 @@
 
 #include <QPainter>
 
-#include "connector.h"
 #include "simulator.h"
 #include "hd44780_base.h"
 #include "utils.h"

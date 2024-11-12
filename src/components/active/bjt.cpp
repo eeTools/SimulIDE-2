@@ -7,7 +7,6 @@
 
 #include "bjt.h"
 #include "circuitwidget.h"
-#include "connector.h"
 #include "simulator.h"
 #include "circuit.h"
 #include "pin.h"

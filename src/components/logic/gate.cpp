@@ -4,7 +4,6 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include "gate.h"
-#include "connector.h"
 #include "circuit.h"
 #include "iopin.h"
 

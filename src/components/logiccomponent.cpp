@@ -6,7 +6,7 @@
 #include "logiccomponent.h"
 #include "circuitwidget.h"
 #include "simulator.h"
-#include "connector.h"
+#include "wire.h"
 #include "circuit.h"
 #include "iopin.h"
 
@@ -62,7 +62,7 @@ std::vector<Pin*> LogicComponent::getPins()
 
 void LogicComponent::remove()
 {
-    if( m_oePin ) m_oePin->removeConnector();
+    if( m_oePin ) m_oePin->removeWire();
     eClockedDevice::remove();
     IoComponent::remove();
 }
@@ -95,7 +95,7 @@ void LogicComponent::setTristate( bool t )  // Activate or deactivate OE Pin
 {
     if( !m_oePin ) return;
 
-    if( !t ) m_oePin->removeConnector();
+    if( !t ) m_oePin->removeWire();
 
     m_oePin->setVisible( t );
     m_tristate = t;

@@ -4,7 +4,6 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include "bincounter.h"
-#include "connector.h"
 #include "iopin.h"
 
 #include "intprop.h"
@@ -113,6 +112,6 @@ void BinCounter::voltChanged()
 void BinCounter::useSetPin( bool set )
 {
     m_pinSet = set;
-    if( !set ) m_setPin->removeConnector();
+    if( !set ) m_setPin->removeWire();
     m_setPin->setVisible( set );
 }

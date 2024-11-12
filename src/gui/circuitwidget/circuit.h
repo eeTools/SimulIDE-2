@@ -10,7 +10,7 @@
 #include <QTimer>
 
 #include "component.h"
-#include "connector.h"
+#include "wire.h"
 #include "pin.h"
 
 #define COMP_STATE_NEW "__COMP_STATE_NEW__"
@@ -53,7 +53,7 @@ class Circuit : public QGraphicsScene
         void removeComp( Component* comp) ;
         void compRemoved( bool removed ) { m_compRemoved = removed; }
         void removeNode( Node* node );
-        void removeConnector( Connector* conn );
+        void removeWire( Wire* conn );
         void clearCircuit();
 
         //--- Undo/Redo ----------------------------------
@@ -83,19 +83,19 @@ class Circuit : public QGraphicsScene
         Component* createItem( QString name, QString id, bool map=true );
 
         QString newSceneId() { return QString::number(++m_seqNumber); }
-        QString newConnectorId() { return QString::number(++m_conNumber); }
+        QString newWireId() { return QString::number(++m_conNumber); }
 
-        void newconnector( Pin* startpin, bool save=true );
-        void closeconnector( Pin* endpin, bool save=false );
-        void deleteNewConnector();
-        //void updateConnectors();
-        Connector* getNewConnector() { return m_newConnector; }
+        void newWire( Pin* startpin, bool save=true );
+        void closeWire( Pin* endpin, bool save=false );
+        void deleteNewWire();
+        //void updateWires();
+        Wire* getNewWire() { return m_newWire; }
 
         void addNode( Node* node );
         void addComponent( Component* comp );
 
         QList<Component*>* compList() { return &m_compList; }
-        QList<Connector*>* conList()  { return &m_connList; }
+        QList<Wire*>* conList()  { return &m_connList; }
         QList<Node*>*      nodeList() { return &m_nodeList; }
         QHash<QString, CompBase*>* compMap() { return &m_compMap;}
 
@@ -183,7 +183,7 @@ class Circuit : public QGraphicsScene
 
         QRect        m_scenerect;
         CircuitView* m_graphicView;
-        Connector*   m_newConnector;
+        Wire*   m_newWire;
 
         int m_sceneWidth;
         int m_sceneHeight;
@@ -213,7 +213,7 @@ class Circuit : public QGraphicsScene
         QPointF m_deltaMove;
 
         QList<Component*> m_compList;   // Component list
-        QList<Connector*> m_connList;   // Connector list
+        QList<Wire*>      m_connList;   // Wire list
         QList<Node*>      m_nodeList;   // Node list
 
         SubPackage* m_board;
@@ -254,7 +254,7 @@ class Circuit : public QGraphicsScene
         QList<circChange> m_undoStack;
 
         QList<CompBase*>  m_removedComps; // removed component list;
-        QList<Connector*> m_oldConns;
+        QList<Wire*> m_oldConns;
         QList<Component*> m_oldComps;
         QList<Node*>      m_oldNodes;
         QMap<CompBase*, QString> m_compStrMap;

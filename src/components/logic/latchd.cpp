@@ -136,7 +136,7 @@ void LatchD::setPinReset( bool r )
 {
     m_useReset = r;
     m_resetPin->setVisible( r );
-    if( !r ) m_resetPin->removeConnector();
+    if( !r ) m_resetPin->removeWire();
     updateSize();
 }
 void LatchD::updateSize()

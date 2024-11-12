@@ -9,7 +9,6 @@
 #include "circuitwidget.h"
 #include "simulator.h"
 #include "circuit.h"
-#include "connector.h"
 #include "iopin.h"
 
 #include "boolprop.h"
@@ -118,7 +117,7 @@ void Mux::setAddrBits( int bits )
             pin->setVisible( true );
             pin->setY( h+8 );
         }else{
-            pin->removeConnector();
+            pin->removeWire();
             pin->setVisible( false );
         }
         if( i < 2 ) m_outPin[i]->setY( -h+i*8+16 ); // Outputs
@@ -131,7 +130,7 @@ void Mux::setAddrBits( int bits )
             pin->setVisible( true );
             pin->setY( i*8-(bits+bits/3)*8 );
         }else{
-            pin->removeConnector();
+            pin->removeWire();
             pin->setVisible( false );
     }   }
     m_oePin->setY( -h-8 ); // OE

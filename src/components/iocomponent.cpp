@@ -564,9 +564,9 @@ std::vector<Pin*> IoComponent::getPins()
 
 void IoComponent::remove()
 {
-    for( IoPin* pin : m_inPin )    pin->removeConnector();
-    for( IoPin* pin : m_outPin )   pin->removeConnector();
-    for( IoPin* pin : m_otherPin ) pin->removeConnector();
+    for( IoPin* pin : m_inPin )    pin->removeWire();
+    for( IoPin* pin : m_outPin )   pin->removeWire();
+    for( IoPin* pin : m_otherPin ) pin->removeWire();
     Component::remove();
 }
 

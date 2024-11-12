@@ -8,7 +8,6 @@
 #include <QtMath>
 
 #include "audio_out.h"
-#include "connector.h"
 #include "propdialog.h"
 #include "pin.h"
 #include "label.h"

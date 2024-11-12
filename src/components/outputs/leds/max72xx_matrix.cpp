@@ -6,7 +6,6 @@
 #include <QPainter>
 
 #include "max72xx_matrix.h"
-#include "connector.h"
 #include "simulator.h"
 #include "iopin.h"
 

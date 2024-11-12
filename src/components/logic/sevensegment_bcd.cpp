@@ -100,7 +100,7 @@ void SevenSegmentBCD::setShowEnablePin( bool show )
     if( m_showEnablePin == show ) return;
     m_showEnablePin = show;
 
-    if( !show ) m_enablePin->removeConnector();
+    if( !show ) m_enablePin->removeWire();
     m_enablePin->setVisible( show );
 }
 
@@ -109,7 +109,7 @@ void SevenSegmentBCD::setShowDotPin( bool show )
     if( m_showDotPin == show) return;
     m_showDotPin = show;
 
-    if( !show ) m_dotPin->removeConnector();
+    if( !show ) m_dotPin->removeWire();
     m_dotPin->setVisible( show );
 }
 
@@ -117,7 +117,7 @@ bool SevenSegmentBCD::setLinkedTo( Linker* li )
 {
     bool linked = Component::setLinkedTo( li );
     if( li && linked )
-        for( uint i=0; i<m_inPin.size(); ++i ) m_inPin[i]->removeConnector();
+        for( uint i=0; i<m_inPin.size(); ++i ) m_inPin[i]->removeWire();
 
     setHidden( (li && linked), false, false );
 

@@ -204,7 +204,7 @@ void SerialTerm::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
     p->setBrush( Qt::darkBlue );
     p->drawRoundedRect( m_area, 4, 4 );
 
-    if( m_pin[0]->connector() )
+    if( m_pin[0]->wire() )
     {
         if( m_sending ) p->setBrush( Qt::yellow );
         else            p->setBrush( Qt::red );
@@ -212,7 +212,7 @@ void SerialTerm::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
     else p->setBrush( Qt::black );
     p->drawRoundedRect( -5,-11, 8, 6, 2, 2 ); // Tx led
 
-    if( m_pin[1]->connector() )
+    if( m_pin[1]->wire() )
     {
         if( m_receiving ){
             m_receiving = false;

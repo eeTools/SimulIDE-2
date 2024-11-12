@@ -6,7 +6,6 @@
 #include <QPainter>
 
 #include "ledrgb.h"
-#include "connector.h"
 #include "circuit.h"
 #include "simulator.h"
 #include "circuitwidget.h"

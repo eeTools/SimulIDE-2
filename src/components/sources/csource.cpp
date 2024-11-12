@@ -142,8 +142,8 @@ void Csource::updateStep()
 
     if( !m_controlPins && !m_linkedTo )
     {
-        m_pin[0]->removeConnector();
-        m_pin[1]->removeConnector();
+        m_pin[0]->removeWire();
+        m_pin[1]->removeWire();
 
         if( m_currSource )
         {

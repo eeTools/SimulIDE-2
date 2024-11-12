@@ -6,7 +6,7 @@
 #include "e-node.h"
 #include "pin.h"
 #include "e-pin.h"
-#include "connector.h"
+#include "wire.h"
 #include "e-element.h"
 #include "circmatrix.h"
 #include "simulator.h"
@@ -350,8 +350,8 @@ void eNode::updateConnectors()
     for( ePin* epin : m_ePinList ){
         Pin* pin = epin->getPin();
         if( pin && pin->isVisible() ){
-            Connector* conn = pin->connector();
-            if( conn ) conn->updateLines();
+            Wire* wire = pin->wire();
+            if( wire ) wire->update();
         }
     }
 }

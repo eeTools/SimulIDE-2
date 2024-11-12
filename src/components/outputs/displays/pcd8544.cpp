@@ -16,7 +16,6 @@
 #include <QPainter>
 
 #include "pcd8544.h"
-#include "connector.h"
 #include "simulator.h"
 
 listItem_t Pcd8544::libraryItem(){

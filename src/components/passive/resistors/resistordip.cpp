@@ -5,7 +5,6 @@
 
 #include "resistordip.h"
 #include "circuitwidget.h"
-#include "connector.h"
 #include "simulator.h"
 #include "circuit.h"
 #include "pin.h"
@@ -162,7 +161,7 @@ void ResistorDip::setPullUp( bool p )
         int index = i*2+1;
         m_pin[index]->setEnabled( !p );
         m_pin[index]->setVisible( !p );
-        if( p ) m_pin[index]->removeConnector();
+        if( p ) m_pin[index]->removeWire();
         else    m_pin[index]->setEnode( NULL );
     }
     update();

@@ -8,7 +8,6 @@
 
 #include "stepper.h"
 #include "simulator.h"
-#include "connector.h"
 
 #include "doubleprop.h"
 #include "boolprop.h"
@@ -195,7 +194,7 @@ void Stepper::setResistance( double res )
 void Stepper::setBipolar( bool bi )
 {
     m_bipolar = bi;
-    m_pinCo.removeConnector();
+    m_pinCo.removeWire();
     m_pinCo.setVisible( !bi && !m_hidden );
 }
 

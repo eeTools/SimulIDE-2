@@ -270,7 +270,7 @@ void WaveGen::setBipolar(bool b )
     m_bipolar = b;
 
     m_gndpin->setVisible( b );
-    if( !b ) m_gndpin->removeConnector();
+    if( !b ) m_gndpin->removeWire();
 
     if( b ) m_outpin->setY( -4 );
     else    m_outpin->setY( 0 );

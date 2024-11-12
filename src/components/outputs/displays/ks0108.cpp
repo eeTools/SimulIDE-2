@@ -7,7 +7,6 @@
 #include <math.h>
 
 #include "ks0108.h"
-#include "connector.h"
 #include "simulator.h"
 #include "iopin.h"
 

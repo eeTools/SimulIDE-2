@@ -6,7 +6,6 @@
 #include <QGraphicsProxyWidget>
 
 #include "logicanalizer.h"
-#include "connector.h"
 #include "circuitwidget.h"
 #include "circuit.h"
 #include "simulator.h"
@@ -140,7 +139,7 @@ void LAnalizer::updateStep()
 
         for( int i=0; i<8; i++ )
         {
-            bool connected = m_pin[i]->connector();
+            bool connected = m_pin[i]->wire();
 
             if( !connected && !m_pin[i]->isBus() )
             {

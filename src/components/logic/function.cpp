@@ -9,7 +9,6 @@
 #include <QGraphicsProxyWidget>
 
 #include "function.h"
-#include "connector.h"
 #include "circuit.h"
 #include "simulator.h"
 #include "circuitwidget.h"

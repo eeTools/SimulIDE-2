@@ -6,7 +6,6 @@
 #include <math.h>
 
 #include "hd44780.h"
-#include "connector.h"
 #include "simulator.h"
 #include "iopin.h"
 #include "utils.h"

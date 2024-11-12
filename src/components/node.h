@@ -35,5 +35,6 @@ class Node : public Component
         void joinConns( int co0, int c1);
 
         bool m_isBus;
+        bool m_blocked;
 };
 #endif
