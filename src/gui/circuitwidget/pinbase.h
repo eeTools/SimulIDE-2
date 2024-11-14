@@ -70,6 +70,8 @@ class PinBase : public QGraphicsItem, public Updatable
         virtual void setPinId( QString id ) {;}
         void setVisible( bool visible );
 
+        virtual QColor getColor(){ return m_color[0]; }
+
         void moveBy( int dx, int dy );
 
         virtual void wireRemoved();
@@ -80,7 +82,7 @@ class PinBase : public QGraphicsItem, public Updatable
         void warning( bool w );
         virtual void animate( bool an );
 
-        virtual void isMoved(){;}
+        virtual void isMoved();
         void flip( int h, int v );
 
     protected:

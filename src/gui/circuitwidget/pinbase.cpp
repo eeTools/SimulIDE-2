@@ -91,6 +91,12 @@ void PinBase::flip( int h, int v )
     setLabelPos();
 }
 
+void PinBase::isMoved()
+{
+    if( my_wire ) my_wire->updateConRoute( this );
+    setLabelPos();
+}
+
 void PinBase::setLabelText( QString label, bool over )
 {
     label = label.simplified();

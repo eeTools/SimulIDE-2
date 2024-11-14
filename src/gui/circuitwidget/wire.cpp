@@ -441,44 +441,44 @@ void Wire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
             QPoint delta0 = p1 - p0;
             QPoint delta1 = p2 - p1;
 
-            QRectF square( 0, 0, 10, 10 );
+            QPoint pStart, pEnd;
+            QPoint pCtrl = p1;
+            int curveX = 10;
+            int curveY = 10;
 
-            int dRpX = 0;
-            int dRpY = 0;
-            double start = 0;
-            double sweep = 1;
+            int dRpX = 1;
+            int dRpY = 1;
             if( delta0.y() == 0 )          // Horizontal line
             {
-                if( delta0.x() > 0 ) dRpX = -10; // Right
+                if( delta0.x() > 0 ) dRpX = -1; // Right
+                if( delta1.y() < 0 ) dRpY = -1; // Next line up
 
-                if( delta1.y() > 0 )       // Next line Down
-                {
-                    start = 90;
-                    if( delta0.x() > 0 ) sweep = -1; // Right
-                }
-                else if( delta1.y() < 0 )  // Next line up
-                {
-                    dRpY = -10;
-                    start = 270;
-                    if( delta0.x() < 0 ) sweep = -1; // left
-                }
+                int absY = abs( delta1.y() );
+                if( absY < 2*curveY ) curveY = absY/2;
+
+                int absX = abs( delta0.x() );
+                if( absX < 2*curveX ) curveX = absX/2;
+
+                pStart = p1 + QPoint( curveX*dRpX, 0    );
+                pEnd   = p1 + QPoint( 0   , curveY*dRpY );
             }
             else if( delta0.x() == 0 )  // Vertical Line
             {
-                if( delta0.y() > 0 ) dRpY = -10; // Down
+                if( delta0.y() > 0 ) dRpY = -1; // Down
+                if( delta1.x() < 0 ) dRpX = -1; // Next line Left
 
-                if( delta1.x() > 0 )       // Next line Right
-                {
-                    start = 180;
-                    if( delta0.y() < 0 ) sweep = -1; // Up
-                }
-                else if( delta1.x() < 0 )  // Next line Left
-                {
-                    dRpX = -10;
-                    if( delta0.y() > 0 ) sweep = -1; // Down
-                }
+                int absY = abs( delta0.y() );
+                if( absY < 2*curveY ) curveY = absY/2;
+
+                int absX = abs( delta1.x() );
+                if( absX < 2*curveX ) curveX = absX/2;
+
+                pStart = p1 + QPoint( 0   , curveY*dRpY );
+                pEnd   = p1 + QPoint( curveX*dRpX, 0    );
             }
-            m_path.arcTo( square.translated( p1.x()+dRpX, p1.y()+dRpY ), start, 90*sweep );
+            m_path.lineTo( pStart );
+            m_path.quadTo( pCtrl, pEnd );
+            //p->drawPoint( pCtrl );
         }
         else m_path.lineTo( p1 );
 
@@ -491,7 +491,8 @@ void Wire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 
     QColor color;
     if( isSelected() ) color = QColor( Qt::darkGray );
-    else if( m_wireFlags & wireBus ) color =  Qt::darkGreen;
+    else if( m_wireFlags & wireFunc ) color = m_startPin->getColor();
+    else if( m_wireFlags & wireBus  ) color = Qt::darkGreen;
     else if( Circuit::self()->animate() )
     {
         if( getVoltage() > 2.5 ) color = QColor( 200, 50, 50  );
@@ -501,5 +502,6 @@ void Wire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 
     QPen pen( color, 1.6, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
     p->setPen( pen );
+    p->drawPath( m_path );
     p->drawPath( m_path );
 }
