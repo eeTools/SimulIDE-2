@@ -43,9 +43,6 @@ class Pin : public PinBase, public ePin
 
         Component* component() { return m_component; }
 
-        void setConPin( Pin* pin ) { m_conPin = pin; }
-        Pin* conPin(){ return m_conPin; }
-
         Pin* connectPin( bool connect );
 
         void setPinId( QString id ) override { m_id = id; }
@@ -53,11 +50,8 @@ class Pin : public PinBase, public ePin
         void removeWire() override;
         void wireRemoved() override;
 
-        void registerEnode( eNode* enode, int n=-1 );
-        void registerPinsW( eNode* enode, int n=-1 );
-        
-        void setIsBus( bool bus );
-        bool isBus() { return m_isBus; }
+        void registerEnode( eNode* enode, int n=-1 ) override;
+        void registerPinsW( eNode* enode, int n=-1 ) override;
 
         void setDataChannel( LaChannel* ch ) { m_dataChannel = ch; }
 
@@ -71,12 +65,8 @@ class Pin : public PinBase, public ePin
 
         pinState_t m_pinState;
 
-        bool m_isBus;
-
         Component* m_component;
         LaChannel* m_dataChannel;    // connect to Logic Analyzer
-
-        Pin* m_conPin;         // Pin at the other side of wire
 };
 
 #endif

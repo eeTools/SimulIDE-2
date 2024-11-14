@@ -31,7 +31,7 @@ Bus::Bus( QString type, QString id )
     m_busPin1 = new Pin( 270, QPoint( 0, 0 ), m_id+"-busPinI", 1, this );
     m_busPin1->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
     m_busPin1->setLength( 1 );
-    m_busPin1->setIsBus( true );
+    m_busPin1->writeWireFlag( wireBus, true );
 
     m_numLines = 0;
     m_startBit = 0;
@@ -40,7 +40,7 @@ Bus::Bus( QString type, QString id )
     m_ePin[0] = m_pin[0] = m_busPin0 = new Pin( 90, QPoint( 0, 0 ), m_id+"-ePin0", 1, this );
     m_busPin0->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
     m_busPin0->setLength( 1 );
-    m_busPin0->setIsBus( true );
+    m_busPin0->writeWireFlag( wireBus, true );
 
     addPropGroup( { tr("Main"), {
         new IntProp<Bus>("Num_Bits" , tr("Size"),"_bits"

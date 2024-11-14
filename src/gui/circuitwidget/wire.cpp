@@ -17,7 +17,7 @@
 
 #define tr(str) simulideTr("Wire",str)
 
-Wire::Wire( QString type, QString id, Pin* startpin, Pin* endpin )
+Wire::Wire( QString type, QString id, PinBase* startpin, PinBase* endpin )
     : CompBase( type, id )
     , QGraphicsItem()
 {
@@ -29,7 +29,7 @@ Wire::Wire( QString type, QString id, Pin* startpin, Pin* endpin )
     m_freeLine = false;
     m_moving = false;
 
-    setIsBus( m_startPin->isBus() );
+    m_wireFlags = m_startPin->wireFlags();
 
     QPoint pinPos = startPin()->scenePos().toPoint();
     m_pList.append( pinPos );
@@ -55,6 +55,12 @@ Wire::~Wire()
 QRectF Wire::boundingRect() const
 {
     return m_path.controlPointRect() + QMarginsF( 2, 2, 2, 2 );
+}
+
+void Wire::writeWireFlag( int flag, bool val )
+{
+    if( val ) m_wireFlags |= flag;
+    else      m_wireFlags &= !(~flag);
 }
 
 void Wire::setPointListStr( QString pl )
@@ -160,7 +166,7 @@ void Wire::updateConRoute( QPointF thisPoint )
     Circuit::self()->update();
 }
 
-void Wire::updateConRoute( Pin* pin )
+void Wire::updateConRoute( PinBase* pin )
 {
     if( pin == m_startPin ) // Convert startPin in endPin
     {
@@ -194,7 +200,7 @@ void Wire::remove()
     if( m_endPin )   m_endPin->wireRemoved();
 }
 
-void Wire::closeCon( Pin* endpin )
+void Wire::closeCon( PinBase* endpin )
 {
     if( Simulator::self()->isRunning() ) CircuitWidget::self()->powerCircOff();
 
@@ -202,9 +208,9 @@ void Wire::closeCon( Pin* endpin )
     m_startPin->setWire( this );
     m_endPin->setWire( this );
     m_startPin->setConPin( m_endPin );
+    m_startPin->setWireFlags( m_wireFlags ); // StartPin will set conPin isBus
     m_endPin->setConPin( m_startPin );
-    m_endPin->setIsBus( m_isBus );
-    m_startPin->setIsBus( m_isBus ); // StartPin will set conPin isBus
+    m_endPin->setWireFlags( m_wireFlags );
 
     updateConRoute( m_endPin->scenePos() );
 
@@ -271,7 +277,7 @@ bool Wire::connectToWire( QPoint cutPoint )
     node->setPos( cutPoint );
     Circuit::self()->addNode( node );
 
-    Pin* pin1 = node->getPin(1);
+    PinBase* pin1 = node->getPin(1);
     if( Circuit::self()->is_constarted() )   // A Wire wants to connect here (ends in a node)
     {
         splitCon( index, node );
@@ -279,7 +285,7 @@ bool Wire::connectToWire( QPoint cutPoint )
     }
     else                                     // A new Wire created here (starts in a node)
     {
-        pin1->setIsBus( m_isBus );
+        pin1->setWireFlags( m_wireFlags );
         Circuit::self()->newWire( pin1, false );
         splitCon( index, node );
     }
@@ -314,9 +320,9 @@ void Wire::mousePressEvent( QGraphicsSceneMouseEvent* event )
         {
            if( Circuit::self()->is_constarted() )     // Wire started at Pin is connecting here
            {
-               Wire* con = Circuit::self()->getNewWire();
-               if( con == this ) return;
-               if( con->isBus() != m_isBus ) { event->ignore(); return; } // Avoid connect Bus with no-Bus
+               Wire* wire = Circuit::self()->getNewWire();
+               if( wire == this ) return;
+               if( wire->wireFlags() != m_wireFlags ) { event->ignore(); return; } // Avoid connect Bus with no-Bus
            }
            QPoint point1 = toGrid( event->scenePos() ).toPoint();
 
@@ -391,12 +397,17 @@ void Wire::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
    QObject::connect( removeAction, &QAction::triggered
                    , [=](){ Circuit::self()->removeWire( this ); } );
 
-   /// TODO: set color
+   /// TODO: set Wire color
 
    menu.exec( event->screenPos() );
 }
 
-double Wire::getVoltage() { return m_startPin->getVoltage(); }
+double Wire::getVoltage()
+{
+    if( m_wireFlags & wireFunc ) return 0;
+    Pin* pin = (Pin*) m_startPin;
+    return pin->getVoltage();
+}
 
 QString Wire::startPinId() { return m_startPin->pinId(); }
 QString Wire::endPinId()   { return m_endPin->pinId(); }
@@ -423,53 +434,55 @@ void Wire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
     for( int i=1; i<m_pList.size(); ++i )
     {
         QPoint p1 = m_pList.at(i);
-        p0 = p1;
 
-        /*QPoint p2 = (i == m_pList.size()-1) ? m_lastPoint : m_pList.at(i+1);
-        QPoint delta0 = p1 - p0;
-        QPoint delta1 = p2 - p1;
-        p0 = p1;
-
-        QRectF square( 0, 0, 10, 10 );
-
-        int dRpX = 0;
-        int dRpY = 0;
-        double start = 0;
-        double sweep = 1;
-        if( delta0.y() == 0 )          // Horizontal line
+        if( m_wireFlags & wireFunc )
         {
-            if( delta0.x() > 0 ) dRpX = -10; // Right
+            QPoint p2 = (i == m_pList.size()-1) ? m_lastPoint : m_pList.at(i+1);
+            QPoint delta0 = p1 - p0;
+            QPoint delta1 = p2 - p1;
 
-            if( delta1.y() > 0 )       // Next line Down
-            {
-                start = 90;
-                if( delta0.x() > 0 ) sweep = -1; // Right
-            }
-            else if( delta1.y() < 0 )  // Next line up
-            {
-                dRpY = -10;
-                start = 270;
-                if( delta0.x() < 0 ) sweep = -1; // left
-            }
-        }
-        else if( delta0.x() == 0 )  // Vertical Line
-        {
-            if( delta0.y() > 0 ) dRpY = -10; // Down
+            QRectF square( 0, 0, 10, 10 );
 
-            if( delta1.x() > 0 )       // Next line Right
+            int dRpX = 0;
+            int dRpY = 0;
+            double start = 0;
+            double sweep = 1;
+            if( delta0.y() == 0 )          // Horizontal line
             {
-                start = 180;
-                if( delta0.y() < 0 ) sweep = -1; // Up
+                if( delta0.x() > 0 ) dRpX = -10; // Right
+
+                if( delta1.y() > 0 )       // Next line Down
+                {
+                    start = 90;
+                    if( delta0.x() > 0 ) sweep = -1; // Right
+                }
+                else if( delta1.y() < 0 )  // Next line up
+                {
+                    dRpY = -10;
+                    start = 270;
+                    if( delta0.x() < 0 ) sweep = -1; // left
+                }
             }
-            else if( delta1.x() < 0 )  // Next line Left
+            else if( delta0.x() == 0 )  // Vertical Line
             {
-                dRpX = -10;
-                if( delta0.y() > 0 ) sweep = -1; // Down
+                if( delta0.y() > 0 ) dRpY = -10; // Down
+
+                if( delta1.x() > 0 )       // Next line Right
+                {
+                    start = 180;
+                    if( delta0.y() < 0 ) sweep = -1; // Up
+                }
+                else if( delta1.x() < 0 )  // Next line Left
+                {
+                    dRpX = -10;
+                    if( delta0.y() > 0 ) sweep = -1; // Down
+                }
             }
+            m_path.arcTo( square.translated( p1.x()+dRpX, p1.y()+dRpY ), start, 90*sweep );
         }
-        m_path.arcTo( square.translated( p1.x()+dRpX, p1.y()+dRpY ), start, 90*sweep );
-        */
-        m_path.lineTo( p1 );
+        else m_path.lineTo( p1 );
+
+        p0 = p1;
     }
     m_path.lineTo( m_lastPoint );
 
@@ -478,7 +491,7 @@ void Wire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 
     QColor color;
     if( isSelected() ) color = QColor( Qt::darkGray );
-    else if( m_isBus ) color =  Qt::darkGreen;
+    else if( m_wireFlags & wireBus ) color =  Qt::darkGreen;
     else if( Circuit::self()->animate() )
     {
         if( getVoltage() > 2.5 ) color = QColor( 200, 50, 50  );

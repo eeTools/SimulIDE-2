@@ -6,6 +6,7 @@
 #include "lachannel.h"
 #include "plotdisplay.h"
 #include "simulator.h"
+#include "wire.h"
 #include "pin.h"
 #include "utils.h"
 
@@ -37,7 +38,7 @@ void LaChannel::stamp()    // Called at Simulation Start
     m_analizer->conditonMet( m_channel, C_LOW );
     addReading( 0 );
 
-    if( m_pin->isBus() )
+    if( m_pin->wireFlags() & wireBus )
     {
         bool connected = m_pin->wire();
         m_plotBase->display()->connectChannel( m_channel, connected );
@@ -62,7 +63,7 @@ void LaChannel::setPin( Pin* p ) { m_ePin[0] = m_pin = p; }
 void LaChannel::setIsBus( bool b )
 {
     m_pin->removeWire();
-    m_pin->setIsBus( b );
+    m_pin->writeWireFlag( wireBus, b );
     m_pin->setDataChannel( b? this : NULL );
 }
 
@@ -84,7 +85,7 @@ void LaChannel::voltChanged()
     if( !m_connected ) return;
     uint64_t simTime = Simulator::self()->circTime();
 
-    if( m_pin->isBus() )
+    if( m_pin->wireFlags() & wireBus )
     {
         double busValue = 0;
         for( int n : m_busNodes.keys() )

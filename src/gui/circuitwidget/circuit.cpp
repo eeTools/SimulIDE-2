@@ -138,7 +138,7 @@ QString Circuit::replaceId( QString pinName )
     return pinName;
 }
 
-Pin* Circuit::findPin( QString id )
+PinBase* Circuit::findPin( QString id )
 {
     QStringList words = id.split("-");
     id = words.takeLast();
@@ -149,9 +149,9 @@ Pin* Circuit::findPin( QString id )
     return nullptr;
 }
 
-Pin* Circuit::findPin( int x, int y, QString id )
+PinBase* Circuit::findPin( int x, int y, QString id )
 {
-    Pin* pin = findPin( id );
+    PinBase* pin = findPin( id );
     if( pin ) return pin;
     // qDebug() << "Circuit::findPin" << id;
     QRectF itemRect = QRectF ( x-4, y-4, 8, 8 );
@@ -159,12 +159,12 @@ Pin* Circuit::findPin( int x, int y, QString id )
     QList<QGraphicsItem*> list = items( itemRect ); // List of items in (x, y)
     for( QGraphicsItem* it : list )
     {
-        pin =  qgraphicsitem_cast<Pin*>( it );
+        pin =  qgraphicsitem_cast<PinBase*>( it );
         if( pin && pin->pinId().left(1) == id.left(1) && !pin->wire() ) return pin; // Check if names start by same letter
     }
     for( QGraphicsItem* it : list ) // Not found by first letter, take first Pin
     {
-        Pin* pin =  qgraphicsitem_cast<Pin*>( it );
+        PinBase* pin =  qgraphicsitem_cast<PinBase*>( it );
         if( pin ) return pin;
     }
     return nullptr;
@@ -237,8 +237,8 @@ void Circuit::loadStrDoc( QString &doc )
 
         if( type == "Wire" )
         {
-            Pin* startpin = nullptr;
-            Pin* endpin   = nullptr;
+            PinBase* startpin = nullptr;
+            PinBase* endpin   = nullptr;
             QString startpinid, endpinid;
             QStringList pointList;
 
@@ -864,7 +864,7 @@ void Circuit::paste( QPointF eventpoint )
     m_busy = false;
 }
 
-void Circuit::newWire( Pin* startpin, bool save )
+void Circuit::newWire( PinBase* startpin, bool save )
 {
     if( save ) beginUndoStep();
 
@@ -876,7 +876,7 @@ void Circuit::newWire( Pin* startpin, bool save )
     m_connList.append( m_newWire );
 }
 
-void Circuit::closeWire( Pin* endpin, bool save )
+void Circuit::closeWire( PinBase* endpin, bool save )
 {
     m_conStarted = false;
     m_newWire->closeCon( endpin );
@@ -1181,9 +1181,10 @@ void Circuit::drawBackground( QPainter* painter, const QRectF &rect )
 
 void Circuit::updatePin( ePin* epin, QString oldId, QString newId )
 {
-    remPin( oldId );
-    Pin* pin = static_cast<Pin*>( epin );
-    addPin( pin, newId );
+    qDebug() << "FIXME: ERROR Circuit::updatePin";
+    //remPin( oldId );
+    //PinBase* pin = static_cast<PinBase*>( epin );
+    //addPin( pin, newId );
 }
 
 void Circuit::setSceneWidth( int w )
@@ -1216,7 +1217,7 @@ void Circuit::setDrawGrid( bool draw )
 void Circuit::setAnimate( bool an )
 {
     m_animate = an;
-    for( Pin* pin : m_pinMap.values() ) pin->animate( an );
+    for( PinBase* pin : m_pinMap.values() ) pin->animate( an );
     update();
 }
 

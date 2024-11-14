@@ -11,6 +11,7 @@
 #include "updatable.h"
 
 class Wire;
+class eNode;
 
 class PinBase : public QGraphicsItem, public Updatable
 {
@@ -27,6 +28,7 @@ class PinBase : public QGraphicsItem, public Updatable
         };
 
         QRectF boundingRect() const override { return m_area; }
+        void setBoundingRect( QRect area ) { m_area = area; }
 
         virtual QString pinId() { return ""; }
         
@@ -36,17 +38,24 @@ class PinBase : public QGraphicsItem, public Updatable
         int length() { return m_length; }
         virtual void setLength( int length );
 
-        //void setColor( QColor color ) { m_color[0] = color; }
         void setPinAngle( int angle );
         int pinAngle() { return m_angle; }
 
         void setY( qreal y );
 
-        void setBoundingRect( QRect area ) { m_area = area; }
+        void writeWireFlag( int flag, bool val );
+        void setWireFlags( int flags ) { m_wireFlags = flags; }
+        int  wireFlags() { return m_wireFlags; }
 
         Wire* wire() { return my_wire; }
         void setWire( Wire* c );
         virtual void removeWire();
+
+        void setConPin( PinBase* pin ) { m_conPin = pin; }
+        PinBase* conPin(){ return m_conPin; }
+
+        virtual void registerEnode( eNode*, int n=-1 ){;}
+        virtual void registerPinsW( eNode*, int n=-1 ){;}
 
         QString getLabelText() { return m_labelText; }
         virtual void setLabelText( QString label, bool over=true );
@@ -84,6 +93,8 @@ class PinBase : public QGraphicsItem, public Updatable
         int m_overScore;
         int m_labelheight;
         int m_labelWidth;
+        int m_wireFlags;
+
         double m_space;
 
         bool m_blocked;
@@ -99,6 +110,8 @@ class PinBase : public QGraphicsItem, public Updatable
         QRectF m_area;
 
         Wire*  my_wire;
+
+        PinBase* m_conPin;  // Pin at the other side of wire
 
         QGraphicsSimpleTextItem m_label;
 };

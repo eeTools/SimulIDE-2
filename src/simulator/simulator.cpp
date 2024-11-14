@@ -249,11 +249,11 @@ void Simulator::createNodes()
     pinNames.sort();
     for( QString pinName : pinNames )
     {
-        Pin* pin = Circuit::self()->m_pinMap.value( pinName );
+        PinBase* pin = Circuit::self()->m_pinMap.value( pinName );
         if( !pin ) continue;
         if( pinList.contains( pinName ) ) continue;
         if( !pin->conPin() ) continue;
-        if( pin->isBus() ) continue;
+        if( pin->wireFlags() & wireBus ) continue;
         if( pinName.startsWith("Node") ) continue;
 
         eNode* node = new eNode( "eNodeSim-"+QString::number(i) );

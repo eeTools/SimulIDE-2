@@ -11,14 +11,19 @@
 #include "compbase.h"
 
 class Node;
-class Pin;
+class PinBase;
+
+enum wireFlags_t{
+    wireFunc = 1<<0,
+    wireBus  = 1<<1
+};
 
 class Wire : public CompBase, public QGraphicsItem
 {
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        Wire( QString type, QString id, Pin* startpin, Pin* endpin = NULL );
+        Wire( QString type, QString id, PinBase* startpin, PinBase* endpin=nullptr );
         ~Wire();
 
         enum { Type = UserType + 2 };
@@ -31,14 +36,17 @@ class Wire : public CompBase, public QGraphicsItem
         QString startPinId();
         QString endPinId();
 
-        Pin* startPin() { return m_startPin;}
-        void setStartPin( Pin* pin ) { m_startPin = pin; }
+        PinBase* startPin() { return m_startPin;}
+        void setStartPin( PinBase* pin ) { m_startPin = pin; }
 
-        Pin* endPin() { return m_endPin; }
-        void setEndPin( Pin* pin) { m_endPin = pin; }
+        PinBase* endPin() { return m_endPin; }
+        void setEndPin( PinBase* pin) { m_endPin = pin; }
+
+        void writeWireFlag( int flag, bool val );
+        void setWireFlags( int flags ) { m_wireFlags = flags; }
+        int  wireFlags() { return m_wireFlags; }
 
         QString pListStr() { refreshPointList(); return m_pointList.join(","); }
-        //QStringList pointList() { refreshPointList(); return m_pointList; }
         QList<QPoint> pointVector() { return m_pList; }
 
         void setPointListStr( QString pl );
@@ -49,11 +57,8 @@ class Wire : public CompBase, public QGraphicsItem
 
         bool connectToWire( QPoint cutPoint );
         void updateConRoute( QPointF thisPoint );
-        void updateConRoute( Pin* nod );
-        void closeCon( Pin* endpin );
-
-        void setIsBus( bool bus ) { m_isBus = bus; }
-        bool isBus() { return m_isBus; }
+        void updateConRoute( PinBase* nod );
+        void closeCon( PinBase* endpin );
 
         double getVoltage();
         
@@ -80,12 +85,12 @@ class Wire : public CompBase, public QGraphicsItem
 
         int m_actLine;
         int m_lastIndex;
-        
-        bool m_isBus;
+        int m_wireFlags;
+
         bool m_moving;
 
-        Pin* m_startPin;
-        Pin* m_endPin;
+        PinBase* m_startPin;
+        PinBase* m_endPin;
 
         QStringList m_pointList;
         QList<QPoint> m_pList;

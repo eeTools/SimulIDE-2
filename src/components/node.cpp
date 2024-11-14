@@ -41,7 +41,7 @@ void Node::pinMessage( int rem ) // Called by pin
     if     ( rem == 1 ) checkRemove();
     else if( rem == 2 ) // Propagate Is Bus
     {
-        for( int i=0; i<3; i++) m_pin[i]->setIsBus( true );
+        for( int i=0; i<3; i++) m_pin[i]->writeWireFlag( wireBus, true );
         m_isBus = true;
 }   }
 
@@ -64,14 +64,15 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
         Wire* wire = m_pin[i]->wire();
         if( wire )
         {
-            Pin* coPin = m_pin[i]->conPin();
+            /// FIXME
+            /*PinBase* coPin = m_pin[i]->conPin();
             if( coPin->component() == this ) // Wire betwen 2 Pins of this node
             {
                 wire->setStartPin( nullptr );
                 wire->setEndPin( nullptr );
                 Circuit::self()->removeWire( wire );
                 continue;
-            }
+            }*/
             if( conecteds == 0 ) { conecteds++; con[0] = i; }
             else con[1] = i;
             conectors++;
@@ -90,14 +91,14 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
 void Node::joinConns( int c0, int c1 )
 {
     m_blocked = true;
-    Pin* pin0 = m_pin[c0];
-    Pin* pin1 = m_pin[c1];
+    PinBase* pin0 = m_pin[c0];
+    PinBase* pin1 = m_pin[c1];
 
     Wire* wire0 = pin0->wire();
     Wire* wire1 = pin1->wire();
     if( !wire0 || !wire1 ) return;
 
-    Pin* endPin = wire1->endPin();
+    PinBase* endPin = wire1->endPin();
 
     if( pin0 == wire0->startPin() ) wire0->updateConRoute( pin0 );             // Forze Node pin to be endPin
     if( pin1 == endPin            ) wire1->updateConRoute( wire1->startPin() ); // Forze Node pin to be startPin
@@ -120,7 +121,7 @@ void Node::setHidden( bool hid, bool , bool )
 {
     m_hidden = hid;
 
-    for( Pin* pin : m_pin ) pin->setVisible( !hid );
+    for( PinBase* pin : m_pin ) pin->setVisible( !hid );
     this->setVisible( !hid );
 }
 

@@ -74,8 +74,8 @@ class Circuit : public QGraphicsScene
 
         void accepKeys( bool a ) { m_acceptKeys = a; }
 
-        Pin* findPin( int x, int y, QString id );
-        Pin* findPin( QString id );
+        PinBase* findPin( int x, int y, QString id );
+        PinBase* findPin( QString id );
 
         void loadCircuit( QString filePath );
         bool saveCircuit( QString filePath );
@@ -85,19 +85,18 @@ class Circuit : public QGraphicsScene
         QString newSceneId() { return QString::number(++m_seqNumber); }
         QString newWireId() { return QString::number(++m_conNumber); }
 
-        void newWire( Pin* startpin, bool save=true );
-        void closeWire( Pin* endpin, bool save=false );
+        void newWire( PinBase* startpin, bool save=true );
+        void closeWire( PinBase* endpin, bool save=false );
         void deleteNewWire();
-        //void updateWires();
         Wire* getNewWire() { return m_newWire; }
 
         void addNode( Node* node );
         void addComponent( Component* comp );
 
         QList<Component*>* compList() { return &m_compList; }
-        QList<Wire*>* conList()  { return &m_connList; }
+        QList<Wire*>*      conList()  { return &m_connList; }
         QList<Node*>*      nodeList() { return &m_nodeList; }
-        QHash<QString, CompBase*>* compMap() { return &m_compMap;}
+        QMap<QString, CompBase*>* compMap() { return &m_compMap;}
 
         Component* getCompById( QString id );
         QString origId( QString name ) { return m_idMap.value( name ); } // used by Shield
@@ -111,7 +110,7 @@ class Circuit : public QGraphicsScene
         bool isBusy()  { return m_busy || m_pasting | m_deleting; }
         bool isSubc()  { return m_createSubc; }
 
-        void addPin( Pin* pin, QString pinId ) { m_pinMap[ pinId ] = pin; m_LdPinMap[ pinId ] = pin; }
+        void addPin( PinBase* pin, QString pinId ) { m_pinMap[ pinId ] = pin; m_LdPinMap[ pinId ] = pin; }
         void remPin( QString pinId ) { m_pinMap.remove( pinId ); }
         void updatePin( ePin* epin, QString oldId, QString newId );
 
@@ -132,9 +131,6 @@ class Circuit : public QGraphicsScene
 
         QString iconData() { return m_iconData; }
         void setIconData( QString id ) { m_iconData = id; }
-
-        //void setConverting( bool c ) { m_converting = c; } // used when converting old Components from xml
-        //bool converting() { return m_converting; }
 
         int circuitRev() { return m_circRev; }
 
@@ -218,10 +214,10 @@ class Circuit : public QGraphicsScene
 
         SubPackage* m_board;
 
-        QHash<QString, Pin*>      m_pinMap;   // Pin Id to Pin*
-        QHash<QString, Pin*>      m_LdPinMap; // Pin Id to Pin* while loading/pasting/importing
-        QHash<QString, QString>   m_idMap;    // Component seqNumber to new seqNumber (pasting)
-        QHash<QString, CompBase*> m_compMap;  // Component Id to Component*
+        QMap<QString, PinBase*>  m_pinMap;   // Pin Id to PinBase*
+        QMap<QString, PinBase*>  m_LdPinMap; // Pin Id to PinBase* while loading/pasting/importing
+        QMap<QString, QString>   m_idMap;    // Component seqNumber to new seqNumber (pasting)
+        QMap<QString, CompBase*> m_compMap;  // Component Id to Component*
 
         QTimer m_bckpTimer;
 
@@ -254,7 +250,7 @@ class Circuit : public QGraphicsScene
         QList<circChange> m_undoStack;
 
         QList<CompBase*>  m_removedComps; // removed component list;
-        QList<Wire*> m_oldConns;
+        QList<Wire*>      m_oldConns;
         QList<Component*> m_oldComps;
         QList<Node*>      m_oldNodes;
         QMap<CompBase*, QString> m_compStrMap;

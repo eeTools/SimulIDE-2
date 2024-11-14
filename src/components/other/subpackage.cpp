@@ -360,7 +360,7 @@ void SubPackage::addNewPin( QString id, QString type, QString label, int pos, in
     pin->setLength( length );
     pin->setSpace( space );
     pin->setLabelText( label );
-    pin->setIsBus( type == "bus" );
+    pin->writeWireFlag( wireBus, type == "bus" );
     pin->setInverted( type == "inverted" || type == "inv" );
     pin->setUnused( type == "unused" || type == "nc" );
     if( type == "nul" ) pin->setPinType( Pin::pinNull );
@@ -466,7 +466,7 @@ void SubPackage::setPointPin( bool point )
 
 void SubPackage::setBusPin( bool bus )
 {
-    m_eventPin->setIsBus( bus );
+    m_eventPin->writeWireFlag( wireBus, bus );
 
     Circuit::self()->update();
     m_changed = true;
@@ -679,7 +679,7 @@ QString SubPackage::pinEntry( Pin* pin )
     QString space  = "space=\"" +QString::number( pin->space() )+"\"";
     QString type;
     if     ( pin->unused()   ) type = "nc";
-    else if( pin->isBus()    ) type = "bus";
+    else if( pin->wireFlags() & wireBus ) type = "bus";
     else if( pin->inverted() ) type = "inv";
     else if( pin->pinType() == Pin::pinNull ) type = "nul";
     else if( pin->pinType() == Pin::pinRst  ) type = "rst";
@@ -775,7 +775,7 @@ EditDialog::EditDialog( SubPackage* pack, Pin* eventPin, QWidget* parent )
     m_pointCheckBox->setChecked( (eventPin->length() < 7) );
 
     m_busCheckBox = new QCheckBox(tr("Bus Pin"));
-    m_busCheckBox->setChecked( eventPin->isBus() );
+    m_busCheckBox->setChecked( eventPin->wireFlags() & wireBus );
 
     QDialogButtonBox* bb = new QDialogButtonBox( QDialogButtonBox::Ok );
     QPushButton* okBtn = bb->button(QDialogButtonBox::Ok);

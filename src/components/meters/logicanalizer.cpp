@@ -141,7 +141,7 @@ void LAnalizer::updateStep()
         {
             bool connected = m_pin[i]->wire();
 
-            if( !connected && !m_pin[i]->isBus() )
+            if( !connected && !(m_pin[i]->wireFlags() & wireBus) )
             {
                 QString chTunnel = m_channel[i]->m_chTunnel;
 

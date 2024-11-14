@@ -8,6 +8,7 @@
 #include "plotbase.h"
 #include "simulator.h"
 #include "e-node.h"
+#include "wire.h"
 #include "pin.h"
 
 DataChannel::DataChannel( PlotBase* plotBase, QString id )
@@ -43,7 +44,7 @@ void DataChannel::stamp()    // Called at Simulation Start
 
 bool DataChannel::isBus()
 {
-    if( m_pin ) return m_pin->isBus();
+    if( m_pin ) return m_pin->wireFlags() & wireBus;
     return false;
 }
 

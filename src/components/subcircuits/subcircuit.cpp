@@ -221,8 +221,8 @@ void SubCircuit::loadSubCircuit( QString doc )
                 //startPinId = startPinId.replace("Pin-", "Pin_"); // Old TODELETE
                 //endPinId   =   endPinId.replace("Pin-", "Pin_"); // Old TODELETE
 
-                Pin* startPin = circ->m_LdPinMap.value( startPinId );
-                Pin* endPin   = circ->m_LdPinMap.value( endPinId );
+                PinBase* startPin = circ->m_LdPinMap.value( startPinId );
+                PinBase* endPin   = circ->m_LdPinMap.value( endPinId );
 
                 if( !startPin ) startPin = findPin( startPinId );
                 if( !endPin   ) endPin   = findPin( endPinId );

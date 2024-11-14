@@ -26,8 +26,6 @@ Pin::Pin( int angle, QPoint pos, QString id, int index, Component* parent, int l
     m_pinState  = undef_state;
     m_pinType   = pinNormal;
 
-    m_isBus   = false;
-    
     m_conPin = nullptr;
     m_dataChannel = nullptr;
     
@@ -42,6 +40,8 @@ Pin::Pin( int angle, QPoint pos, QString id, int index, Component* parent, int l
 
     Circuit::self()->addPin( this, id );
     Pin::animate( Circuit::self()->animate() );
+
+    setFlag( QGraphicsItem::ItemStacksBehindParent, true );
 
     m_component->addSignalPin( this );
 }
@@ -75,7 +75,7 @@ void Pin::registerPinsW( eNode* enode, int n )     // Called by component, calls
     if( m_blocked ) return;
     m_blocked = true;
 
-    if( !m_isBus ) ePin::setEnode( enode );
+    if( !(m_wireFlags & wireBus) ) ePin::setEnode( enode );
     if( m_conPin ) m_conPin->registerEnode( enode, n ); // Call pin at other side of Connector
 
     m_blocked = false;
@@ -86,7 +86,7 @@ void Pin::registerEnode( eNode* enode, int n )     // Called by m_conPin
     if( m_blocked ) return;
     m_blocked = true;
 
-    if( !m_isBus )
+    if( !(m_wireFlags & wireBus) )
     {
         ePin::setEnode( enode );
         n = m_index;
@@ -111,7 +111,7 @@ Pin* Pin::connectPin( bool connect )      // Auto-Connect
             if( pin->parentItem() == this->parentItem() ) continue;
             if( fabs(scenePos().x()-pin->scenePos().x()) > 3 ) continue;
             if( fabs(scenePos().y()-pin->scenePos().y()) > 3 ) continue;
-            if( m_isBus != pin->isBus() ) continue; // Only connect Bus to Bus
+            if( m_wireFlags != pin->wireFlags() ) continue; // Only connect Bus to Bus
             if( pin->wire() ) continue;
             if( pin->unused() ) continue;
             if( !connect && pin->pinType() < pinSocket
@@ -126,7 +126,7 @@ Pin* Pin::connectPin( bool connect )      // Auto-Connect
         else if( connect && (it->type() == UserType+2) ) // WireLine
         {
             Wire* wire =  qgraphicsitem_cast<Wire*>( it );
-            if( m_isBus != wire->isBus() ) continue;
+            if( m_wireFlags != wire->wireFlags() ) continue;
             Circuit::self()->newWire( this );
             wire->connectToWire( QPoint( scenePos().x(), scenePos().y()) );
             break;
@@ -157,8 +157,8 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
         else{
             if( Circuit::self()->is_constarted() )
             {
-                Wire* con = Circuit::self()->getNewWire();
-                if( con->isBus() != m_isBus ) // Avoid connect Bus with no-Bus
+                Wire* wire = Circuit::self()->getNewWire();
+                if( m_wireFlags != wire->wireFlags()  ) // Avoid connect Bus with no-Bus
                 { event->ignore(); return; }
             }
             event->accept();
@@ -166,23 +166,9 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
             else                                   Circuit::self()->newWire( this, true );
 }   }   }
 
-void Pin::setIsBus( bool bus )
-{
-    if( m_isBus == bus ) return;
-    /// if( !bus ) return;          // Why?
-    m_isBus = bus;
-    
-    if( my_wire  ) my_wire->setIsBus( true );
-    if( m_conPin ) m_conPin->setIsBus( true );
-    
-    m_component->pinMessage( 2 ); // Propagate Is Bus (Node)
-
-    update();
-}
-
 void Pin::animate( bool an )
 {
-    if( m_isBus ) return;
+    if( m_wireFlags & wireBus ) return;
     PinBase::animate( an );
 }
 
@@ -223,7 +209,7 @@ void Pin::paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
     QPen pen( m_color[0], 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
 
     if     ( m_unused  ) pen.setColor( QColor( 75, 120, 170 ));
-    else if( m_isBus   ) pen.setColor( Qt::darkGreen );
+    else if( m_wireFlags & wireBus ) pen.setColor( Qt::darkGreen );
     else if( m_animate ) pen.setColor( m_color[m_pinState] );
 
     painter->setPen(pen);

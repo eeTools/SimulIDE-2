@@ -137,12 +137,12 @@ void Tunnel::setGroupName( QString name, bool single )
 
 bool Tunnel::isBus()
 {
-    return m_pin[0]->isBus();
+    return m_pin[0]->wireFlags() & wireBus;
 }
 
 void Tunnel::setIsbus( bool b )
 {
-    m_pin[0]->setIsBus( b );
+    m_pin[0]->writeWireFlag( wireBus, b );
 }
 
 void Tunnel::setRotated( bool rot )
@@ -260,7 +260,7 @@ void Tunnel::paint( QPainter* p, const QStyleOptionGraphicsItem *o, QWidget *w )
 
     if( m_tunnels.contains( m_name ) )
     {
-        if( m_pin[0]->isBus() ) m_color = QColor( 100, 220, 100 );
+        if( m_pin[0]->wireFlags() & wireBus ) m_color = QColor( 100, 220, 100 );
         else                    m_color = QColor( 255, 255, 250 );
     } else                      m_color = QColor( 210, 210, 230 );
 

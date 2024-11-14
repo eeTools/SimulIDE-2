@@ -27,6 +27,7 @@ PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int 
     m_Hflip = 1;
     m_Vflip = 1;
     m_overScore = -1;
+    m_wireFlags = 0;
 
     QFont font;
     font.setFamily("Ubuntu Mono");
@@ -46,11 +47,14 @@ PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int 
     setRotation( 180-angle );
     PinBase::setLength( length );
     setCursor( Qt::CrossCursor );
-    setFlag( QGraphicsItem::ItemStacksBehindParent, true );
     setFlag( QGraphicsItem::ItemIsSelectable, false );
 }
-PinBase::~PinBase()
+PinBase::~PinBase(){}
+
+void PinBase::writeWireFlag( int flag, bool val )
 {
+    if( val ) m_wireFlags |= flag;
+    else      m_wireFlags &= !(~flag);
 }
 
 void PinBase::wireRemoved()
