@@ -65,7 +65,16 @@ QPainterPath AndGate::shape() const
 void AndGate::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     Component::paint( p, o, w );
-    p->drawChord( -27, m_area.y(), 36, m_area.height(), -1440/*-16*90*/, 2880/*16*180*/ );
+
+    int endY = m_area.height()/2;
+    int endX = m_area.width()/2;
+
+    QPainterPath path;
+    path.moveTo( -9, -endY );
+    path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0 ) );
+    path.quadTo( QPoint( endX, endY ), QPoint( -9, endY ) );
+    path.lineTo( -9, -endY );
+    p->drawPath( path );
 
     Component::paintSelected( p );
 }
