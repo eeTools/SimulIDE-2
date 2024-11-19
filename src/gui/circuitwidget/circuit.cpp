@@ -513,7 +513,9 @@ Component* Circuit::createItem( QString type, QString id, bool map )
 {
     Component* comp = ComponentList::self()->createComponent( type, id );
 
-    if( map ) m_compMap[id] = comp;
+    /// if( !comp ) comp = new fComponent( type, id );
+
+    if( comp && map ) m_compMap[id] = comp;
     return comp;
 }
 
