@@ -1,5 +1,5 @@
 
-VERSION = "2.0.0"
+VERSION = "2.0"
 RELEASE = ""
 
 TEMPLATE = app
@@ -110,7 +110,8 @@ CONFIG += warn_on
 CONFIG += no_qml_debug
 CONFIG *= c++11
 
-REV_NO = $$system( git rev-parse --short HEAD )
+REV_NO = $$system($(which date) +\"\\\"%m%d\\\"\")
+#REV_NO = $$system( git rev-parse --short HEAD )
 DEFINES += REVNO=\\\"$$REV_NO\\\"
 DEFINES += APP_VERSION=\\\"$$VERSION$$RELEASE\\\"
 

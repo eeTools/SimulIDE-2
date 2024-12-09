@@ -628,7 +628,7 @@ void ComponentList::writeSettings()
 
     Circuit::self()->saveString( m_listFile, treeStr );
 }
-
+/*
 //BEGIN Item includes
 #include "ampmeter.h"
 #include "adc.h"
@@ -741,11 +741,11 @@ void ComponentList::writeSettings()
 #include "voltsource.h"
 #include "wavegen.h"
 #include "ws2812.h"
-#include "zener.h"
+#include "zener.h"*/
 
 void ComponentList::LoadLibraryItems()
 {
-    addCategory( tr("Meters"),"Meters", "", "" );
+    /*addCategory( tr("Meters"),"Meters", "", "" );
     addItem( Probe::libraryItem() );
     addItem( Voltimeter::libraryItem() );
     addItem( Amperimeter::libraryItem() );
@@ -916,5 +916,5 @@ void ComponentList::LoadLibraryItems()
     addCategory( tr("Other"),"Other", "", "" );
     addItem( SubPackage::libraryItem() );
     addItem( TestUnit::libraryItem() );
-    addItem( Dial::libraryItem() );
+    addItem( Dial::libraryItem() );*/
 }
