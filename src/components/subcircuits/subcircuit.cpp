@@ -17,7 +17,6 @@
 
 #include "logicsubc.h"
 #include "board.h"
-#include "shield.h"
 #include "module.h"
 
 #include "stringprop.h"
@@ -114,7 +113,6 @@ Component* SubCircuit::construct( QString type, QString id )
     SubCircuit* subcircuit = NULL;
     if     ( subcTyp == "Logic"  ) subcircuit = new LogicSubc( type, id );
     else if( subcTyp == "Board"  ) subcircuit = new BoardSubc( type, id );
-    else if( subcTyp == "Shield" ) subcircuit = new ShieldSubc( type, id );
     else if( subcTyp == "Module" ) subcircuit = new ModuleSubc( type, id );
     else                           subcircuit = new SubCircuit( type, id );
 

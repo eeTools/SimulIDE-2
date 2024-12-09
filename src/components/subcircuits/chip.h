@@ -19,7 +19,6 @@ class Chip : public Component, public eElement
             None=0,
             Logic,
             Board,
-            Shield,
             Module
         };
 

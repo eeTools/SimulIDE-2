@@ -5,36 +5,18 @@
 
 #include "board.h"
 #include "circuit.h"
-#include "shield.h"
 
 BoardSubc::BoardSubc( QString type, QString id )
          : SubCircuit( type, id )
 {
     m_graphical = true;
     m_subcType = Chip::Board;
-    m_parentBoard = NULL;
 }
 BoardSubc::~BoardSubc(){}
 
-void BoardSubc::setLogicSymbol( bool ls ) /// FIXME
+void BoardSubc::setBoard( BoardSubc* board )
 {
-    if( m_shields.size() ) return;
-    SubCircuit::setLogicSymbol( ls );
+    m_parentBoard = board;
+    setParentItem( board );
+    Circuit::self()->compList()->removeOne( this );
 }
-
-void BoardSubc::attachShield( ShieldSubc* shield )
-{
-    if( !m_shields.contains( shield ) ) m_shields.append( shield );
-}
-
-QString BoardSubc::toString()
-{
-    QString toStr;
-    for( ShieldSubc* shield : m_shields )
-    {
-        toStr += shield->toString();
-    }
-    toStr += SubCircuit::toString();
-    return toStr;
-}
-

@@ -23,7 +23,6 @@
 #include "mcu.h"
 #include "simulator.h"
 #include "e-node.h"
-#include "shield.h"
 #include "linker.h"
 #include "tunnel.h"
 #include "createcomp.h"
@@ -202,7 +201,6 @@ void Circuit::loadStrDoc( QString &doc )
     QList<Node*>      nodeList;   // Pasting node list
 
     Component* lastComp = nullptr;
-    QList<ShieldSubc*> shieldList;
 
     m_circRev = 0;
     m_busy  = true;
@@ -332,8 +330,6 @@ void Circuit::loadStrDoc( QString &doc )
                 if( type == "Subcircuit")
                 {
                     lastComp  = comp;
-                    ShieldSubc* shield = static_cast<ShieldSubc*>(comp);
-                    if( shield->subcType() >= Chip::Shield ) shieldList.append( shield );
                 }
                 /// Why?? // comp->setPropStr("label", label ); //setIdLabel( label );
 
@@ -395,7 +391,6 @@ void Circuit::loadStrDoc( QString &doc )
     if( !m_undo && !m_redo ) // Take care about unconnected Joints
         for( Node* joint : nodeList ) joint->checkRemove(); // Only removed if some missing connector
 
-    for( ShieldSubc* shield : shieldList ) shield->connectBoard();
     for( Linker*     linker : linkList   ) linker->createLinks( &compList );
 
     setAnimate( m_animate ); // Force Pin update

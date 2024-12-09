@@ -330,7 +330,6 @@ QString ComponentList::getIcon( QString folder, QString name )
     return icon;
 }
 
-
 Component* ComponentList::createComponent( QString type, QString id )
 {
     listItem_t item = m_componentFactory.value( type );
