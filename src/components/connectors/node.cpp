@@ -26,7 +26,7 @@ Node::Node( QString type, QString id )
     m_pin.resize( 3 );
     for( int i=0; i<3; i++ )
     {
-        m_pin[i] = new Pin( 90*i, QPoint(0,0), id+"-"+uchar(48+i), i, this );
+        m_pin[i] = new Pin( 90*i, QPoint(0,0), id+"-"+uchar(48+i), this );
         m_pin[i]->setLength( 0 );
     }
     remPropGroup( "CompGraphic" );
@@ -45,7 +45,7 @@ void Node::pinMessage( int rem ) // Called by pin
         m_isBus = true;
 }   }
 
-void Node::registerEnode( eNode* enode, int n )
+void Node::registerEnode( int enode, int n )
 {
     for( int i=0; i<3; i++ )
         if( m_pin[i]->conPin() ) m_pin[i]->registerPinsW( enode, n );

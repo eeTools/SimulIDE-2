@@ -12,8 +12,8 @@
 #include "simulator.h"
 #include "circuitwidget.h"
 #include "circuit.h"
-#include "mcuconfigword.h"
-#include "e_mcu.h"
+/// #include "mcuconfigword.h"
+/// #include "e_mcu.h"
 #include "utils.h"
 
 Memory::Memory()
@@ -271,11 +271,11 @@ bool Memory::loadHex( QString file )
             //qDebug()<< "Memory::loadHex"<<addrBase/bytes<< addr <<data;
             if( addr >= size ){
                 bool ok = false;
-                if( m_eMcu )
+                /*if( m_eMcu )
                 {
                     ConfigWord* cfgWord = (ConfigWord*)m_eMcu->getModule("cfgword");
                     if( cfgWord ) ok = cfgWord->setCfgWord( addr, data );
-                }
+                }*/
                 if( !ok )
                 {
                     qDebug() << "    Warning: PGM End reached at Line"<<QString::number( nLine )

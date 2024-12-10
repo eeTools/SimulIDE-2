@@ -22,7 +22,7 @@
 #include "chip.h"
 #include "utils.h"
 #include "subcircuit.h"
-#include "mcu.h"
+/// #include "mcu.h"
 
 ComponentList* ComponentList::m_pSelf = NULL;
 
@@ -367,15 +367,16 @@ void ComponentList::addItem( QString caption, TreeItem* catItem, QIcon &icon, QS
 
     QString name = ( type == "Subcircuit" || type == "MCU" ) ? nameTr : type;
 
-    if( type == "MCU" )
+    /*if( type == "MCU" )
     {
         listItem_t libItem = Mcu::libraryItem();
 
         type = name;
         libItem.type = name;
         m_componentFactory[name] = libItem;
-    }
-    else if( type == "Subcircuit" )
+    }*/
+    //else
+    if( type == "Subcircuit" )
     {
         listItem_t libItem = SubCircuit::libraryItem();
 

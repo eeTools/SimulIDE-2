@@ -11,7 +11,6 @@
 #include "circuitwidget.h"
 #include "simulator.h"
 #include "circuit.h"
-#include "e-node.h"
 #include "pin.h"
 #include "utils.h"
 
@@ -41,7 +40,7 @@ Tunnel::Tunnel( QString type, QString id )
     m_name = "";
 
     m_pin.resize( 1 );
-    m_pin[0] = new Pin( 0, QPoint(0,0), id+"-pin", 0, this);
+    m_pin[0] = new Pin( 0, QPoint(0,0), id+"-pin", this);
     m_pin[0]->setLabelColor( Qt::black );
     m_pin[0]->setLength( 5 );
     m_pin[0]->setSpace( 4 );
@@ -64,13 +63,13 @@ Tunnel::Tunnel( QString type, QString id )
 }
 Tunnel::~Tunnel() {}
 
-eNode* Tunnel::getEnode( QString n ) // Static
+int Tunnel::getEnode( QString n ) // Static
 {
     QList<Tunnel*>* list = m_tunnels.value( n );
-    if( !list ) return NULL;
+    if( !list ) return -1;
     Tunnel* tunnel= list->first();
-    if( tunnel ) return tunnel->getPin()->getEnode();
-    return NULL;
+    if( tunnel ) return tunnel->getPin()->getNode();
+    return -1;
 }
 
 void Tunnel::clearTunnels() // Static
@@ -78,7 +77,7 @@ void Tunnel::clearTunnels() // Static
     m_tunnels.clear();
 }
 
-void Tunnel::setEnode( eNode* node, int n )
+void Tunnel::setEnode( int node, int n )
 {
     if( m_blocked ) return;
     m_blocked = true;
@@ -87,7 +86,7 @@ void Tunnel::setEnode( eNode* node, int n )
     m_blocked = false;
 }
 
-void Tunnel::registerEnode( eNode* enode, int n ) // called by m_pin[0]
+void Tunnel::registerEnode( int enode, int n ) // called by m_pin[0]
 {
     if( m_blocked ) return;
 

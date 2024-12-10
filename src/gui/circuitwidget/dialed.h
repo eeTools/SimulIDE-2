@@ -7,7 +7,6 @@
 #define DIALED_H
 
 #include "component.h"
-#include "e-element.h"
 #include "dialwidget.h"
 
 class Dialed : public Component

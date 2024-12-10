@@ -26,16 +26,15 @@ listItem_t FreqMeter::libraryItem(){
 
 FreqMeter::FreqMeter( QString type, QString id )
          : Component( type, id )
-         , eElement( id )
+         , Element( id )
          , m_display( this )
 {
     m_area = QRectF( -32, -10, 85, 20 );
     m_color = Qt::black;
     m_graphical = true;
 
-    m_ePin.resize( 1 );
     m_pin.resize( 1 );
-    m_ePin[0] = m_pin[0] = new Pin( 180, QPoint(-40, 0), id+"-lPin", 0, this);
+    m_pin[0] = new Pin( 180, QPoint(-40, 0), id+"-lPin", this);
     
     m_idLabel->setPos(-12,-24);
     setLabelPos(-32,-24, 0);
@@ -51,7 +50,7 @@ FreqMeter::FreqMeter( QString type, QString id )
 
     Simulator::self()->addToUpdateList( this );
 
-    FreqMeter::initialize();
+    //FreqMeter::initialize();
 
     addPropGroup( { tr("Main"), {
 new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
@@ -60,7 +59,7 @@ new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
 }
 FreqMeter::~FreqMeter(){}
 
-void FreqMeter::initialize()
+/*void FreqMeter::initialize()
 {
     m_rising  = false;
     m_falling = false;
@@ -78,7 +77,7 @@ void FreqMeter::initialize()
 void FreqMeter::stamp()          // Called at Simulation Start
 {
     m_ePin[0]->changeCallBack( this );
-}
+}*/
 
 void FreqMeter::updateStep()
 {
@@ -127,7 +126,7 @@ void FreqMeter::updateStep()
 void FreqMeter::voltChanged()
 {
     uint64_t simTime = Simulator::self()->circTime();
-    double data = m_ePin[0]->getVoltage();
+    double data = m_pin[0]->getVoltage();
     double delta = data-m_lastData;
     
     if( delta > m_filter )                         // Rising

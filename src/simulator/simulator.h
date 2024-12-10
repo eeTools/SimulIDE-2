@@ -6,8 +6,7 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "e-node.h"
-#include "e-element.h"
+#include "kcl.h"
 
 enum simState_t{
     SIM_STOPPED=0,
@@ -22,14 +21,12 @@ enum simState_t{
 #include <QElapsedTimer>
 #include <QFuture>
 
-class BaseProcessor;
 class Updatable;
-class eElement;
-class Socket;
-class eNode;
-class CircMatrix;
+class Component;
+class Element;
+class CallBack;
 
-class Simulator : public QObject
+class Simulator : public QObject, public Kcl
 {
         friend class eNode;
 
@@ -40,8 +37,8 @@ class Simulator : public QObject
 
  static Simulator* self() { return m_pSelf; }
 
-         void addEvent( uint64_t time, eElement* el );
-         void cancelEvents( eElement* el );
+         void addEvent( uint64_t time, CallBack* cb );
+         //void cancelEvents( eElement* el );
 
         void startSim( bool paused=false );
         void pauseSim();
@@ -53,7 +50,7 @@ class Simulator : public QObject
         uint64_t fps() { return m_fps; }
         void setFps( uint64_t fps );
         uint64_t psPerFrame() { return m_psPF; }
-        uint64_t simPsPF() { return m_simPsPF; }
+        uint64_t realPsPF() { return m_realPsPF; }
 
         uint64_t psPerSec() { return m_psPerSec; } // Speed picosecond/second
         void setPsPerSec( uint64_t psPs );
@@ -77,7 +74,7 @@ class Simulator : public QObject
         bool isPaused()  { return (m_state == SIM_PAUSED); }
         bool isPauseDebug() { return (m_state == SIM_PAUSED && m_debug == true); }
 
-        uint64_t circTime() { return m_circTime; }
+        uint64_t circTime() { return m_simTime; }
 
         void timerEvent( QTimerEvent* e );
 
@@ -87,24 +84,19 @@ class Simulator : public QObject
 
         inline void notCorverged() { m_converged = false; }
 
-        void addToEnodeList( eNode* nod );
-
-        void addToElementList( eElement* el );
-        void remFromElementList( eElement* el );
+        void addElement( Element* e ) { m_elements.append(e); }
+        void remElement( Element* e ) { m_elements.removeAll(e); }
         
         void addToUpdateList( Updatable* el );
         void remFromUpdateList( Updatable* el );
 
-        void addToSocketList( Socket* el );
-        void remFromSocketList( Socket* el );
+        void addToComponentList( Component* el );
+        void remFromComponentList( Component* el );
+
+        void addToPinList( QString pin ) { if( !m_pinList.contains(pin) ) m_pinList.append(pin); }
 
     private:
  static Simulator* m_pSelf;
-
-        // Accelerate calls from eNode:
-        inline void addToChangedNodes( eNode* nod ) { nod->nextCH = m_changedNode; m_changedNode = nod; }
-        inline void addToChangedList( eElement* el ) { el->nextChanged = m_voltChanged; m_voltChanged = el; }
-        inline void addToNoLinList( eElement* el ) { el->nextChanged = m_nonLinear;  m_nonLinear = el; }
 
         void createNodes();
         void resetSim();
@@ -117,27 +109,24 @@ class Simulator : public QObject
         //inline void stopTimer();
         //inline void initTimer();
 
-        eElement* m_firstEvent;
+        //eElement* m_firstEvent;
+        CallBack* m_firstEvent;
+
+        QList<Element*> m_elements;
+        QStringList m_pinList; // used in createNodes()
 
         QFuture<void> m_CircuitFuture;
-
-        CircMatrix* m_matrix;
 
         QHash<int, QString> m_errors;
         QHash<int, QString> m_warnings;
 
-        QList<eNode*> m_eNodeList;
-
-        eNode*    m_changedNode;
-        eElement* m_voltChanged;
-        eElement* m_nonLinear;
-
-        QList<eElement*> m_elementList;
         QList<Updatable*> m_updateList;
-        QList<Socket*> m_socketList;
+        QList<Component*> m_componentList;
 
         simState_t m_state;
         simState_t m_oldState;
+
+        bool m_running;
 
         bool m_debug;
         bool m_converged;
@@ -149,7 +138,6 @@ class Simulator : public QObject
         int m_timerTick_ms;
         int m_slopeSteps;
 
-        double m_realFPS;
         uint64_t m_fps;
         uint32_t m_NLstep;
         uint32_t m_maxNlstp;
@@ -159,11 +147,10 @@ class Simulator : public QObject
         uint64_t m_stepSize;  ///
         uint64_t m_stepsPS;   ///
         uint64_t m_psPF;
-        uint64_t m_simPsPF;
+        uint64_t m_realPsPF;
         double   m_realSpeed;
 
-        uint64_t m_timerTime;
-        uint64_t m_circTime;
+        uint64_t m_simTime;
         uint64_t m_tStep;
         uint64_t m_lastStep;
         uint64_t m_refTime;

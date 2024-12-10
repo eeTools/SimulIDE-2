@@ -15,7 +15,7 @@
 
 ConnBase::ConnBase( QString type, QString id )
         : Component( type, id )
-        , eElement( id )
+        , Element( id )
 {
     m_graphical = true;
     //this->setZValue(-1 );
@@ -34,7 +34,7 @@ ConnBase::~ConnBase()
     m_connPins.clear();
 }
 
-void ConnBase::registerEnode( eNode* enode, int n )
+void ConnBase::registerEnode( int enode, int n )
 {
     if( n < m_size )
     {
@@ -54,8 +54,8 @@ void ConnBase::createPins( int c )
 
     for( int i=start; i<m_size; i++ )
     {
-        m_pin[i] = new Pin( 180, QPoint(-8,-32+8+i*8 ), m_id+"-pin"+QString::number(i), i, this );
-        m_sockPins[i] = new Pin( 90, QPoint( 0,-32+8+i*8 ), m_id+"-pin"+QString::number(i+m_size), i+m_size, this );
+        m_pin[i] = new Pin( 180, QPoint(-8,-32+8+i*8 ), m_id+"-pin"+QString::number(i), this );
+        m_sockPins[i] = new Pin( 90, QPoint( 0,-32+8+i*8 ), m_id+"-pin"+QString::number(i+m_size), this );
         m_sockPins[i]->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
         m_sockPins[i]->setLength( 1 );
         m_sockPins[i]->setPinType( m_pinType );
@@ -91,7 +91,7 @@ void ConnBase::setSize( int size )
     for( int i=m_size; i<m_size*2; i++ )
     {
         m_pin[i] = m_sockPins[i-m_size];
-        m_pin[i]->setIndex( i );
+        /// m_pin[i]->setIndex( i );
     }
     m_connPins.resize( size );
     m_area = QRectF(-4, -28, 8, m_size*8 );
@@ -116,9 +116,9 @@ void ConnBase::setHidden( bool hid, bool hidArea, bool hidLabel )
     }
 }
 
-void ConnBase::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget )
+void ConnBase::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
-    Component::paint( p, option, widget );
+    Component::paint( p, o, w );
     //p->drawRoundRect( m_area, 4, 4 );
 
     updatePixmap();

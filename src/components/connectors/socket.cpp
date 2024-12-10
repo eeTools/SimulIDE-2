@@ -7,7 +7,6 @@
 #include "circuitwidget.h"
 #include "simulator.h"
 #include "circuit.h"
-#include "e-node.h"
 
 #define tr(str) simulideTr("Socket",str)
 
@@ -29,12 +28,12 @@ Socket::Socket( QString type, QString id )
 
     m_color = QColor( 50, 50, 70 );
 
-    Simulator::self()->addToSocketList( this );
+    /// Simulator::self()->addToSocketList( this );
     Simulator::self()->addToUpdateList( this );
 }
 Socket::~Socket()
 {
-    Simulator::self()->remFromSocketList( this );
+    /// Simulator::self()->remFromSocketList( this );
 }
 
 void Socket::updateStep()

@@ -17,20 +17,18 @@
 
 Meter::Meter( QString type, QString id )
      : Component( type, id )
-     , eResistor( id )
+     , Resistance( id )
      , m_display( this )
 {
-    m_area = QRectF( -24, -24, 50, 32 );
+    m_area = QRectF(-24,-24, 50, 32 );
     m_graphical = true;
     m_switchPins = false;
 
-    m_pin.resize( 3 );
-    m_ePin[0] = m_pin[0] = new Pin( 270, QPoint(-8, 16), id+"-lPin", 0, this);
+    m_pin.resize( 2 );
+    m_pin[0] = new Pin( 270, QPoint(-8, 16), "pPin@"+id, this);
     m_pin[0]->setColor( Qt::red );
 
-    m_ePin[1] = m_pin[1] = new Pin( 270, QPoint(8, 16), id+"-rPin", 1, this);
-
-    m_pin[2] = m_outPin = new IoPin( 0, QPoint(32,-8), id+"-outnod", 0, this, source );
+    m_pin[1] = new Pin( 270, QPoint( 8, 16), "nPin@"+id, this);
     m_outPin->setOutHighV( 0 );
     m_outPin->setOutState( true );
 

@@ -9,8 +9,8 @@
 #include <QColor>
 
 #include "pin.h"
-#include "e-element.h"
-#include "e-node.h"
+#include "element.h"
+#include "pinsource.h"
 
 enum pinMode_t{
     undef_mode=0,
@@ -23,17 +23,16 @@ enum pinMode_t{
 class eNode;
 class asIScriptEngine;
 
-class IoPin : public Pin, public eElement
+class IoPin : public Pin, public Element
 {
         friend class Function;
     public:
         IoPin( int angle, const QPoint pos, QString id, int index, Component* parent, pinMode_t mode=source );
         ~IoPin();
 
-        virtual void initialize() override;
-        virtual void stamp() override;
-        virtual void updateStep() override;
-        virtual void runEvent() override;
+        void stampAdmit() override;
+        void updateStep() override;
+        /// void runEvent() override;
 
         virtual void scheduleState( bool state, uint64_t time );
 
@@ -63,24 +62,24 @@ class IoPin : public Pin, public eElement
         virtual void setOutState( bool high );
         virtual void toggleOutState( uint64_t time=0 ) { scheduleState( !m_outState, time ); }
 
-        virtual double getVoltage() override;
+        double getVoltage() override;
         inline void setVoltage( double volt )
         {
             if( m_outVolt == volt ) return;
             m_outVolt = volt;
-            ePin::stampCurrent( m_outVolt*m_admit );
+            m_pinSource.updtVoltage( m_outVolt );
         }
         inline void setOutStatFast( bool state )
         {
             m_outState = m_nextState = state;
             m_outVolt = state ? m_outHighV : m_outLowV;
-            ePin::stampCurrent( m_outVolt*m_admit );
+            m_pinSource.updtVoltage( m_outVolt );
         }
 
         void setStateZ( bool z );
         virtual void setPullup( bool up );
 
-        virtual void setInverted( bool invert ) override;
+        void setInverted( bool invert ); // override;
 
         virtual void controlPin( bool outCtrl , bool dirCtrl ){;}
 
@@ -102,17 +101,11 @@ class IoPin : public Pin, public eElement
             m_admit         = vddAdmit+gndAdmit;
 
             m_outVolt = m_outHighV*vddAdmit/m_admit;
-            ePin::stampAdmitance( m_admit );
-            stampVolt( m_outVolt );
-            /// Optimized to:
-            /*double current = m_outHighV*vddAdmit;
-            if( m_enode ){
-                m_enode->stampAdmitance( this, m_admit  );
-                m_enode->stampCurrent( this, current );
-            }else m_outVolt = current/m_admit;          // Used by getVoltage()*/
+            m_pinSource.updtAdmitance( m_admit );
+            m_pinSource.updtVoltage( m_outVolt );
         }
         inline void stampAll();
-        inline void stampVolt( double v) { ePin::stampCurrent( v*m_admit ); }
+        inline void stampVolt( double v) { m_pinSource.updtVoltage( v ); }
 
         double m_inpHighV;  // currently in eClockedDevice
         double m_inpLowV;
@@ -139,11 +132,13 @@ class IoPin : public Pin, public eElement
         bool m_userInvert;
 
         int m_steps;
+        int m_step;
+
         uint64_t m_timeRis;  // Time for Output voltage to switch from 0% to 100%
         uint64_t m_timeFal;  // Time for Output voltage to switch from 100% to 0%
 
         pinMode_t m_pinMode;
 
-        static eNode m_gndEnode;
+        PinSource m_pinSource;
 };
 #endif

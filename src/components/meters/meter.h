@@ -6,12 +6,12 @@
 #ifndef METER_H
 #define METER_H
 
-#include "e-resistor.h"
+#include "resistance.h"
 #include "component.h"
 
 class IoPin;
 
-class Meter : public Component, public eResistor
+class Meter : public Component, public Resistance
 {
     public:
         Meter( QString type, QString id );
@@ -22,8 +22,8 @@ class Meter : public Component, public eResistor
         bool swithchPins() { return m_switchPins; }
         void setSwitchPins( bool s );
 
-        virtual void initialize() override { m_crashed = false;}
-        virtual void updateStep() override;
+        /// void initialize() override { m_crashed = false;}
+        void updateStep() override;
 
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
 

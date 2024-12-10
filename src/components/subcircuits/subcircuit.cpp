@@ -12,7 +12,7 @@
 #include "tunnel.h"
 #include "node.h"
 #include "utils.h"
-#include "mcu.h"
+/// #include "mcu.h"
 #include "linker.h"
 
 #include "logicsubc.h"
@@ -280,13 +280,13 @@ void SubCircuit::loadSubCircuit( QString doc )
                         comp->setVisible( false );     // Not Boards: Don't show any component
                     }
 
-                    if( comp->itemType() == "MCU" )
+                    /*if( comp->itemType() == "MCU" )
                     {
                         comp->remProperty("Logic_Symbol");
                         Mcu* mcu = (Mcu*)comp;
                         QString program = mcu->program();
                         if( !program.isEmpty() ) mcu->load( m_subcDir+"/"+program );
-                    }
+                    }*/
                     if( comp->isMainComp() ) m_mainComponents[uid] = comp; // This component will add it's Context Menu and properties
 
                     m_compList.append( comp );

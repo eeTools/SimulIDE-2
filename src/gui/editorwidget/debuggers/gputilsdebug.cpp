@@ -10,7 +10,6 @@
 //#include <QDebug>
 
 #include "gputilsdebug.h"
-#include "e_mcu.h"
 #include "basedebugger.h"
 #include "outpaneltext.h"
 #include "utils.h"

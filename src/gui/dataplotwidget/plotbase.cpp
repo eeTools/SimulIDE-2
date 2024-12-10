@@ -21,7 +21,7 @@
 
 PlotBase::PlotBase( QString type, QString id )
         : Component( type, id )
-        , ScriptBase( id )
+        //, ScriptBase( id )
 {
     m_graphical = true;
     m_bufferSize = 600000;
@@ -42,19 +42,19 @@ PlotBase::PlotBase( QString type, QString id )
     m_baSizeY = 135;
 
     //int r;
-    m_pauseFunc = NULL;
+    /*m_pauseFunc = NULL;
     m_aEngine->RegisterObjectType("PlotBase",0, asOBJ_REF | asOBJ_NOCOUNT );
     m_aEngine->RegisterGlobalProperty("PlotBase pb", this );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "bool m_pause", asOFFSET(PlotBase,m_pause)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch1", asOFFSET(PlotBase,m_condCh1)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch2", asOFFSET(PlotBase,m_condCh2)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch3", asOFFSET(PlotBase,m_condCh3)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch4", asOFFSET(PlotBase,m_condCh4)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch5", asOFFSET(PlotBase,m_condCh5)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch6", asOFFSET(PlotBase,m_condCh6)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch7", asOFFSET(PlotBase,m_condCh7)); //assert( r >= 0 );
-    /*r = */m_aEngine->RegisterObjectProperty("PlotBase", "int ch8", asOFFSET(PlotBase,m_condCh8)); //assert( r >= 0 );
-
+    m_aEngine->RegisterObjectProperty("PlotBase", "bool m_pause", asOFFSET(PlotBase,m_pause)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch1", asOFFSET(PlotBase,m_condCh1)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch2", asOFFSET(PlotBase,m_condCh2)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch3", asOFFSET(PlotBase,m_condCh3)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch4", asOFFSET(PlotBase,m_condCh4)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch5", asOFFSET(PlotBase,m_condCh5)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch6", asOFFSET(PlotBase,m_condCh6)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch7", asOFFSET(PlotBase,m_condCh7)); //assert( r >= 0 );
+    m_aEngine->RegisterObjectProperty("PlotBase", "int ch8", asOFFSET(PlotBase,m_condCh8)); //assert( r >= 0 );
+*/
     QString n;
     for( int i=1; i<9; ++i ) // Condition simple to script: ch1l to (ch1==1)
     {
@@ -129,7 +129,7 @@ bool PlotBase::setPropStr( QString prop, QString val )
     return true;
 }
 
-void PlotBase::initialize()
+/*void PlotBase::initialize()
 {
     if( m_testTime )
         Simulator::self()->addEvent( m_testTime*1000, this );
@@ -144,7 +144,7 @@ void PlotBase::runEvent() // Test time reached, make comparison
             qDebug() << "PlotBase::runEvent Error: Test failed for Channel" << i;
         }
     }
-}
+}*/
 
 QString PlotBase::testData()
 {
@@ -237,7 +237,7 @@ QString PlotBase::tunnels()
 
 void PlotBase::updateConds( QString conds )
 {
-    m_pauseFunc = NULL;
+    ///m_pauseFunc = NULL;
     m_pause = false;
     m_conditions = conds;
 
@@ -253,17 +253,18 @@ void PlotBase::updateConds( QString conds )
         conds.replace( "ch"+n+"h", m_condTo.value("ch"+n+"h") );
         conds.replace( "ch"+n+"f", m_condTo.value("ch"+n+"f") );
     }
-    m_script = "void pause() { pb.m_pause = "+conds+";}";
+    /*m_script = "void pause() { pb.m_pause = "+conds+";}";
     /// qDebug() << m_script <<endl;
     int r = ScriptBase::compileScript();
     if( r < 0 ) { qDebug() << "PlotBase::updateConds Failed to compile expression:"<<conds; return; }
 
-    m_pauseFunc = m_aEngine->GetModule(0)->GetFunctionByDecl("void pause()");
+    m_pauseFunc = m_aEngine->GetModule(0)->GetFunctionByDecl("void pause()");*/
 }
 
 void PlotBase::conditonMet( int ch, cond_t cond )
 {
-    if( !m_pauseFunc ) return;
+    /// if( !m_pauseFunc )
+        return;
 
     ch++;
     switch ( ch ) {
@@ -279,7 +280,7 @@ void PlotBase::conditonMet( int ch, cond_t cond )
     }
     if( Simulator::self()->simState() <= SIM_PAUSED ) return;
 
-    callFunction( m_pauseFunc ); // Check if condition met:
+    /// callFunction( m_pauseFunc ); // Check if condition met:
 
     if( m_pause )
     {

@@ -4,7 +4,7 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include "voltmeter.h"
-#include "e-pin.h"
+#include "pin.h"
 
 #define tr(str) simulideTr("Voltimeter",str)
 
@@ -28,7 +28,7 @@ Voltimeter::~Voltimeter(){}
 
 void Voltimeter::updateStep()
 {
-    double volt = m_ePin[0]->getVoltage()-m_ePin[1]->getVoltage();
+    double volt = m_pin[0]->getVoltage()-m_pin[1]->getVoltage();
     
     if( volt != m_dispValue )
     {

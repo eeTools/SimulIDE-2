@@ -8,8 +8,8 @@
 #include "basedebugger.h"
 #include "editorwindow.h"
 #include "simulator.h"
-#include "cpubase.h"
-#include "mcu.h"
+///#include "cpubase.h"
+///#include "mcu.h"
 #include "utils.h"
 
 #define tr(str) QCoreApplication::translate("BaseDebugger",str)
@@ -35,13 +35,13 @@ bool BaseDebugger::upload()
         m_outPane->appendLine( "\n"+tr("Error: Hex file doesn't exist:")+"\n"+m_firmware );
         return false;
     }
-    if( !Mcu::self() )
+    /*if( !Mcu::self() )
     {
         m_outPane->appendLine( "\n"+tr("Error: No Mcu in Simulator... ") );
         return false;
-    }
+    }*/
     bool ok = true;
-    if( !m_firmware.isEmpty() )
+    /*if( !m_firmware.isEmpty() )
     {
         ok = Mcu::self()->load( m_firmware );
         if( ok ) m_outPane->appendText( "\n"+tr("FirmWare Uploaded to ") );
@@ -55,7 +55,7 @@ bool BaseDebugger::upload()
         m_running = false;
         eMcu::self()->setDebugger( this );
         if( m_fileExt != ".hex" ) ok = postProcess();
-    }
+    }*/
     return ok;
 }
 
@@ -249,7 +249,7 @@ void BaseDebugger::stepDebug()
 {
     if( !m_debugStep ) return;
 
-    int lastPC = eMcu::self()->cpu()->getPC();
+    /*int lastPC = eMcu::self()->cpu()->getPC();
     eMcu::self()->stepCpu();
     int PC = eMcu::self()->cpu()->getPC();
 
@@ -276,7 +276,8 @@ void BaseDebugger::stepDebug()
             {
                 m_prevLine = line;
                 EditorWindow::self()->lineReached( line );
-}   }   }   }
+    }   }   }   */
+}
 
 QString BaseDebugger::getValueInFile( QString line, QString key ) // Static
 {

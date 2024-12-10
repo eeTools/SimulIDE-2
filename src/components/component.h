@@ -127,7 +127,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         virtual QString background() { return m_background; }
         virtual void setBackground( QString bck );
 
-        virtual void registerEnode( eNode*, int n=-1 ) {;}
+        virtual void registerEnode( int, int n=-1 ) {;}
 
         virtual void pinMessage( int ){;}
 
@@ -230,8 +230,6 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
 
         std::vector<Pin*> m_pin;
         QList<Pin*> m_signalPin;
-
-
 
         //QGraphicsItemGroup* m_group;
 };

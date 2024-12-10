@@ -54,8 +54,8 @@ class PinBase : public QGraphicsItem, public Updatable
         void setConPin( PinBase* pin ) { m_conPin = pin; }
         PinBase* conPin(){ return m_conPin; }
 
-        virtual void registerEnode( eNode*, int n=-1 ){;}
-        virtual void registerPinsW( eNode*, int n=-1 ){;}
+        virtual void registerEnode( int enode, int n=-1 ){;}
+        virtual void registerPinsW( int enode, int n=-1 ){;}
 
         QString getLabelText() { return m_labelText; }
         virtual void setLabelText( QString label, bool over=true );

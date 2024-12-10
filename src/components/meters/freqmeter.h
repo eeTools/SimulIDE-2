@@ -7,9 +7,9 @@
 #define FREQMETER_H
 
 #include "component.h"
-#include "e-element.h"
+#include "element.h"
 
-class FreqMeter : public Component, public eElement
+class FreqMeter : public Component, public Element
 {
     public:
         FreqMeter( QString type, QString id );
@@ -17,10 +17,10 @@ class FreqMeter : public Component, public eElement
 
  static listItem_t libraryItem();
 
-        virtual void initialize() override;
-        virtual void stamp() override;
-        virtual void updateStep() override;
-        virtual void voltChanged() override;
+        ///void initialize() override;
+        ///void stamp() override;
+        void updateStep() override;
+        void voltChanged() override;
 
         double filter() { return m_filter; }
         void setFilter( double f ) { m_filter = f; }

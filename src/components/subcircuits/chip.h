@@ -7,9 +7,9 @@
 #define CHIP_H
 
 #include "component.h"
-#include "e-element.h"
+#include "element.h"
 
-class Chip : public Component, public eElement
+class Chip : public Component, public Element
 {
     public:
         Chip( QString type, QString id );

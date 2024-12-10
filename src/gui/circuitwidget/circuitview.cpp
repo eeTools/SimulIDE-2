@@ -21,7 +21,7 @@
 #include "component.h"
 #include "subcircuit.h"
 #include "utils.h"
-#include "e-diode.h"
+/// #include "e-diode.h"
 #include "linker.h"
 
 #define tr(str) QCoreApplication::translate("CircuitView",str)

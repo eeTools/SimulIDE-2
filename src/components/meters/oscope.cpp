@@ -13,7 +13,6 @@
 #include "oscwidget.h"
 #include "datawidget.h"
 #include "tunnel.h"
-#include "e-node.h"
 #include "iopin.h"
 
 #include "stringprop.h"
@@ -58,8 +57,8 @@ Oscope::Oscope( QString type, QString id )
         m_inPin[i]->setInputAdmit( admit );
         m_channel[i] = new OscopeChannel( this, id+"Chan"+QString::number(i) );
         m_channel[i]->m_channel = i;
-        m_channel[i]->m_ePin[0] = m_pin[i];
-        m_channel[i]->m_ePin[1] = m_pin[4]; // Ref Pin
+        m_channel[i]->m_pin = m_pin[i];
+        /// m_channel[i]->m_pin[1] = m_pin[4]; // Ref Pin
         m_channel[i]->m_buffer.resize( m_bufferSize );
         m_channel[i]->m_time.resize( m_bufferSize );
 
@@ -138,13 +137,13 @@ void Oscope::updateStep()
             {
                 QString chTunnel = m_channel[i]->m_chTunnel;
 
-                eNode* enode = Tunnel::getEnode( chTunnel );
+                /*int enode = Tunnel::getEnode( chTunnel );
                 m_pin[i]->setEnode( enode );
                 if( enode )
                 {
                     enode->voltChangedCallback( m_channel[i] );
                     connected = true;
-                }
+                }*/
                 display()->connectChannel( i, connected );
             }
             m_channel[i]->m_connected = connected;
@@ -159,7 +158,7 @@ void Oscope::updateStep()
         double admit = m_connectGnd ? m_inputAdmit : 0;
         for( IoPin* pin : m_inPin ){
             pin->setInputAdmit( admit );
-            pin->stampAdmitance( admit );
+            /// pin->stampAdmitance( admit );
         }
     }
 }

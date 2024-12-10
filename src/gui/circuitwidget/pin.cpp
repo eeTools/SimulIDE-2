@@ -16,9 +16,9 @@
 #include "component.h"
 #include "simulator.h"
 
-Pin::Pin( int angle, QPoint pos, QString id, int index, Component* parent, int length )
+Pin::Pin( int angle, QPoint pos, QString id, Component* parent, int length )
    : PinBase( angle, pos, id, parent, length )
-   , ePin( id, index )
+   , ePin( id )
 {
     m_area = QRect(-3, -3, 11, 6);
 
@@ -70,26 +70,28 @@ void Pin::wireRemoved()
     /// m_component->remSignalPin( this ); after conn removed it can't auto-connect again
 }
 
-void Pin::registerPinsW( eNode* enode, int n )     // Called by component, calls conPin
+void Pin::registerPinsW( int enode, int n )     // Called by component, calls conPin
 {
     if( m_blocked ) return;
     m_blocked = true;
 
-    if( !(m_wireFlags & wireBus) ) ePin::setEnode( enode );
+    if( !(m_wireFlags & wireBus) ){
+        m_enode = enode;
+        Simulator::self()->addToPinList( m_id );
+    }
     if( m_conPin ) m_conPin->registerEnode( enode, n ); // Call pin at other side of Connector
 
     m_blocked = false;
 }
 
-void Pin::registerEnode( eNode* enode, int n )     // Called by m_conPin
+void Pin::registerEnode( int enode, int n )     // Called by m_conPin
 {
     if( m_blocked ) return;
     m_blocked = true;
 
-    if( !(m_wireFlags & wireBus) )
-    {
-        ePin::setEnode( enode );
-        n = m_index;
+    if( !(m_wireFlags & wireBus) ){
+        m_enode = enode;
+        Simulator::self()->addToPinList( m_id );
     }
     m_component->registerEnode( enode, n );
     if( m_dataChannel ) m_dataChannel->registerEnode( enode, n );

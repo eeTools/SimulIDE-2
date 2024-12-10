@@ -7,10 +7,10 @@
 #define CONNBASE_H
 
 #include "component.h"
-#include "e-element.h"
+#include "element.h"
 #include "pin.h"
 
-class ConnBase : public Component, public eElement
+class ConnBase : public Component, public Element
 {
     public:
         ConnBase( QString type, QString id );
@@ -19,16 +19,16 @@ class ConnBase : public Component, public eElement
         int  size() { return m_size; }
         void setSize( int size );
 
-        virtual void registerEnode( eNode*, int n=-1 ) override;
+        void registerEnode( int, int n=-1 ) override;
 
-        virtual void setHidden( bool hid, bool hidArea=false, bool hidLabel=false ) override;
+        void setHidden( bool hid, bool hidArea=false, bool hidLabel=false ) override;
 
         void createPins( int c );
         void deletePins( int d );
 
         virtual void updatePins(){;}
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     protected:
         virtual void updatePixmap(){;}

@@ -7,11 +7,11 @@
 #define PROBE_H
 
 #include "component.h"
-#include "e-element.h"
+#include "element.h"
 
 class IoPin;
 
-class Probe : public Component, public eElement
+class Probe : public Component, public Element
 {
     public:
         Probe( QString type, QString id );

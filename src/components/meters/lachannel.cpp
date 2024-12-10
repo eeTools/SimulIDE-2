@@ -32,20 +32,21 @@ void LaChannel::initialize()
 
     if( !Simulator::self()->isRunning() ) m_busNodes.clear();
 }
-void LaChannel::stamp()    // Called at Simulation Start
+
+void LaChannel::stampAdmit()    // Called at Simulation Start
 {
-    DataChannel::stamp();
+    DataChannel::stampAdmit();
     m_analizer->conditonMet( m_channel, C_LOW );
     addReading( 0 );
 
-    if( m_pin->wireFlags() & wireBus )
+    /*if( m_pin->isBus() )
     {
-        bool connected = m_pin->wire();
+        bool connected = m_pin->connector();
         m_plotBase->display()->connectChannel( m_channel, connected );
 
         for( eNode* node : m_busNodes )
             node->voltChangedCallback( this );
-    }
+    }*/
 }
 
 /*void LaChannel::updateStep()
@@ -58,7 +59,7 @@ void LaChannel::stamp()    // Called at Simulation Start
     //m_analizer->display()->setLimits( m_channel, dispMax, dispMin );
 }*/
 
-void LaChannel::setPin( Pin* p ) { m_ePin[0] = m_pin = p; }
+void LaChannel::setPin( Pin* p ) { m_pin = p; }
 
 void LaChannel::setIsBus( bool b )
 {
@@ -67,7 +68,7 @@ void LaChannel::setIsBus( bool b )
     m_pin->setDataChannel( b? this : NULL );
 }
 
-void LaChannel::registerEnode( eNode* enode, int n )
+void LaChannel::registerEnode( int enode, int n )
 {
     m_busNodes[n] = enode;
 }
@@ -85,7 +86,7 @@ void LaChannel::voltChanged()
     if( !m_connected ) return;
     uint64_t simTime = Simulator::self()->circTime();
 
-    if( m_pin->wireFlags() & wireBus )
+    /*if( m_pin->isBus() )
     {
         double busValue = 0;
         for( int n : m_busNodes.keys() )
@@ -99,8 +100,9 @@ void LaChannel::voltChanged()
             m_busValue = busValue;
             addReading( busValue );
         }
-    }else{
-        double volt = m_ePin[0]->getVoltage();
+    }else*/
+    {
+        double volt = m_kcl->getVoltage( m_nodes[0] );
 
         if( volt > m_analizer->thresholdR() ) // High
         {

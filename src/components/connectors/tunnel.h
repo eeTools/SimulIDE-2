@@ -8,7 +8,6 @@
 
 #include "component.h"
 
-class eNode;
 class Pin;
 
 class Tunnel : public Component
@@ -32,18 +31,18 @@ class Tunnel : public Component
 
         virtual void remove() override;
 
-        virtual void registerEnode( eNode* enode, int n=-1 ) override;
+        virtual void registerEnode( int enode, int n=-1 ) override;
 
         QString tunnelUid() { return m_tunUid; }
         void setTunnelUid( QString uid ) { m_tunUid = uid; }
 
-        void setEnode( eNode* node, int n=-1 );
+        void setEnode( int node, int n=-1 );
         void setPacked( bool p );
         void removeTunnel();
         bool m_show;
 
         Pin* getPin() { return m_pin[0]; }
- static eNode* getEnode( QString n );
+ static int getEnode( QString n );
 
  static void clearTunnels();
 

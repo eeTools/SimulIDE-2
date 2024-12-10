@@ -8,25 +8,24 @@
 #include <math.h>
 
 #include "simulator.h"
-#include "editorwindow.h"
 #include "circuit.h"
 #include "updatable.h"
 #include "outpaneltext.h"
 #include "mainwindow.h"
 #include "infowidget.h"
 #include "circuitwidget.h"
-#include "circmatrix.h"
-#include "e-element.h"
-#include "socket.h"
+#include "element.h"
+#include "pinbase.h"
+
+#include "callback.h"
 
 Simulator* Simulator::m_pSelf = NULL;
 
 Simulator::Simulator( QObject* parent )
          : QObject( parent )
+         , Kcl()
 {
     m_pSelf = this;
-
-    m_matrix = new CircMatrix();
 
     m_fps = 20;
     m_timerId   = 0;
@@ -47,26 +46,19 @@ Simulator::Simulator( QObject* parent )
     m_warnings[2] = "Probably Circuit Error";  // Warning if matrix diagonal element = 0.
     m_warnings[100] = "AVR crashed !!!";
 
-    resetSim();
-    CircuitWidget::self()->setMsg( " "+tr("Stopped")+" ", 1 );
+    //resetSim();
+    //CircuitWidget::self()->setMsg( " "+tr("Stopped")+" ", 1 );
 
     m_RefTimer.start();
 }
 Simulator::~Simulator()
 {
     m_CircuitFuture.waitForFinished();
-    delete m_matrix;
 }
 
 inline void Simulator::solveMatrix()
 {
-    while( m_changedNode ){
-        m_changedNode->stampMatrix();
-        m_changedNode = m_changedNode->nextCH;
-    }
-    //if( !m_matrix->solveMatrix() ) // m_matrix sets the eNode voltages
-    //    m_warning = 2;             // Warning if diagonal element = 0.
-    m_matrix->solveMatrix(); // m_matrix sets the eNode voltages
+ // m_matrix sets the eNode voltages
 }
 
 void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (50 ms, 20 Hz max)
@@ -74,11 +66,7 @@ void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (5
     e->accept();
 
     if( m_state == SIM_WAITING ) return;
-
     uint64_t currentTime = m_RefTimer.nsecsElapsed();
-    double fps = 1e9/(currentTime-m_timerTime);
-    m_realFPS = (m_realFPS*9+fps)/10;
-    m_timerTime = currentTime;
 
     if( m_error )
     {
@@ -99,12 +87,12 @@ void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (5
     {
         simState_t state = m_state;
         m_state = SIM_WAITING;
+        m_running = false;
         m_CircuitFuture.waitForFinished();
         m_state = state;
     }
 
     for( Updatable* el : m_updateList ) el->updateStep();
-    EditorWindow::self()->outPane()->updateStep(); // OutPanel in Editor can be created before this simulator.
 
     // Calculate Simulation Load
     double timer_ns = m_timerTick_ms*1e6;
@@ -113,22 +101,23 @@ void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (5
     m_simLoad = (m_simLoad+100*simLoop/timer_ns)/2;
 
     // Get Simulation times
-    m_simPsPF = m_circTime-m_tStep;
-    m_tStep   = m_circTime;
+    m_realPsPF = m_simTime-m_tStep;
+    m_tStep    = m_simTime;
 
     if( m_state == SIM_RUNNING ) // Run Circuit in a parallel thread
         m_CircuitFuture = QtConcurrent::run( this, &Simulator::runCircuit );
 
     if( Circuit::self()->animate() ) // Moved here to be in parallel with runCircuit thread
     {
-        if( (m_timerTime-m_updtTime) >= 2e8 ){ // Animate at 5 FPS
+        if( (currentTime-m_updtTime) >= 2e8 ){ // Animate at 5 FPS
             //Circuit::self()->updateConnectors();
-            for( eNode* node : m_eNodeList) node->updateConnectors();
-            m_updtTime = m_timerTime;
+            //for( eNode* node : m_eNodeList) node->updateConnectors();
+            m_updtTime = currentTime;
         }
     }
+
     // Calculate Real Simulation Speed
-    m_refTime  = m_RefTimer.nsecsElapsed();
+    m_refTime = m_RefTimer.nsecsElapsed();
     uint64_t deltaRefTime = m_refTime-m_lastRefT;
     if( deltaRefTime >= 1e9 )               // We want steps per 1 Sec = 1e9 ns
     {
@@ -136,78 +125,53 @@ void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (5
         m_guiTime = 0;
 
         m_realSpeed = (m_tStep-m_lastStep)*10.0/deltaRefTime;
-        InfoWidget::self()->setRate( m_realSpeed, m_simLoad, guiLoad, m_realFPS+0.5 );
+        InfoWidget::self()->setRate( m_realSpeed, m_simLoad, guiLoad );
         m_lastStep = m_tStep;
         m_lastRefT = m_refTime;
     }
     InfoWidget::self()->setCircTime( m_tStep );
 
-    m_guiTime += m_RefTimer.nsecsElapsed()-m_timerTime; // Time in this function
+    m_guiTime += m_RefTimer.nsecsElapsed()-currentTime; // Time in this function
 }
 
 void Simulator::runCircuit()
 {
+    m_running = true;
     solveCircuit(); // Solve any pending changes
-    if( m_state < SIM_RUNNING ) return;
+    if( !m_running ) return;
 
-    eElement* event = m_firstEvent;
-    uint64_t endRun = m_circTime + m_psPF; // Run upto next Timer event
+    CallBack* event = m_firstEvent;
+    uint64_t endRun = m_simTime + m_psPF;     // Run until time reached
     uint64_t nextTime;
 
-    while( event )                              // Simulator event loop
+    while( event )                          // Simulator event loop
     {
-        if( event->eventTime > endRun ) break;  // All events for this Timer Tick are done
+        if( event->time > endRun ) break;   // All events for this Timer Tick are done
 
-        nextTime = m_circTime;
-        while( m_circTime == nextTime )         // Run all event with same timeStamp
+        nextTime = m_simTime;
+        while( m_simTime == nextTime )      // Run all event with same timeStamp
         {
-            m_circTime = event->eventTime;
-            m_firstEvent = event->nextEvent;    // free Event
-            event->nextEvent = NULL;
-            event->eventTime = 0;
-            event->runEvent();                  // Run event callback
+            m_simTime = event->time;
+            m_firstEvent = event->next;
+            event->next = nullptr;          // free Event
+            /// event->time = 0;            // Not needed
+            event->call();                  // Run event callback
             event = m_firstEvent;
-            if( event ) nextTime = event->eventTime;
+            if( event ) nextTime = event->time;
             else break;
         }
         solveCircuit();
-        if( m_state < SIM_RUNNING ) break;
-        event = m_firstEvent;               // m_firstEvent can be an event added at solveCircuit()
+        if( !m_running ) break;
+        event = m_firstEvent;                // m_firstEvent can be an event added at solveCircuit()
     }
-    if( m_state > SIM_WAITING ) m_circTime = endRun;
+    if( m_running ) m_simTime = endRun;
+    m_running = false;
     m_loopTime = m_RefTimer.nsecsElapsed();
 }
 
 void Simulator::solveCircuit()
 {
-    while( m_changedNode || m_nonLinear || !m_converged ) // Also Proccess changes gererated in voltChanged()
-    {
-        if( m_changedNode ) solveMatrix();
-
-        if( m_converged ) m_converged = m_nonLinear==NULL;
-        while( !m_converged )              // Non Linear Components
-        {
-            m_converged = true;
-            while( m_nonLinear ){
-                m_nonLinear->added = false;
-                m_nonLinear->voltChanged();
-                m_nonLinear = m_nonLinear->nextChanged;
-            }
-            if( m_maxNlstp && (m_NLstep++ >= m_maxNlstp) ) { m_warning = 1; return; } // Max iterations reached
-            if( m_state < SIM_RUNNING ){ m_converged = false; break; }    // Loop broken without converging
-            if( m_changedNode ) solveMatrix();
-        }
-        if( !m_converged ) return; // Don't run linear until nonliear converged (Loop broken)
-
-        m_NLstep = 0;
-        while( m_voltChanged )
-        {
-            m_voltChanged->added = false;
-            m_voltChanged->voltChanged();
-            m_voltChanged = m_voltChanged->nextChanged;
-        }
-        if( m_state < SIM_RUNNING ) break;    // Loop broken without converging
-    }
+    Kcl::solveSystem();
 }
 
 void Simulator::resetSim()
@@ -220,55 +184,37 @@ void Simulator::resetSim()
     m_lastStep = 0;
     m_tStep    = 0;
     m_lastRefT = 0;
-    m_circTime = 1;
+    m_simTime = 1;
     m_updtTime = 0;
     m_NLstep   = 0;
-    ///m_pauseCirc = false;
-    m_simPsPF = 1;
+    m_realPsPF = 1;
 
     InfoWidget::self()->setCircTime( 0 );
     clearEventList();
-    m_changedNode = NULL;
-    m_voltChanged = NULL;
-    m_nonLinear = NULL;
 }
 
 void Simulator::createNodes()
 {
-    //qDebug() <<"\ncreateNodes...\n";
-    for( eNode* enode : m_eNodeList )
-    {
-        enode->clear();
-        delete enode;
-    }
-    m_eNodeList.clear();
-
-    int i = 0;
-    QStringList pinList;
+    int node = 0;
+    m_pinList.clear();
     QStringList pinNames = Circuit::self()->m_pinMap.keys();
     pinNames.sort();
     for( QString pinName : pinNames )
     {
-        PinBase* pin = Circuit::self()->m_pinMap.value( pinName );
-        if( !pin ) continue;
-        if( pinList.contains( pinName ) ) continue;
-        if( !pin->conPin() ) continue;
-        if( pin->wireFlags() & wireBus ) continue;
         if( pinName.startsWith("Node") ) continue;
+        if( m_pinList.contains( pinName ) ) continue;
 
-        eNode* node = new eNode( "eNodeSim-"+QString::number(i) );
-        i++;
+        PinBase* pin = Circuit::self()->m_pinMap.value( pinName );
+        if( !pin || !pin->conPin()) continue;
+        if( pin->wireFlags() & wireBus ) continue;
+
         //qDebug() <<"--------------createNode "<<i<<node->itemId();
         pin->registerPinsW( node );
         pin->registerEnode( node );
-        for( ePin* nodePin : node->getEpins() )
-        {
-            QString pinId = nodePin->getId();//qDebug() <<pinId<<"\t\t\t"<<nodePin->getEnode()->itemId();
-            if( pinId.startsWith("Node") ) continue;
-            if( !pinList.contains(pinId) ) pinList.append( pinId );
-        }
+        node++;
     }
-    /// qDebug() <<"  Created      "<< i << "\teNodes"<<pinList.size()<<"Pins";
+    Kcl::setSize( node );
+    qDebug() <<"  Created      "<< node << "\teNodes"<<m_pinList.size()<<"Pins";
 }
 
 void Simulator::startSim( bool paused )
@@ -280,43 +226,31 @@ void Simulator::startSim( bool paused )
 
     qDebug() <<"\nStarting Circuit Simulation...\n";
 
-    for( Socket* sock : m_socketList ) sock->updateConnections( true );
-
     createNodes();
+    Kcl::createCells();
 
-    qDebug() <<"  Initializing "<< m_elementList.size() << "\teElements";
-    for( eElement* el : m_elementList )    // Initialize all Elements
-    {                                      // This can create new eNodes
-        //qDebug() << "initializing  "<< el->getId();
-        el->eventTime = 0;
-        el->initialize();
-        el->added = false;
-    }
+    /// for( Component* comp : m_componentList ) comp->initialize();
+    for( Element*   elem : m_elements      ) elem->stampAdmit();
 
-    qDebug() <<"  Initializing "<< m_eNodeList.size()<< "\teNodes";
-    for( int i=0; i<m_eNodeList.size(); i++ )         // Initialize eNodes
-    {
-        eNode* enode = m_eNodeList.at(i);
-        enode->setNodeNumber( i+1 );
-        enode->initialize();
-        //qDebug() << "initializing  "<< enode->itemId();
-    }
-    for( eElement* el : m_elementList ) el->stamp();
+    //Kcl::preCalculate();
+    Kcl::initialize();
+    qDebug() <<"  Created      "<< Kcl::getNumGroups() << "\tCircuits";
+    for( Element* e : m_elements ) e->stampCurrent();
 
-    m_matrix->createMatrix( m_eNodeList );
+    bool ok = Kcl::solveSystem();
+    if( ok ) qDebug() << "\nCircuit Matrix looks good";
+    else     qDebug() << "\nCircuit Matrix ERROR";
 
-    /// qDebug() << "\nCircuit Matrix looks good";
-
-    /*double sps100 = 100*(double)m_psPerSec/1e12; // Speed %
+    double sps100 = 100*(double)m_psPerSec/1e12; // Speed %
 
     qDebug()  << "\nSpeed:" <<         sps100      << "%"
               << "\nSpeed:" << (double)m_psPerSec  << "\tps per Sec"
               << "\nFPS:  " <<         m_fps       << "\tFrames per Sec"
               << "\nFrame:" << (double)m_psPF      << "\tps per Frame"
               << "\nNonLi:" << (double)m_maxNlstp  << "\tMax Iterations"
-              << "\nReact:" << (double)m_reactStep << "\tps Reactive step";*/
+              << "\nReact:" << (double)m_reactStep << "\tps Reactive step";
 
-    qDebug() << "    Simulation Running... \n";
+    qDebug() << "\n    Simulation Running... \n";
 
     if( paused ) // We are debugging
     {
@@ -328,8 +262,6 @@ void Simulator::startSim( bool paused )
     if( m_timerId != 0 ) this->killTimer( m_timerId );               // Stop Timer
     m_refTime  = m_RefTimer.nsecsElapsed();
     m_loopTime = m_refTime;
-    m_timerTime = m_loopTime;
-    m_realFPS = m_fps;
     m_timerId = this->startTimer( m_timerTick_ms, Qt::PreciseTimer ); // Init Timer
 }
 
@@ -343,14 +275,12 @@ void Simulator::stopSim()
     if( !m_CircuitFuture.isFinished() ) m_CircuitFuture.waitForFinished();
 
     qDebug() << "\n    Simulation Stopped ";
-    qDebug() << "\n-------------------------------------------------\n ";
 
-    for( eNode* node  : m_eNodeList  )  node->setVolt( 0 );
-    for( eElement* el : m_elementList ) el->initialize();
-    for( Updatable* el : m_updateList ) el->updateStep();
+    ///for( eNode* node  : m_eNodeList  )  node->setVolt( 0 );
+    ///for( eElement* el : m_elementList ) el->initialize();
+    ///for( Updatable* el : m_updateList ) el->updateStep();
 
     clearEventList();
-    m_changedNode = NULL;
 }
 
 void Simulator::pauseSim() // Only pause simulation, don't update UI
@@ -365,29 +295,6 @@ void Simulator::resumeSim()
     if( m_state != SIM_PAUSED ) return;
     m_state = m_oldState;
 }
-
-/*void Simulator::stopTimer()
-{
-    if( m_timerId == 0 ) return;
-    this->killTimer( m_timerId );
-    m_timerId = 0;
-
-    InfoWidget::self()->setRate( 0, 0 );
-    CircuitWidget::self()->setMsg( " "+tr("Stopped")+" ", 1 );
-    Circuit::self()->update();
-    qDebug() << "\n    Simulation Stopped ";
-    m_state = SIM_STOPPED;
-}*/
-
-/*void Simulator::initTimer()
-{
-    if( m_timerId != 0 ) return;
-    CircuitWidget::self()->setMsg( " "+tr("Running")+" ", 0 );
-    m_refTime  = m_RefTimer.nsecsElapsed();
-    m_loopTime = m_refTime;
-    m_timerId = this->startTimer( m_timerTick_ms, Qt::PreciseTimer );
-    m_state = SIM_RUNNING;
-}*/
 
 void Simulator::setFps( uint64_t fps )
 {
@@ -425,31 +332,28 @@ void Simulator::clearEventList()
 {
     m_firstEvent = NULL;
 }
-void Simulator::addEvent( uint64_t time, eElement* el )
+void Simulator::addEvent( uint64_t time, CallBack* cb )
 {
     if( m_state < SIM_STARTING ) return;
 
-    if( el->eventTime )
-    { qDebug() << "Warning: Simulator::addEvent Repeated event"<<el->getId(); return; }
-
-    time += m_circTime;
-    eElement* last  = NULL;
-    eElement* event = m_firstEvent;
+    time += m_simTime;
+    CallBack* last  = nullptr;
+    CallBack* event = m_firstEvent;
 
     while( event ){
-        if( time <= event->eventTime ) break; // Insert event here
+        if( time <= event->time ) break; // Insert event here
         last  = event;
-        event = event->nextEvent;
+        event = event->next;
     }
-    el->eventTime = time;
+    cb->time = time;
 
-    if( last ) last->nextEvent = el;
-    else       m_firstEvent = el; // List was empty or insert First
+    if( last ) last->next = cb;
+    else       m_firstEvent = cb; // List was empty or insert First
 
-    el->nextEvent = event;
+    cb->next = event;
 }
 
-void Simulator::cancelEvents( eElement* el )
+/*void Simulator::cancelEvents( eElement* el )
 {
     if( el->eventTime == 0 ) return;
     eElement* event = m_firstEvent;
@@ -467,16 +371,7 @@ void Simulator::cancelEvents( eElement* el )
         }
         else last = event;
         event = next;
-}   }
-
-void Simulator::addToEnodeList( eNode* nod )
-{ if( !m_eNodeList.contains(nod) ) m_eNodeList.append( nod ); }
-
-void Simulator::addToElementList( eElement* el )
-{ if( !m_elementList.contains(el) ) m_elementList.append(el); }
-
-void Simulator::remFromElementList( eElement* el )
-{ m_elementList.removeOne(el); }
+}   }*/
 
 void Simulator::addToUpdateList( Updatable* el )
 { if( !m_updateList.contains(el) ) m_updateList.append(el); }
@@ -484,10 +379,10 @@ void Simulator::addToUpdateList( Updatable* el )
 void Simulator::remFromUpdateList( Updatable* el )
 { m_updateList.removeOne(el); }
 
-void Simulator::addToSocketList( Socket* el )
-{ if( !m_socketList.contains(el) ) m_socketList.append(el); }
+void Simulator::addToComponentList( Component* c )
+{ if( !m_componentList.contains(c) ) m_componentList.append(c); }
 
-void Simulator::remFromSocketList( Socket* el )
-{ m_socketList.removeOne(el); }
+void Simulator::remFromComponentList( Component* c )
+{ m_componentList.removeOne(c); }
 
 #include "moc_simulator.cpp"

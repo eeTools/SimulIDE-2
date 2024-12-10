@@ -5,7 +5,6 @@
 
 #include "valuewidget.h"
 #include "mainwindow.h"
-#include "e_mcu.h"
 #include "watchable.h"
 #include "utils.h"
 

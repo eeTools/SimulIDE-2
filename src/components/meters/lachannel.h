@@ -21,22 +21,22 @@ class LaChannel : public DataChannel
         LaChannel( LAnalizer* la, QString id );
         ~LaChannel();
 
-        virtual void initialize() override;
-        virtual void stamp() override;
+        void initialize() override;
+        void stampAdmit() override;
         //virtual void updateStep() override;
-        virtual void voltChanged() override;
+        void voltChanged() override;
 
         void setPin( Pin* p );
 
         virtual void setIsBus( bool b ) override;
-        void registerEnode( eNode* enode, int n=-1 );
+        void registerEnode( int enode, int n=-1 );
 
     private:
         void addReading( double v );
 
         double m_busValue;
 
-        QMap<int, eNode*> m_busNodes;
+        QMap<int, int> m_busNodes;
 
         LAnalizer* m_analizer;
 };

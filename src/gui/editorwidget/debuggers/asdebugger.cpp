@@ -7,8 +7,8 @@
 
 #include "asdebugger.h"
 #include "outpaneltext.h"
-#include "scriptcpu.h"
-#include "mcu.h"
+/// #include "scriptcpu.h"
+/// #include "mcu.h"
 #include "codeeditor.h"
 
 #define tr(str) QCoreApplication::translate("Compiler",str)
@@ -26,12 +26,12 @@ asDebugger::asDebugger( CodeEditor* parent, OutPanelText* outPane )
 }
 asDebugger::~asDebugger()
 {
-    if( m_device ) m_device->setDebugger( nullptr );
+    /// if( m_device ) m_device->setDebugger( nullptr );
 }
 
 bool asDebugger::upload() // Copy hex file to Circuit folder, then upload
 {
-    if( !m_device )
+    /*if( !m_device )
     {
         m_outPane->appendText( "\n"+tr("Error uploading Script to ") );
         m_outPane->appendLine( Mcu::self()->device() );
@@ -43,13 +43,13 @@ bool asDebugger::upload() // Copy hex file to Circuit folder, then upload
     eMcu::self()->setDebugger( this );
     //m_device->startScript();
     m_outPane->appendText( "\n"+tr("Script Uploaded to ") );
-    m_outPane->appendLine( Mcu::self()->device() );
+    m_outPane->appendLine( Mcu::self()->device() );*/
     return true;
 }
 
 int asDebugger::compile( bool )
 {
-    m_firmware = m_buildPath+m_fileName+m_fileExt;
+    /*m_firmware = m_buildPath+m_fileName+m_fileExt;
     m_device = nullptr;
 
     if( !m_firmware.isEmpty() && !QFileInfo::exists( m_firmware ) )
@@ -76,7 +76,8 @@ int asDebugger::compile( bool )
     }
     else m_outPane->appendLine( "\n"+tr("     ERROR!!! Compilation Failed")+"\n" );
 
-    return r;
+    return r;*/
+    return -1;
 }
 
 void asDebugger::scriptError( int line )

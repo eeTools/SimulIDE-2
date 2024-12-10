@@ -17,7 +17,7 @@ QString Chip::s_subcType = "None";
 
 Chip::Chip( QString type, QString id )
     : Component( type, id )
-    , eElement( id )
+    , Element( id )
     , m_label( this )
 {
     m_id = id;
@@ -189,7 +189,6 @@ void Chip::initPackage( QString pkgStr )
     for( Pin* pin : m_ncPins ) m_tempPins.append( pin );
     for( Pin* pin : m_pin    ) m_tempPins.append( pin );
     m_ncPins.clear();
-    m_ePin.clear();
     m_pin.clear();
 
     QString embedName;
@@ -281,7 +280,7 @@ void Chip::addNewPin( QString id, QString type, QString label, int pos, int xpos
                 pin->setPos( xpos, ypos );
                 pin->setPinAngle( angle );
             }
-            else pin = new Pin( angle, QPoint(xpos, ypos), m_id+"-"+id, pos-1, this ); // pos in package starts at 1
+            else pin = new Pin( angle, QPoint(xpos, ypos), m_id+"-"+id, this ); // pos in package starts at 1
 
             pin->setVisible( true );
             pin->setLabelText( label );
@@ -299,7 +298,6 @@ void Chip::addNewPin( QString id, QString type, QString label, int pos, int xpos
 
     if( pin->unused() ) m_ncPins.append( pin );
     else{
-        m_ePin.emplace_back( pin );
         m_pin.emplace_back( pin );
     }
     m_tempPins.removeOne( pin );

@@ -10,7 +10,7 @@
 #include "editorwindow.h"
 #include "circuitwidget.h"
 #include "mainwindow.h"
-#include "mcu.h"
+///#include "mcu.h"
 #include "simulator.h"
 #include "compiler.h"
 #include "utils.h"
@@ -51,7 +51,7 @@ void EditorWindow::updateStep()
     QString debugFile = m_debugLine.file;
     int     debugLine = m_debugLine.lineNumber;
 
-    uint64_t cycle = eMcu::self()->cycle();
+    uint64_t cycle = -1; /// eMcu::self()->cycle();
     double time    = Simulator::self()->circTime()/1e6;
 
     QString lineStr = QString::number( debugLine );
@@ -165,7 +165,7 @@ void EditorWindow::initDebbuger()
         m_debugDoc->startDebug();
 
         stepOverAct->setVisible( true /*m_stepOver*/ );
-        eMcu::self()->setDebugging( true );
+        /// eMcu::self()->setDebugging( true );
         reset();
 
         m_outPane.appendLine("\n"+tr("Debugger Started")+"\n");
@@ -223,14 +223,14 @@ void EditorWindow::stopDebbuger()
     if( m_state > DBG_STOPPED )
     {
         CircuitWidget::self()->powerCircOff();
-        if( eMcu::self() ) eMcu::self()->setDebugging( false );
+        ///if( eMcu::self() ) eMcu::self()->setDebugging( false );
 
         m_state = DBG_STOPPED;
         m_debugDoc->stopDebug();
 
         Simulator::self()->remFromUpdateList( this );
     }
-    m_debugger = NULL;
+    m_debugger = nullptr;
 }
 
 BaseDebugger* EditorWindow::createDebugger( QString name, CodeEditor* ce, QString code )

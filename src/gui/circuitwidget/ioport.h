@@ -10,7 +10,7 @@
 
 #include "iopin.h"
 #include "iopin.h"
-#include "e-element.h"
+#include "element.h"
 
 #include "scriptarray.h"
 
@@ -18,7 +18,7 @@ class IoPin;
 class Component;
 class asIScriptEngine;
 
-class IoPort :public eElement
+class IoPort :public Element
 {
         friend class McuCreator;
 
@@ -27,7 +27,7 @@ class IoPort :public eElement
         ~IoPort();
 
         void reset();
-        virtual void runEvent() override;
+        /// void runEvent() override;
 
         void scheduleState( uint32_t val, uint64_t time );
         void setOutState( uint32_t val );
@@ -38,7 +38,7 @@ class IoPort :public eElement
         void setPinMode( pinMode_t mode );
         void setPinMode( uint mode ) { setPinMode( (pinMode_t) mode ); }
 
-        void changeCallBack( eElement* el, bool ch );
+        //void changeCallBack( eElement* el, bool ch );
 
         IoPin* getPinN( uint8_t i );
         IoPin* getPin( QString pinName );

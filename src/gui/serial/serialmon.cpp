@@ -4,7 +4,7 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include "serialmon.h"
-#include "usartmodule.h"
+/// #include "usartmodule.h"
 #include "simulator.h"
 #include "utils.h"
 
@@ -55,8 +55,8 @@ void SerialMonitor::updateStep()
 
     if( m_outBuffer.isEmpty() ) return;
 
-    for( int i=0; i<m_outBuffer.size(); i++ )
-        m_usart->sendByte( m_outBuffer.at(i) );
+    ///for( int i=0; i<m_outBuffer.size(); i++ )
+    ///    m_usart->sendByte( m_outBuffer.at(i) );
 
     m_outBuffer.clear();
 }
@@ -128,5 +128,5 @@ void SerialMonitor::activateSend()
 void SerialMonitor::closeEvent( QCloseEvent* event )
 {
     event->accept();
-    m_usart->monitorClosed();
+    /// m_usart->monitorClosed();
 }

@@ -7,7 +7,7 @@
 #define ECLOCKEDDEVICE_H
 
 #include "component.h"
-#include "e-element.h"
+#include "element.h"
 
 enum clkState_t{
     Clock_Low = 0,
@@ -26,13 +26,13 @@ enum trigger_t {
 class eElement;
 class IoPin;
 
-class eClockedDevice : public eElement
+class eClockedDevice : public Element
 {
     public:
         eClockedDevice( QString id );
         ~eClockedDevice();
 
-        virtual void stamp() override;
+        /// void stamp() override;
 
         trigger_t trigger() { return m_trigger; }
         virtual void setTrigger( trigger_t trigger );

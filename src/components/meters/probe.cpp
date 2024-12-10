@@ -29,7 +29,7 @@ listItem_t Probe::libraryItem(){
 
 Probe::Probe( QString type, QString id )
      : Component( type, id )
-     , eElement( id )
+     , Element( id )
 {
     setZValue( 200 );
     m_area = QRect(-12,-8, 20, 16 );

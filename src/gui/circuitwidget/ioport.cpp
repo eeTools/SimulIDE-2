@@ -11,7 +11,7 @@
 #include "simulator.h"
 
 IoPort::IoPort( QString name )
-      : eElement( name )
+      : Element( name )
 {
     m_name = name;
     m_shortName = "P"+ name.right(1);
@@ -36,17 +36,11 @@ void IoPort::reset()
     m_outVectors.clear();
 }
 
-void IoPort::runEvent()
+/*void IoPort::runEvent()
 {
     setOutState( m_nextState );
-    /*for( int i=0; i<m_numPins; ++i ){
-        IoPin* pin = m_pins[i];
-        bool nextState = (m_nextState & 1<<i)>0;
-        //if( pin->getOutState() != nextState )     // Pin changed
-            pin->setOutState( nextState );
-    }*/
     if( m_index > 0 ) nextStep();
-}
+}*/
 
 void IoPort::trigger( uint n )
 {
@@ -65,15 +59,15 @@ void IoPort::nextStep()
 
     m_nextState = outState.state;
     uint64_t time = outState.time;
-    if( time ) Simulator::self()->addEvent( time, this );
-    else       runEvent();
+    ///if( time ) Simulator::self()->addEvent( time, this );
+    ///else       runEvent();
 }
 
 void IoPort::scheduleState( uint32_t val, uint64_t time )
 {
     if( m_pinState == val ) return;
     m_nextState = val;
-    Simulator::self()->addEvent( time, this );
+    /// Simulator::self()->addEvent( time, this );
 }
 
 void IoPort::setOutState( uint32_t val )
@@ -125,10 +119,10 @@ void IoPort::setPinMode( pinMode_t mode )
     for( IoPin* pin : m_pins ) pin->setPinMode( mode );
 }
 
-void IoPort::changeCallBack( eElement* el, bool ch )
+/*void IoPort::changeCallBack( eElement* el, bool ch )
 {
     for( IoPin* pin : m_pins ) pin->changeCallBack( el, ch );
-}
+}*/
 
 void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
 {
@@ -235,12 +229,12 @@ QStringList IoPort::registerScript( asIScriptEngine* engine )
     engine->RegisterObjectMethod("IoPort", "void addSequence( array<array<uint64>>@ t )"
                                    , asMETHODPR( IoPort, addSequence, (CScriptArray*), void)
                                    , asCALL_THISCALL );
-
+/*
     memberList << "changeCallBack( eElement@ e, bool call )";
     engine->RegisterObjectMethod("IoPort", "void changeCallBack(eElement@ s, bool s)"
                                    , asMETHODPR( IoPort, changeCallBack, (eElement*, bool), void)
                                    , asCALL_THISCALL );
-
+*/
     memberList << "trigger( uint index )";
     engine->RegisterObjectMethod("IoPort", "void trigger(uint n)"
                                    , asMETHODPR( IoPort, trigger, (uint), void)

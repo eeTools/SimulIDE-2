@@ -5,7 +5,7 @@
 
 #include "infowidget.h"
 #include "mainwindow.h"
-#include "mcu.h"
+/// #include "mcu.h"
 
 InfoWidget* InfoWidget::m_pSelf = nullptr;
 
@@ -52,7 +52,7 @@ void InfoWidget::setTargetSpeed( double s )
 
 void InfoWidget::updtMcu()
 {
-    if( Mcu::self() )
+    /*if( Mcu::self() )
     {
         QString device = Mcu::self()->device();
         QString freq = QString::number( Mcu::self()->freq()*1e-6 );
@@ -73,7 +73,7 @@ void InfoWidget::updtMcu()
     }
     mainMcuLabel->setVisible( Mcu::self() );
     mainMcu->setVisible( Mcu::self() );
-    mainMcuName->setVisible( Mcu::self() );
+    mainMcuName->setVisible( Mcu::self() );*/
 }
 
 void InfoWidget::setRate( double rate, double simLoad, double guiLoad, int fps )

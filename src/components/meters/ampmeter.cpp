@@ -28,10 +28,11 @@ Amperimeter::~Amperimeter(){}
 
 void Amperimeter::updateStep()
 {
-    double curr = current();
+    /*double curr = current();
     
     if( curr != m_dispValue )
     {
         m_dispValue = curr;
         Meter::updateStep();
-}   }
+    }*/
+}

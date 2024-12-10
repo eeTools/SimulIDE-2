@@ -10,11 +10,12 @@
 #include "simulator.h"
 #include "circuit.h"
 
-eNode IoPin::m_gndEnode("");
+//eNode IoPin::m_gndEnode("");
 
 IoPin::IoPin( int angle, const QPoint pos, QString id, int index, Component* parent, pinMode_t mode )
-     : Pin( angle, pos, id, index, parent )
-     , eElement( id )
+     : Pin( angle, pos, id, parent )
+     , Element( id )
+     , m_pinSource( id )
 {
     m_outState = false;
     m_stateZ   = false;
@@ -47,7 +48,7 @@ IoPin::IoPin( int angle, const QPoint pos, QString id, int index, Component* par
 }
 IoPin::~IoPin(){}
 
-void IoPin::initialize()
+void IoPin::stampAdmit()
 {
     m_step = 0;
     m_steps = Simulator::self()->slopeSteps();
@@ -55,14 +56,11 @@ void IoPin::initialize()
     m_inpState  = false;
     m_outState  = false;
     m_nextState = false;
-}
 
-void IoPin::stamp()
-{
     if( m_skipStamp ) return;
 
-    ePin::setEnodeComp( &m_gndEnode );
-    ePin::createCurrent();
+    //ePin::setEnodeComp( &m_gndEnode );
+    /// ePin::createCurrent();
     setPinMode( m_pinMode );
     stampAll();
     updateStep();
@@ -91,7 +89,7 @@ void IoPin::updateStep()
     update();
 }
 
-void IoPin::runEvent()
+/*void IoPin::runEvent()
 {
     if( m_step == m_steps )
     {
@@ -116,21 +114,21 @@ void IoPin::runEvent()
         Simulator::self()->addEvent( time/m_steps, this );
         m_step++;
     }
-}
+}*/
 
 void IoPin::scheduleState( bool state, uint64_t time )
 {
     if( m_nextState == state ) return;
     m_nextState = state;
 
-    if( m_step )
+    /*if( m_step )
     {
         Simulator::self()->cancelEvents( this );
         m_step = m_steps-m_step;
     }
     if     ( time )    Simulator::self()->addEvent( time, this );
     else if( m_steps ) IoPin::runEvent();
-    else               IoPin::setOutState( m_nextState );
+    else               IoPin::setOutState( m_nextState );*/
 }
 
 void IoPin::startLH()
@@ -160,7 +158,7 @@ void IoPin::setPinMode( pinMode_t mode )
             break;
         case output:
             m_admit = 1/m_outputImp;
-            ePin::stampAdmitance( m_admit );
+            m_pinSource.updtAdmitance( m_admit );
             break;
         case openCo:
             m_vddAdmit = cero_doub;
@@ -229,7 +227,7 @@ void IoPin::setStateZ( bool z )
 
 double IoPin::getVoltage()
 {
-    if     ( m_enode )           return m_enode->getVolt();
+    if     ( m_enode )           return m_kcl->getVoltage( m_enode );//m_enode->getVolt();
     else if( m_pinMode > input ) return m_outVolt;
     else{
         double vddAdmit = m_vddAdmit + m_vddAdmEx;
@@ -261,7 +259,7 @@ void IoPin::setInputImp( double imp )
         //m_gndAdmit = 1/m_inputImp;
         //updtState();
         m_admit = 1/m_inputImp;
-        ePin::stampAdmitance( m_admit );
+        m_pinSource.updtAdmitance( m_admit );
     }
 }
 
@@ -273,24 +271,24 @@ void IoPin::setOutputImp( double imp )
         //m_vddAdmit = 1/m_outputImp;
         //updtState();
         m_admit = 1/m_outputImp;
-        ePin::stampAdmitance( m_admit );
+        m_pinSource.updtAdmitance( m_admit );
     }
 }
 
 void IoPin::setInverted( bool invert )
 {
-    bool inverted = m_userInverted ? !invert : invert;
+    bool inverted = false; // m_userInverted ? !invert : invert;
     if( inverted == m_inverted ) return;
     m_inverted = inverted;
 
     if( m_pinMode > input ) setOutState( m_outState );
-    else                    ePin::stampAdmitance( m_admit );
+    else                    m_pinSource.updtAdmitance( m_admit );
     update();
 }
 
 void IoPin::stampAll()
 {
-    ePin::stampAdmitance( m_admit );
+    m_pinSource.updtAdmitance( m_admit );
     stampVolt( m_outVolt );
 }
 
@@ -298,12 +296,12 @@ void IoPin::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 {
     if( !m_userInvert ) return;
 
-    QMenu* menu = new QMenu();
+    /*QMenu* menu = new QMenu();
     QAction* editAction = menu->addAction( QIcon(":/invert.png"),QObject::tr("Invert Pin"));
     QObject::connect( editAction, &QAction::triggered,
                       [=](){ userInvertPin(); } );
 
-    menu->exec( event->screenPos() );
+    menu->exec( event->screenPos() );*/
 }
 
 // ---- Script Engine -------------------
@@ -357,11 +355,11 @@ QStringList IoPin::registerScript( asIScriptEngine* engine )
     engine->RegisterObjectMethod("IoPin", "void setImpedance( double imp )"
                                    , asMETHODPR( IoPin, setImpedance, (double), void)
                                    , asCALL_THISCALL );
-
+/*
     memberList << "changeCallBack( eElement@ e, bool call )";
     engine->RegisterObjectMethod("IoPin", "void changeCallBack(eElement@ p, bool s)"
                                    , asMETHODPR( IoPin, changeCallBack, (eElement*, bool), void)
                                    , asCALL_THISCALL );
-
+*/
     return memberList;
 }

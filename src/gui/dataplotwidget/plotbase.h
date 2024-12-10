@@ -7,14 +7,14 @@
 #define PLOTBASE_H
 
 #include "component.h"
-#include "scriptbase.h"
+//#include "scriptbase.h"
 #include "datachannel.h"
 
 class IoPin;
 class PlotDisplay;
 class QGraphicsProxyWidget;
 
-class PlotBase : public Component, public ScriptBase
+class PlotBase : public Component//, public ScriptBase
 {
     public:
         PlotBase( QString type, QString id );
@@ -22,8 +22,8 @@ class PlotBase : public Component, public ScriptBase
 
         virtual bool setPropStr( QString prop, QString val ) override;
 
-        virtual void initialize() override;
-        virtual void runEvent() override;
+        //void initialize() override;
+        //void runEvent() override;
 
         int baSizeX() { return m_baSizeX; }
         void setBaSizeX( int size );
@@ -134,12 +134,13 @@ class PlotBase : public Component, public ScriptBase
         bool m_autoExport;
         QString m_exportFile;
 
+        bool m_changed;
         bool m_connectGnd;
         double m_inputAdmit;
 
         std::vector<IoPin*> m_inPin;
 
-        asIScriptFunction* m_pauseFunc;
+        //asIScriptFunction* m_pauseFunc;
         QString m_conditions;
 
         QHash<QString, QString> m_condTo;

@@ -6,7 +6,7 @@
 #ifndef DATACHANNEL_H
 #define DATACHANNEL_H
 
-#include "e-element.h"
+#include "element.h"
 #include "updatable.h"
 
 #include <QVector>
@@ -22,7 +22,7 @@ enum cond_t{
 class PlotBase;
 class Pin;
 
-class DataChannel : public eElement, public Updatable
+class DataChannel : public Element, public Updatable
 {
         friend class PlotBase;
         friend class Oscope;
@@ -34,12 +34,16 @@ class DataChannel : public eElement, public Updatable
         DataChannel( PlotBase* plotBase, QString id );
         ~DataChannel();
 
-        virtual void stamp() override;
+        virtual void initialize(){;}
+        void stampAdmit() override;
+        void stampCurrent() override;
 
         virtual void setFilter( double f ) {;}
 
         bool isBus();
         virtual void setIsBus( bool b ){;}
+
+        void setPin( Pin* p ) { m_pin = p; }
 
         QString getChName() { return m_chTunnel; }
 

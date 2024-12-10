@@ -7,7 +7,6 @@
 
 #include "gcbdebugger.h"
 #include "codeeditor.h"
-#include "e_mcu.h"
 #include "outpaneltext.h"
 #include "utils.h"
 

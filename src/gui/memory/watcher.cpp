@@ -10,10 +10,10 @@
 #include "valuewidget.h"
 #include "headerwidget.h"
 #include "mainwindow.h"
-#include "e_mcu.h"
-#include "cpubase.h"
+///#include "e_mcu.h"
+///#include "cpubase.h"
 #include "console.h"
-#include "scriptcpu.h"
+///#include "scriptcpu.h"
 
 Watcher::Watcher( QWidget* parent, Watchable* cpu )
        : QWidget( parent )

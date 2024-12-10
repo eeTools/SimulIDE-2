@@ -8,7 +8,7 @@
 #include <QDir>
 
 #include "avrgccdebugger.h"
-#include "e_mcu.h"
+/// #include "e_mcu.h"
 #include "outpaneltext.h"
 #include "codeeditor.h"
 #include "utils.h"

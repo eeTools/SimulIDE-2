@@ -13,7 +13,6 @@
 #include "lawidget.h"
 #include "datalawidget.h"
 #include "tunnel.h"
-#include "e-node.h"
 #include "iopin.h"
 
 #include "stringprop.h"
@@ -145,13 +144,13 @@ void LAnalizer::updateStep()
             {
                 QString chTunnel = m_channel[i]->m_chTunnel;
 
-                eNode* enode = Tunnel::getEnode( chTunnel );
+                /*int enode = Tunnel::getEnode( chTunnel );
                 m_pin[i]->setEnode( enode );
                 if( enode )
                 {
                     enode->voltChangedCallback( m_channel[i] );
                     connected = true;
-                }
+                }*/
                 display()->connectChannel( i, connected );
             }
             m_channel[i]->m_connected = connected;
@@ -167,7 +166,7 @@ void LAnalizer::updateStep()
         double admit = m_connectGnd ? m_inputAdmit : 0;
         for( IoPin* pin : m_inPin ){
             pin->setInputAdmit( admit );
-            pin->stampAdmitance( admit );
+            /// pin->stampAdmitance( admit );
         }
     }
 }

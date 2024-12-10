@@ -10,22 +10,22 @@
 #include "iopin.h"
 
 eClockedDevice::eClockedDevice( QString id )
-              : eElement( id )
+              : Element( id )
 {
     m_clock   = false;
-    m_clkPin  = NULL;
+    m_clkPin  = nullptr;
     m_trigger = Clock;
 }
 eClockedDevice::~eClockedDevice(){}
 
-void eClockedDevice::stamp()
+/*void eClockedDevice::stamp()
 {
     if( m_clkPin ){
         m_clock = m_clkPin->inverted();
         m_clkPin->changeCallBack( this );
     }
     else m_clock = false;
-}
+}*/
 
 void eClockedDevice::updateClock()
 {

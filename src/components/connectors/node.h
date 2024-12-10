@@ -19,7 +19,7 @@ class Node : public Component
 
         Pin* getPin( int pin ) const { return m_pin[pin]; }
 
-        virtual void registerEnode( eNode* enode, int n=-1 ) override;
+        virtual void registerEnode( int enode, int n=-1 ) override;
 
         virtual void setHidden( bool hid, bool hidArea=false, bool hidLabel=false ) override;
 

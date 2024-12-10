@@ -29,7 +29,7 @@ class Pin : public PinBase, public ePin
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        Pin( int angle, QPoint pos, QString id, int index, Component* parent=0, int length=8 );
+        Pin( int angle, QPoint pos, QString id, Component* parent=0, int length=8 );
         ~Pin();
 
         enum { Type = UserType + 3 };
@@ -50,8 +50,8 @@ class Pin : public PinBase, public ePin
         void removeWire() override;
         void wireRemoved() override;
 
-        void registerEnode( eNode* enode, int n=-1 ) override;
-        void registerPinsW( eNode* enode, int n=-1 ) override;
+        void registerEnode( int enode, int n=-1 ) override;
+        void registerPinsW( int enode, int n=-1 ) override;
 
         void setDataChannel( LaChannel* ch ) { m_dataChannel = ch; }
 

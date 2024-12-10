@@ -366,7 +366,6 @@ void SubPackage::addNewPin( QString id, QString type, QString label, int pos, in
     if( type == "nul" ) pin->setPinType( Pin::pinNull );
     if( type == "rst" ) pin->setPinType( Pin::pinRst );
 
-    m_ePin.emplace_back( pin );
     m_pin.emplace_back( pin );
     m_pkgePins.append( pin );
 }

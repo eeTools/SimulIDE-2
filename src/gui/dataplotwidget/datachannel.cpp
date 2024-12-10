@@ -7,39 +7,37 @@
 #include "plotdisplay.h"
 #include "plotbase.h"
 #include "simulator.h"
-#include "e-node.h"
 #include "wire.h"
 #include "pin.h"
 
 DataChannel::DataChannel( PlotBase* plotBase, QString id )
-           : eElement( id  )
+           : Element( id  )
            , Updatable()
 {
     m_plotBase = plotBase;
-    m_ePin.resize( 2 );
-    m_pin = NULL;
-    m_ePin[1] = NULL;
+
+    m_pin = nullptr;
+
     m_chTunnel = "";
     m_trigIndex = 0;
     m_pauseOnCond = false;
 }
 DataChannel::~DataChannel(){}
 
-void DataChannel::stamp()    // Called at Simulation Start
+void DataChannel::stampAdmit()    // Called at Simulation Start
 {
     m_bufferCounter = 0;
     m_trigIndex = 0;
-    bool connected = false;
+}
 
-    eNode* enode =  m_ePin[0]->getEnode();
-    if( enode ){
-        enode->voltChangedCallback( this );
-        connected = true;
-    }
+void DataChannel::stampCurrent()
+{
+    m_nodes[0] = m_pin->getNode();
+    bool connected = m_nodes[0] >= 0;
+
+    if( connected ) m_kcl->addChangeCB( this, m_nodes[0] );
+
     m_plotBase->display()->connectChannel( m_channel, connected );
-
-    if( !m_ePin[1] ) return;
-    m_ePin[1]->changeCallBack( this );
 }
 
 bool DataChannel::isBus()
