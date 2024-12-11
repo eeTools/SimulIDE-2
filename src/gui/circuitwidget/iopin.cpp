@@ -229,7 +229,7 @@ void IoPin::setStateZ( bool z )
 
 double IoPin::getVoltage()
 {
-    if     ( m_enode )           return m_kcl->getVoltage( m_enode );//m_enode->getVolt();
+    if     ( m_enode > 0 )       return m_kcl->getVoltage( m_enode );//m_enode->getVolt();
     else if( m_pinMode > input ) return m_outVolt;
     else{
         double vddAdmit = m_vddAdmit + m_vddAdmEx;
