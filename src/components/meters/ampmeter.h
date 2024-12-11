@@ -3,16 +3,16 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef AMPERIMETER_H
-#define AMPERIMETER_H
+#ifndef AMPMETER_H
+#define AMPMETER_H
 
 #include "meter.h"
 
-class Amperimeter : public Meter
+class AmpMeter : public Meter
 {
     public:
-        Amperimeter( QString id );
-        ~Amperimeter();
+        AmpMeter( QString id );
+        ~AmpMeter();
 
  static listItem_t libraryItem();
 

@@ -8,8 +8,8 @@
 #include "basedebugger.h"
 #include "editorwindow.h"
 #include "simulator.h"
-#include "cpubase.h"
-#include "mcu.h"
+///#include "cpubase.h"
+///#include "mcu.h"
 #include "utils.h"
 
 #define tr(str) QCoreApplication::translate("BaseDebugger",str)
@@ -25,12 +25,12 @@ BaseDebugger::BaseDebugger( CodeEditor* parent, OutPanelText* outPane )
 }
 BaseDebugger::~BaseDebugger( )
 {
-    if( eMcu::self() ) eMcu::self()->getRamTable()->remDebugger( this );
+    ///if( eMcu::self() ) eMcu::self()->getRamTable()->remDebugger( this );
 }
 
 bool BaseDebugger::upload()
 {
-    if( !m_firmware.isEmpty() && !QFileInfo::exists( m_firmware ) )
+    /*if( !m_firmware.isEmpty() && !QFileInfo::exists( m_firmware ) )
     {
         m_outPane->appendLine( "\n"+tr("Error: Hex file doesn't exist:")+"\n"+m_firmware );
         return false;
@@ -56,7 +56,8 @@ bool BaseDebugger::upload()
         eMcu::self()->setDebugger( this );
         if( m_fileExt != ".hex" ) ok = postProcess();
     }
-    return ok;
+    return ok;*/
+    return false;
 }
 
 void BaseDebugger::preProcess()
@@ -249,7 +250,7 @@ void BaseDebugger::stepDebug()
 {
     if( !m_debugStep ) return;
 
-    int lastPC = eMcu::self()->cpu()->getPC();
+    /*int lastPC = eMcu::self()->cpu()->getPC();
     eMcu::self()->stepCpu();
     int PC = eMcu::self()->cpu()->getPC();
 
@@ -276,7 +277,8 @@ void BaseDebugger::stepDebug()
             {
                 m_prevLine = line;
                 EditorWindow::self()->lineReached( line );
-}   }   }   }
+    }   }   }*/
+}
 
 QString BaseDebugger::getValueInFile( QString line, QString key ) // Static
 {

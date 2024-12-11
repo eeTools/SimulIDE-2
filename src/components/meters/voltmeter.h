@@ -8,11 +8,11 @@
 
 #include "meter.h"
 
-class Voltmeter : public Meter
+class VoltMeter : public Meter
 {
     public:
-        Voltmeter( QString id );
-        ~Voltmeter();
+        VoltMeter( QString id );
+        ~VoltMeter();
 
  static listItem_t libraryItem();
 

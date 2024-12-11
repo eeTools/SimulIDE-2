@@ -29,13 +29,13 @@ Meter::Meter( QString id )
     m_pin[0]->setColor( Qt::red );
 
     m_pin[1] = new Pin( 270, QPoint( 8, 16), "nPin@"+id, this);
-    m_outPin->setOutHighV( 0 );
-    m_outPin->setOutState( true );
+    //m_outPin->setOutHighV( 0 );
+    //m_outPin->setOutState( true );
 
     m_idLabel->setPos(-12,-24);
     setLabelPos(-24,-40, 0);
 
-    QFont f( "Helvetica [Cronyx]", 10, QFont::Bold );
+    QFont f("Helvetica [Cronyx]", 10, QFont::Bold );
     f.setPixelSize(12);
     m_display.setFont(f);
     m_display.setBrush(  Qt::yellow );
@@ -45,16 +45,6 @@ Meter::Meter( QString id )
     Simulator::self()->addToUpdateList( this );
 }
 Meter::~Meter(){}
-
-bool Meter::setPropStr( QString prop, QString val )
-{
-    if( prop =="SwitchPins" )       // Old: TODELETE
-    {
-        if( val == "true" ) { m_Hflip = -1; setflip(); }
-    }
-    else return Component::setPropStr( prop, val );
-    return true;
-}
 
 void Meter::updateStep()
 {
@@ -76,8 +66,8 @@ void Meter::updateStep()
     }
     else m_display.setText( sign+QString::number( value,'f', decimals ).left(5)+"\n"+mult+m_unit );
 
-    m_outPin->setOutHighV( m_dispValue );
-    m_outPin->setOutState( true );
+    //m_outPin->setOutHighV( m_dispValue );
+    //m_outPin->setOutState( true );
 }
 
 void Meter::setSwitchPins( bool s )

@@ -5,28 +5,28 @@
 
 #include "ampmeter.h"
 
-#define tr(str) simulideTr("Amperimeter",str)
+#define tr(str) simulideTr("Ampmeter",str)
 
-listItem_t Amperimeter::libraryItem(){
+listItem_t AmpMeter::libraryItem(){
     return {
         tr("Ampmeter"),
         "Meters",
-        "amperimeter.png",
-        "Amperimeter",
-        [](QString id){ return (Component*)new Amperimeter( id ); } };
+        "ampmeter.png",
+        "AmpMeter",
+        [](QString id){ return (Component*)new AmpMeter( id ); } };
 }
 
-Amperimeter::Amperimeter( QString id )
-           : Meter( id )
+AmpMeter::AmpMeter( QString id )
+        : Meter( id )
 {
     m_unit = "A";
     m_dispValue = 0;
     setResistance( 1e-6 );
     m_display.setText(" 0.000\n A");
 }
-Amperimeter::~Amperimeter(){}
+AmpMeter::~AmpMeter(){}
 
-void Amperimeter::updateStep()
+void AmpMeter::updateStep()
 {
     /*double curr = current();
     

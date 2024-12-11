@@ -17,8 +17,6 @@ class Meter : public Component, public Resistance
         Meter( QString id );
         ~Meter();
 
-        virtual bool setPropStr( QString prop, QString val ) override;
-
         bool swithchPins() { return m_switchPins; }
         void setSwitchPins( bool s );
 
@@ -34,7 +32,7 @@ class Meter : public Component, public Resistance
         double m_dispValue;
         bool m_switchPins;
 
-        IoPin* m_outPin;
+        //IoPin* m_outPin;
         QGraphicsSimpleTextItem m_display;
 };
 

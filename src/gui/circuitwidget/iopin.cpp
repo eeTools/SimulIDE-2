@@ -145,6 +145,8 @@ void IoPin::startHL()
 
 void IoPin::setPinMode( pinMode_t mode )
 {
+    return; /// TODO: fixme
+
     if( m_pinMode == mode ) return;
     m_pinMode = mode;
 

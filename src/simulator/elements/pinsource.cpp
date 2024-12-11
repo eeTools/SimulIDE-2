@@ -10,6 +10,7 @@ PinSource::PinSource( QString id )
          : Element( id )
 {
     m_nodes.resize( 1,-1 );
+    m_node = -1;
 
     m_admitance = 0;
     m_currChanged  = nullptr;

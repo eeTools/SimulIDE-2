@@ -50,7 +50,7 @@ ComponentList::ComponentList( QWidget* parent )
     setIconSize( QSize( 30*scale, 24*scale ));
 
     m_listFile  = MainWindow::self()->getConfigPath("compList.xml");
-    m_restoreList = QFile::exists( m_listFile ); // Restore last List
+    m_restoreList = false; ///QFile::exists( m_listFile ); // Restore last List
     m_oldConfig = !m_restoreList; // xml file doesn't exist: read old config
 
     m_customComp = false;
@@ -630,13 +630,25 @@ void ComponentList::writeSettings()
 }
 
 //BEGIN Item includes
+#include "ampmeter.h"
+
 #include "capacitor.h"
+#include "freqmeter.h"
+#include "header.h"
 #include "inductor.h"
+#include "logicanalizer.h"
+#include "oscope.h"
+#include "probe.h"
 #include "resistor.h"
+#include "socket.h"
+#include "subcircuit.h"
+#include "subpackage.h"
+#include "tunnel.h"
+
+#include "voltmeter.h"
 
 /*
 
-#include "ampmeter.h"
 #include "adc.h"
 #include "aip31068_i2c.h"
 #include "audio_out.h"
@@ -672,14 +684,14 @@ void ComponentList::writeSettings()
 #include "flipflopjk.h"
 #include "flipfloprs.h"
 #include "flipflopt.h"
-#include "freqmeter.h"
+
 #include "fulladder.h"
 #include "function.h"
 #include "gate_and.h"
 #include "gate_or.h"
 #include "gate_xor.h"
 #include "ground.h"
-#include "header.h"
+
 #include "hd44780.h"
 #include "ili9341.h"
 #include "image.h"
@@ -699,16 +711,16 @@ void ComponentList::writeSettings()
 #include "ledrgb.h"
 #include "line.h"
 #include "lm555.h"
-#include "logicanalizer.h"
+
 #include "magnitudecomp.h"
 #include "max72xx_matrix.h"
 #include "mosfet.h"
 #include "mux.h"
 #include "mux_analog.h"
 #include "op_amp.h"
-#include "oscope.h"
+
 #include "pcd8544.h"
-#include "probe.h"
+
 #include "potentiometer.h"
 #include "push.h"
 #include "rail.h"
@@ -723,15 +735,14 @@ void ComponentList::writeSettings()
 #include "sevensegment.h"
 #include "sevensegment_bcd.h"
 #include "shiftreg.h"
-#include "socket.h"
+
 #include "sr04.h"
 #include "sram.h"
 #include "scr.h"
 #include "ssd1306.h"
 #include "stepper.h"
 #include "strain.h"
-#include "subcircuit.h"
-#include "subpackage.h"
+
 #include "switch.h"
 #include "switchdip.h"
 #include "thermistor.h"
@@ -740,9 +751,9 @@ void ComponentList::writeSettings()
 #include "touchpad.h"
 #include "transformer.h"
 #include "triac.h"
-#include "tunnel.h"
+
 #include "varresistor.h"
-#include "voltmeter.h"
+
 #include "volt_reg.h"
 #include "voltsource.h"
 #include "wavegen.h"
@@ -752,12 +763,12 @@ void ComponentList::writeSettings()
 void ComponentList::LoadLibraryItems()
 {
     addCategory( tr("Meters"),"Meters", "", "" );
-    //addItem( Probe::libraryItem() );
-    //addItem( Voltimeter::libraryItem() );
-    //addItem( Amperimeter::libraryItem() );
-    //addItem( FreqMeter::libraryItem() );
-    //addItem( Oscope::libraryItem() );
-    //addItem( LAnalizer::libraryItem() );
+    addItem( Probe::libraryItem() );
+    addItem( VoltMeter::libraryItem() );
+    addItem( AmpMeter::libraryItem() );
+    addItem( FreqMeter::libraryItem() );
+    addItem( Oscope::libraryItem() );
+    addItem( LAnalizer::libraryItem() );
 
     addCategory( tr("Sources"),"Sources", "", "" );
     //addItem( FixedVolt::libraryItem() );
@@ -906,11 +917,11 @@ void ComponentList::LoadLibraryItems()
 
     ///// addItem( SubCircuit::libraryItem() );
     //// Connectors
-    //addCategory( tr("Connectors"),"Connectors", "", "" );
+    addCategory( tr("Connectors"),"Connectors", "", "" );
     //addItem( Bus::libraryItem() );
-    //addItem( Tunnel::libraryItem() );
-    //addItem( Socket::libraryItem() );
-    //addItem( Header::libraryItem() );
+    addItem( Tunnel::libraryItem() );
+    addItem( Socket::libraryItem() );
+    addItem( Header::libraryItem() );
 
     //addCategory( tr("Graphical"),"Graphical", "", "" );
     //addItem( Image::libraryItem() );
@@ -919,8 +930,8 @@ void ComponentList::LoadLibraryItems()
     //addItem( Ellipse::libraryItem() );
     //addItem( Line::libraryItem() );
 
-    //addCategory( tr("Other"),"Other", "", "" );
-    //addItem( SubPackage::libraryItem() );
+    addCategory( tr("Other"),"Other", "", "" );
+    addItem( SubPackage::libraryItem() );
     //addItem( TestUnit::libraryItem() );
     //addItem( Dial::libraryItem() );
 }

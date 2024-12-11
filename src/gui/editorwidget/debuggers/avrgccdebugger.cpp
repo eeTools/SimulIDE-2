@@ -8,7 +8,7 @@
 #include <QDir>
 
 #include "avrgccdebugger.h"
-#include "e_mcu.h"
+/// #include "e_mcu.h"
 #include "outpaneltext.h"
 #include "codeeditor.h"
 #include "utils.h"
@@ -97,11 +97,11 @@ bool AvrGccDebugger::getVariables()
         }
         address -= 0x800000;          // 0x800000 offset
 
-        eMcu::self()->getRamTable()->addVariable( symbol, address, type );
+        ///eMcu::self()->getRamTable()->addVariable( symbol, address, type );
         varList.append( symbol );
         //qDebug() << "AvrGccDebugger::getAvrGccData  variable "<<type<<symbol<<address;
     }
-    eMcu::self()->getRamTable()->setVariables( varList );
+    ///eMcu::self()->getRamTable()->setVariables( varList );
     m_outPane->appendLine( QString::number( varList.size() )+" variables found" );
     return true;
 }
