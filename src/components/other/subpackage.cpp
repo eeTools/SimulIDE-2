@@ -24,6 +24,7 @@
 #include "circuitwidget.h"
 #include "componentlist.h"
 #include "circuit.h"
+#include "wire.h"
 #include "node.h"
 #include "utils.h"
 
@@ -49,21 +50,6 @@ SubPackage::SubPackage( QString id )
 {
     m_linkCursor = QCursor( QPixmap(":/expose.png"), 10, 10 );
 
-    m_enumUids = QStringList()
-        << "None"
-        << "Logic"
-        << "Board"
-        << "Shield"
-        << "Module";
-
-    m_enumNames = QStringList()
-        << tr("None")
-        << tr("Logic")
-        << tr("Board")
-        << tr("Shield")
-        << tr("Module");
-
-    m_subcType = Chip::None;
     m_width  = 4;
     m_height = 8;
     m_area = QRect(0, 0, m_width*8, m_height*8);
@@ -89,8 +75,11 @@ SubPackage::SubPackage( QString id )
     
     m_pkgeFile = "";
 
+    QString enums = "None,Logic,Board,Shield,Module;"
+      +tr("None")+","+tr("Logic")+","+tr("Board")+","+tr("Shield")+","+tr("Module");
+
     addPropGroup( { tr("Main"), {
-        new StrProp <SubPackage>("SubcType", tr("Type"),""
+        new StrProp <SubPackage>("SubcType", tr("Type"), enums
                                 , this, &SubPackage::subcTypeStr, &SubPackage::setSubcTypeStr,0,"enum" ),
 
         new IntProp <SubPackage>("Width", tr("Width"),""
@@ -123,20 +112,6 @@ SubPackage::~SubPackage()
     delete m_boardModeAction;
 }
 
-void SubPackage::setLogicSymbol( bool ls )
-{
-    // Used when loading old subcircuits with only DIP and LS
-    // To convert original pkg labels to "Logic Symbol" and "DIP"
-    // In these cases package file exist
-    /*if( !m_pkgeFile.isEmpty() && ComponentList::self()->isConverting() )
-    {
-        if     ( ls )                  setIdLabel("1- Logic Symbol");
-        else if( m_subcType == Board ) setIdLabel("0- Board");
-        else                           setIdLabel("2- DIP");
-    }*/
-    Chip::setLogicSymbol( ls );
-}
-
 void SubPackage::setWidth( int width )
 {
     if( width < 1 ) width = 1;
@@ -163,12 +138,10 @@ void SubPackage::setHeight( int height )
 
 void SubPackage::setSubcTypeStr( QString s )
 {
-    int index = getEnumIndex( s.remove("subc") );
-    subcType_t type = (subcType_t)index;
-    if( m_subcType == type ) return;
+    if( m_subcType == s ) return;
 
     SubPackage* currentBoard = Circuit::self()->getBoard();
-    if( type >= Board )
+    if( s =="Board" || s =="Shield" || s =="Module" )
     {
         if( currentBoard && currentBoard != this ) // Only one board Package can be in the circuit
         {
@@ -176,13 +149,14 @@ void SubPackage::setSubcTypeStr( QString s )
             return;
         }
         Circuit::self()->setBoard( this );
+        m_isBoard = true;
     }
     else if( currentBoard == this ) Circuit::self()->setBoard( NULL );
 
-    m_subcType = type;
+    m_subcType = s;
 
     if( m_showVal && (m_showProperty == "SubcType") )
-        setValLabelText( m_enumNames.at( index ) );
+        setValLabelText( m_subcType );
 }
 
 void SubPackage::hoverMoveEvent( QGraphicsSceneHoverEvent* event ) 
@@ -256,7 +230,7 @@ void SubPackage::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
         QColor color = m_isLS ? Qt::black : QColor( 250, 250, 200 );
 
-        m_eventPin = new PackagePin( m_angle, QPoint(m_p1X,m_p1Y ), "name", 0, this );
+        m_eventPin = new PackagePin( m_angle, QPoint(m_p1X,m_p1Y ), "name", this );
 
         m_eventPin->setPinId( "Id" );
         m_eventPin->setLabelColor( color );
@@ -281,7 +255,7 @@ void SubPackage::contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu
 
     menu->addSeparator();
 
-    if( m_subcType >= Board )
+    if( this->isBoard() )
     {
         m_boardModeAction->setChecked( m_boardMode );
         menu->addAction( m_boardModeAction );
@@ -350,7 +324,7 @@ void SubPackage::setBoardMode( bool mode )
 
 void SubPackage::addNewPin( QString id, QString type, QString label, int pos, int xpos, int ypos, int angle, int length, int space )
 {
-    PackagePin* pin = new PackagePin( angle, QPoint(xpos, ypos), m_id+"-"+id, pos-1, this ); // pos in package starts at 1
+    PackagePin* pin = new PackagePin( angle, QPoint(xpos, ypos), m_id+"-"+id, this ); // pos in package starts at 1
 
     QColor color = m_isLS ? Qt::black : QColor( 250, 250, 200 );
 
@@ -366,7 +340,8 @@ void SubPackage::addNewPin( QString id, QString type, QString label, int pos, in
     if( type == "nul" ) pin->setPinType( Pin::pinNull );
     if( type == "rst" ) pin->setPinType( Pin::pinRst );
 
-    m_pin.emplace_back( pin );
+    //m_ePin.emplace_back( pin );
+    //m_pin.emplace_back( pin );
     m_pkgePins.append( pin );
 }
 
@@ -510,10 +485,12 @@ void SubPackage::setBackground( QString bck ) /// FIXME: almost a cpopy fromChip
     update();
 }
 
-QString SubPackage::packageFile()
+void SubPackage::setLogicSymbol( bool ls )
 {
-    return m_pkgeFile;
-    Circuit::self()->update();
+    QColor labelColor = ls ?  QColor( 0, 0, 0 ) : QColor( 250, 250, 200 );
+    for( Pin* pin : m_pkgePins ) pin->setLabelColor( labelColor );
+
+    Chip::setLogicSymbol( ls );
 }
 
 void SubPackage::setPackageFile( QString package )
@@ -525,25 +502,25 @@ void SubPackage::setPackageFile( QString package )
     m_pkgeFile = circuitDir.relativeFilePath( package );
     if( package.isEmpty() ) return;
 
+    for( Pin* pin : m_pkgePins ) deletePin( pin );
     m_pkgePins.clear();
-    for( Pin* pin : m_pin ) deletePin( pin );
-    m_pin.clear();
 
     QString pkgText = fileToString( fileNameAbs, "SubPackage::setPackageFile");
     QString pkgStr  = convertPackage( pkgText );
+    m_isLS = package.endsWith("_LS.package");
     initPackage( pkgStr );
-
-    m_pkgePins += m_ncPins;
+    setLogicSymbol( m_isLS );
 
     m_label.setPlainText( m_name );
-    
-    setLogicSymbol( package.endsWith("_LS.package") );
+
     Circuit::self()->update();
     m_changed = false;
 }
 
 QString SubPackage::packagePins()
 {
+    if( m_pkgePins.isEmpty() ) return " "; // Force to save Pins property even if empty
+
     QString pins;
     int pP = 1;
     for( Pin* pin : m_pkgePins ) { pins += pinStrEntry( pin ); pP++; }
@@ -642,13 +619,14 @@ void SubPackage::savePackage( QString fileName )
 
     QString subcType = subcTypeStr();
 
-    out << "<!DOCTYPE SimulIDE>\n\n";
+    //out << "<!DOCTYPE SimulIDE>\n\n";
     out << "<!-- This file was generated by SimulIDE -->\n\n";
     out << "<packageB name=\""+m_name
-           +"\" width=\"" +QString::number( m_width )
-           +"\" height=\"" +QString::number( m_height )
+           +"\" width=\""      +QString::number( m_width )
+           +"\" height=\""     +QString::number( m_height )
            +"\" background=\"" +m_background
-           +"\" type=\"" +subcType
+           +"\" type=\""       +subcType
+           +"\" logic_symbol=\"" + (m_isLS ? "true" : "false")
            +"\" >\n\n";
     
     int pP = 1;
@@ -706,7 +684,6 @@ void SubPackage::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
 {
     Chip::paint( p, o, w );
 
-    //if( m_background != "" )
     p->setBrush( Qt::transparent );
     p->drawRoundedRect( m_area, 1, 1);
 

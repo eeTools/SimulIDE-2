@@ -12,7 +12,7 @@ class SubPackage;
 class PackagePin : public Pin
 {
     public:
-        PackagePin( int angle, const QPoint pos, QString id, int index, SubPackage* parent=0 );
+        PackagePin( int angle, const QPoint pos, QString id, SubPackage* parent=0 );
         ~PackagePin();
 
         virtual void setLabelText( QString label, bool over=true ) override;

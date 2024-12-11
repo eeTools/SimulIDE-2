@@ -17,6 +17,7 @@
 
 #include "logicsubc.h"
 #include "board.h"
+#include "shield.h"
 #include "module.h"
 
 #include "stringprop.h"
@@ -38,15 +39,18 @@ Component* SubCircuit::construct( QString id )
         list.takeLast();
     }
 
-    int rev = Circuit::self()->circuitRev();
-    if( rev >= 2220 ){ if( name.contains("@") ) list = name.split("@");}
-    else if( name.contains("_") ) list = name.split("_");
+    if( Circuit::self()->getSubcircuit() ){
+        int rev = Circuit::self()->circuitRev();
+        if( rev >= 2220 ){ if( name.contains("@") ) list = name.split("@");}
+        else if( name.contains("_") ) list = name.split("_");
+    }
 
     QMap<QString, QString> packageList;
     QString subcTyp = "None";
     QString subcDoc;
     QString pkgeFile;
     QString subcFile;
+    QString dataFile;
 
     if( list.size() > 1 )  // Subcircuit inside Subcircuit: 1_74HC00 to 74HC00
     {
@@ -55,64 +59,64 @@ Component* SubCircuit::construct( QString id )
         n.toInt(&ok);
         if( ok ) name = list.at( 1 );
     }
-    QString dataFile = ComponentList::self()->getDataFile( name );
-    m_subcDir = ComponentList::self()->getFileDir( name );
 
-    if( dataFile.isEmpty() ) // Component not installed, search in Circuit folder
-    {
-        dataFile = MainWindow::self()->getDataFilePath( name+".subc" );
-        if( !QFile::exists( dataFile ) ) dataFile = "";
-    }
+    m_subcDir = MainWindow::self()->getCircFilePath( name ); // Search subc folder in circuit/data folder
 
-    if( dataFile.isEmpty() ) // use old system
-    {
-        if( m_subcDir.isEmpty() )                                  // Try to find a "data" folder in Circuit folder
-            m_subcDir = MainWindow::self()->getDataFilePath( name );
-    }
+    if( m_subcDir.isEmpty() )
+        m_subcDir = ComponentList::self()->getFileDir( name ); // Get subc folder from list
+    else
+        dataFile = MainWindow::self()->getCircFilePath( name+"/"+name+".sim1" ); // Search sim1 in circuit/data/name folder
 
-    if( dataFile.endsWith(".subc") || dataFile.endsWith(".sim1")) // Subcircuit in single file (.subc)
-    {
-        subcFile = dataFile;
-        packageList = getPackages( subcFile );
+    if( dataFile.isEmpty() )
+        dataFile = MainWindow::self()->getCircFilePath( name+".sim1" ); // Search sim1 in circuit/data folder
+
+    if( dataFile.isEmpty() ) // Get sim1 from list
+        dataFile = ComponentList::self()->getDataFile( name );
+
+    if( dataFile.endsWith(".sim1")) subcFile = dataFile;
+    else if( !m_subcDir.isEmpty() ) subcFile = m_subcDir+"/"+name+".sim1";
+
+    if( !subcFile.isEmpty() ){
+        packageList = getPackages( subcFile ); // Try packages from sim1 file
         subcTyp = s_subcType;
-    }
 
-    if( packageList.isEmpty() && !m_subcDir.isEmpty() ) // Packages from package files
-    {
-        subcFile  = m_subcDir+"/"+name+".sim1";
-        pkgeFile  = m_subcDir+"/"+name+".package";
-        QString pkgFileLS = m_subcDir+"/"+name+"_LS.package";
-        QString pkgName   = "2- DIP";
-        QString pkgNameLS = "1- Logic Symbol";
+        if( packageList.isEmpty() ) // Packages from package files
+        {
+            pkgeFile  = m_subcDir+"/"+name+".package";
+            QString pkgFileLS = m_subcDir+"/"+name+"_LS.package";
+            QString pkgName   = "2- DIP";
+            QString pkgNameLS = "1- Logic Symbol";
 
-        bool dip = QFile::exists( pkgeFile );
-        bool ls  = QFile::exists( pkgFileLS );
-        if( !dip && !ls ){
-            qDebug() << "SubCircuit::construct: Error No package files found for "<<name<<endl;
-            return NULL;
-        }
+            bool dip = QFile::exists( pkgeFile );
+            bool ls  = QFile::exists( pkgFileLS );
+            if( !dip && !ls ){
+                qDebug() << "SubCircuit::construct: Error No package files found for "<<name<<endl;
+                return nullptr;
+            }
 
-        Chip::s_subcType = "None";
-        if( dip ){
-            QString pkgStr = fileToString( pkgeFile, "SubCircuit::construct" );
-            packageList[pkgName] = convertPackage( pkgStr );
-            subcTyp = s_subcType;
-        }
-        if( ls ){
-            QString pkgStr = fileToString( pkgFileLS, "SubCircuit::construct" );
-            packageList[pkgNameLS] = convertPackage( pkgStr );
-            if( subcTyp == "None" ) subcTyp = s_subcType;
+            Chip::s_subcType = "None";
+            if( dip ){
+                QString pkgStr = fileToString( pkgeFile, "SubCircuit::construct" );
+                packageList[pkgName] = convertPackage( pkgStr );
+                subcTyp = s_subcType;
+            }
+            if( ls ){
+                QString pkgStr = fileToString( pkgFileLS, "SubCircuit::construct" );
+                packageList[pkgNameLS] = convertPackage( pkgStr );
+                if( subcTyp == "None" ) subcTyp = s_subcType;
+            }
         }
     }
 
     if( packageList.isEmpty() ){
         qDebug() << "SubCircuit::construct: No Packages found for"<<name<<endl;
-        return NULL;
+        return nullptr;
     }
 
-    SubCircuit* subcircuit = NULL;
+    SubCircuit* subcircuit = nullptr;
     if     ( subcTyp == "Logic"  ) subcircuit = new LogicSubc( id );
     else if( subcTyp == "Board"  ) subcircuit = new BoardSubc( id );
+    else if( subcTyp == "Shield" ) subcircuit = new ShieldSubc( id );
     else if( subcTyp == "Module" ) subcircuit = new ModuleSubc( id );
     else                           subcircuit = new SubCircuit( id );
 
@@ -120,32 +124,28 @@ Component* SubCircuit::construct( QString id )
     {
         subcircuit->remove();
         m_error = 0;
-        return NULL;
+        return nullptr;
     }else{
-        Circuit::self()->m_createSubc = true;
+        Circuit::self()->setSubcircuit( subcircuit );
 
         QStringList pkges = packageList.keys();
         subcircuit->m_packageList = packageList;
-        subcircuit->m_enumUids = pkges;
-        subcircuit->m_enumNames = subcircuit->m_enumUids;
         subcircuit->m_dataFile = subcFile;
 
         if( packageList.size() > 1 ) // Add package list if there is more than 1 to choose
         subcircuit->addProperty( tr("Main"),
-        new StrProp <SubCircuit>("Package", tr("Package"),""
+        new StrProp <SubCircuit>("Package", tr("Package"), pkges.join(",")
                                 , subcircuit, &SubCircuit::package, &SubCircuit::setPackage,0,"enum" ));
 
         subcircuit->setPackage( pkges.first() );
         if( m_error == 0 ) subcircuit->loadSubCircuitFile( subcFile );
-
-        Circuit::self()->m_createSubc = false;
     }
     if( m_error > 0 )
     {
         Circuit::self()->compList()->removeOne( subcircuit );
         delete subcircuit;
         m_error = 0;
-        return NULL;
+        return nullptr;
     }
     return subcircuit;
 }
@@ -175,7 +175,6 @@ void SubCircuit::loadSubCircuitFile( QString file )
 {
     QString doc = fileToString( file, "SubCircuit::loadSubCircuit" );
 
-    /// FIXME: Subcircuit loaded from .subc
     QString oldFilePath = Circuit::self()->getFilePath();
     Circuit::self()->setFilePath( file );             // Path to find subcircuits/Scripted in our data folder
 
@@ -195,116 +194,119 @@ void SubCircuit::loadSubCircuit( QString doc )
     QVector<QStringRef> docLines = doc.splitRef("\n");
     for( QStringRef line : docLines )
     {
-        if( line.startsWith("<item") )
+        if( !line.startsWith("<item") ) continue;
+
+        QVector<propStr_t> properties = parseXmlProps( line );
+
+        propStr_t itemType = properties.takeFirst();
+        if( itemType.name != "itemtype") continue;
+        QString type = itemType.value.toString();
+
+        if( type == "Package" || type == "Subcircuit" ) continue;
+
+        if( type == "Connector" )
         {
-            QVector<propStr_t> properties = parseXmlProps( line );
+            QString startPinId, endPinId, enodeId;
+            QStringList pointList;
 
-            propStr_t itemType = properties.takeFirst();
-            if( itemType.name != "itemtype") continue;
-            QString type = itemType.value.toString();
-
-            if( type == "Package" || type == "Subcircuit" ) continue;
-
-            if( type == "Connector" )
+            for( propStr_t prop : properties )
             {
-                QString startPinId, endPinId, enodeId;
-                QStringList pointList;
+                if     ( prop.name == "startpinid") startPinId = numId+"@"+prop.value.toString();
+                else if( prop.name == "endpinid"  ) endPinId   = numId+"@"+prop.value.toString();
+                else if( prop.name == "pointList" ) pointList  = prop.value.toString().split(",");
+            }
 
-                for( propStr_t prop : properties )
+            PinBase* startPin = circ->m_LdPinMap.value( startPinId );
+            PinBase* endPin   = circ->m_LdPinMap.value( endPinId );
+
+            if( !startPin ) startPin = findPin( startPinId );
+            if( !endPin   ) endPin   = findPin( endPinId );
+
+            if( startPin && endPin ) // Create Connection
+            {
+                startPin->setConPin( endPin );
+                endPin->setConPin( startPin );
+            }
+            else // Start or End pin not found
+            {
+                if( !startPin ) qDebug()<<"\n   ERROR!!  SubCircuit::loadSubCircuit: "<<m_name<<m_id+" null startPin in "<<type<<startPinId;
+                if( !endPin )   qDebug()<<"\n   ERROR!!  SubCircuit::loadSubCircuit: "<<m_name<<m_id+" null endPin in "  <<type<<endPinId;
+        }   }
+        else{
+            Component* comp = nullptr;
+
+            propStr_t circId = properties.takeFirst();
+            if( circId.name != "CircId") continue; /// ERROR
+            QString uid = circId.value.toString();
+            QString newUid = numId+"@"+uid;
+
+            if( type == "Node" ) comp = new Node( newUid );
+            else                 comp = circ->createItem( type, newUid, false );
+
+            if( !comp ){
+                qDebug() << "SubCircuit:"<<m_name<<m_id<< "ERROR Creating Component: "<<type<<uid;
+                continue;
+            }
+            comp->setIdLabel( uid ); // Avoid parent Uids in label
+
+            /*Mcu* mcu = nullptr;
+            if( comp->itemType() == "MCU" )
+            {
+                comp->remProperty("Logic_Symbol");
+                mcu = (Mcu*)comp;
+                mcu->m_subcFolder = m_subcDir+"/";
+            }*/
+
+            for( propStr_t prop : properties )
+            {
+                QString propName = prop.name.toString();
+                if( !s_graphProps.contains( propName ) ) comp->setPropStr( propName, prop.value.toString() );
+            }
+            /// if( mcu ) mcu->m_subcFolder = "";
+
+            comp->setup();
+            comp->setParentItem( this );
+
+            if( this->isBoard() && comp->isGraphical() )
+            {
+                QPointF pos = comp->boardPos();
+
+                comp->moveTo( pos );
+                comp->setRotation( comp->boardRot() );
+                comp->setHflip( comp->boardHflip() );
+                comp->setVflip( comp->boardVflip() );
+
+                if( !this->collidesWithItem( comp ) ) // Don't show Components out of Board
                 {
-                    if     ( prop.name == "startpinid") startPinId = numId+"@"+prop.value.toString();
-                    else if( prop.name == "endpinid"  ) endPinId   = numId+"@"+prop.value.toString();
-                    else if( prop.name == "pointList" ) pointList  = prop.value.toString().split(",");
+                    comp->setBoardPos( QPointF(-1e6,-1e6 ) ); // Used in setLogicSymbol to identify Components not visible
+                    comp->moveTo( QPointF( 0, 0 ) );
+                    comp->setVisible( false );
                 }
-                //startPinId = startPinId.replace("Pin-", "Pin_"); // Old TODELETE
-                //endPinId   =   endPinId.replace("Pin-", "Pin_"); // Old TODELETE
-
-                PinBase* startPin = circ->m_LdPinMap.value( startPinId );
-                PinBase* endPin   = circ->m_LdPinMap.value( endPinId );
-
-                if( !startPin ) startPin = findPin( startPinId );
-                if( !endPin   ) endPin   = findPin( endPinId );
-
-                if( startPin && endPin ) // Create Connection
-                {
-                    startPin->setConPin( endPin );
-                    endPin->setConPin( startPin );
-                }
-                else // Start or End pin not found
-                {
-                    if( !startPin ) qDebug()<<"\n   ERROR!!  SubCircuit::loadSubCircuit: "<<m_name<<m_id+" null startPin in "<<type<<startPinId;
-                    if( !endPin )   qDebug()<<"\n   ERROR!!  SubCircuit::loadSubCircuit: "<<m_name<<m_id+" null endPin in "  <<type<<endPinId;
-            }   }
+                comp->setHidden( true, true, true ); // Boards: hide non graphical
+                if( m_isLS && m_packageList.size() > 1 ) comp->setVisible( false ); // Don't show any component if Logic Symbol
+            }
             else{
-                Component* comp = NULL;
+                comp->moveTo( QPointF(20, 20) );
+                comp->setVisible( false );     // Not Boards: Don't show any component
+            }
 
-                propStr_t circId = properties.takeFirst();
-                if( circId.name != "CircId") continue; /// ERROR
-                QString uid = circId.value.toString();
-                QString newUid = numId+"@"+uid;
+            if( comp->isMainComp() ) m_mainComponents[uid] = comp; // This component will add it's Context Menu and properties
 
-                if( type == "Node" ) comp = new Node( newUid );
-                else                 comp = circ->createItem( type, newUid, false );
+            m_compList.append( comp );
 
-                if( comp ){
-                    comp->setIdLabel( uid ); // Avoid parent Uids in label
+            if( comp->m_isLinker ){
+                Linker* l = dynamic_cast<Linker*>(comp);
+                if( l->hasLinks() ) linkList.append( l );
+            }
 
-                    for( propStr_t prop : properties )
-                    {
-                        QString propName = prop.name.toString();
-                        if( !s_graphProps.contains( propName ) ) comp->setPropStr( propName, prop.value.toString() );
-                    }
-                    comp->setup();
-                    comp->setParentItem( this );
-
-                    if( m_subcType >= Board && comp->isGraphical() )
-                    {
-                        QPointF pos = comp->boardPos();
-
-                        comp->moveTo( pos );
-                        comp->setRotation( comp->boardRot() );
-                        comp->setHflip( comp->boardHflip() );
-                        comp->setVflip( comp->boardVflip() );
-
-                        if( !this->collidesWithItem( comp ) ) // Don't show Components out of Board
-                        {
-                            comp->setBoardPos( QPointF(-1e6,-1e6 ) ); // Used in setLogicSymbol to identify Components not visible
-                            comp->moveTo( QPointF( 0, 0 ) );
-                            comp->setVisible( false );
-                        }
-                        comp->setHidden( true, true, true ); // Boards: hide non graphical
-                        if( m_isLS && m_packageList.size() > 1 ) comp->setVisible( false ); // Don't show any component if Logic Symbol
-                    }
-                    else{
-                        comp->moveTo( QPointF(20, 20) );
-                        comp->setVisible( false );     // Not Boards: Don't show any component
-                    }
-
-                    /*if( comp->itemType() == "MCU" )
-                    {
-                        comp->remProperty("Logic_Symbol");
-                        Mcu* mcu = (Mcu*)comp;
-                        QString program = mcu->program();
-                        if( !program.isEmpty() ) mcu->load( m_subcDir+"/"+program );
-                    }*/
-                    if( comp->isMainComp() ) m_mainComponents[uid] = comp; // This component will add it's Context Menu and properties
-
-                    m_compList.append( comp );
-
-                    if( comp->m_isLinker ){
-                        Linker* l = dynamic_cast<Linker*>(comp);
-                        if( l->hasLinks() ) linkList.append( l );
-                    }
-
-                    if( type == "Tunnel" ) // Make Circuit Tunnel names unique for this subcircuit
-                    {
-                        Tunnel* tunnel = static_cast<Tunnel*>( comp );
-                        tunnel->setTunnelUid( tunnel->name() );
-                        tunnel->setName( m_id+"-"+tunnel->name() );
-                        m_subcTunnels.append( tunnel );
-                }   }
-                else qDebug() << "SubCircuit:"<<m_name<<m_id<< "ERROR Creating Component: "<<type<<uid;
-    }   }   }
+            if( type == "Tunnel" ) // Make Circuit Tunnel names unique for this subcircuit
+            {
+                Tunnel* tunnel = static_cast<Tunnel*>( comp );
+                tunnel->setTunnelUid( tunnel->name() );
+                tunnel->setName( m_id+"-"+tunnel->name() );
+                m_subcTunnels.append( tunnel );
+            }
+    }   }
     for( Linker* l : linkList ) l->createLinks( &m_compList );
 }
 
@@ -352,7 +354,7 @@ Pin* SubCircuit::addPin( QString id, QString type, QString label, int, int xpos,
 
 Pin* SubCircuit::updatePin( QString id, QString type, QString label, int xpos, int ypos, int angle, int length, int space )
 {
-    Pin* pin = NULL;
+    Pin* pin = nullptr;
     Tunnel* tunnel = m_pinTunnels.value( m_id+"-"+id );
     if( !tunnel ){
         //qDebug() <<"SubCircuit::updatePin Pin Not Found:"<<id<<type<<label;
@@ -423,7 +425,7 @@ void SubCircuit::setLogicSymbol( bool ls )
     for( Component* comp : m_compList ) // Don't show graphical components in LS if Board
     {
         if( !comp->isGraphical() ) continue;
-        if( m_subcType >= Board )
+        if( this->isBoard() )
         {
             comp->setVisible( !m_isLS && comp->boardPos() != QPointF(-1e6,-1e6 ) );
         }
@@ -467,7 +469,7 @@ void SubCircuit::addMainCompsMenu( QMenu* menu )
     {
         QString name = mainComp->idLabel();
         QMenu* submenu = menu->addMenu( QIcon(":/subc.png"), name );
-        mainComp->contextMenu( NULL, submenu );
+        mainComp->contextMenu( nullptr, submenu );
     }
     menu->addSeparator();
 }

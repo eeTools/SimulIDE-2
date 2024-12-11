@@ -9,6 +9,7 @@
 #include "chip.h"
 #include "linker.h"
 
+class LibraryItem;
 class QAction;
 
 class SubPackage : public Chip, public Linker
@@ -18,10 +19,8 @@ class SubPackage : public Chip, public Linker
     public:
         SubPackage( QString id );
         ~SubPackage();
-
+        
  static listItem_t libraryItem();
-
-        virtual void setLogicSymbol( bool ls ) override;
 
         int width() { return m_width; }
         void setWidth( int width );
@@ -29,24 +28,29 @@ class SubPackage : public Chip, public Linker
         int height() { return m_height; }
         void setHeight( int height );
 
-        QString packageFile();
+        QString packageFile() { return m_pkgeFile; }
         void setPackageFile( QString package );
 
         QString bckGndData() { return m_BckGndData; }
         virtual void setBckGndData( QString data ) override;
         virtual void setBackground( QString bck ) override;
 
+        virtual void setLogicSymbol( bool ls ) override;
+
         QString packagePins();
         void setPackagePins( QString pinsStr );
+
+        virtual std::vector<Pin*> getPins() override { std::vector<Pin*> p; return p; } // Used to access wires (we have no wires)
 
         void setEventPin( Pin* pin ) { m_eventPin = pin; }
 
         void savePackage( QString fileName );
 
-        QString subcTypeStr() { return m_enumUids.at( (int)m_subcType ); }
-        void setSubcTypeStr( QString s );
+        virtual void setSubcTypeStr( QString s ) override;
 
         virtual void compSelected( Component* comp ) override;  // Use link mechanism to select main components
+
+        /// virtual void moveSignal() override {;}
 
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
@@ -87,7 +91,7 @@ class SubPackage : public Chip, public Linker
 
         bool m_fakePin; // Data for drawing pin when hovering
         bool m_changed;
-        
+
         int m_angle;  
         int m_p1X;
         int m_p1Y;

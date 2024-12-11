@@ -27,7 +27,8 @@ class PropDialog : public QDialog, private Ui::PropDialog
 
         void changed();
 
-        QList<PropVal*> propWidgets() { return m_propList; }
+        PropVal* getPropWidget( QString propName );
+        //QList<PropVal*> propWidgets() { return m_propList; }
 
     public slots:
         void on_labelBox_editingFinished();

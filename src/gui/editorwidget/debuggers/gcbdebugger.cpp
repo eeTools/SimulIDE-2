@@ -7,6 +7,7 @@
 
 #include "gcbdebugger.h"
 #include "codeeditor.h"
+#include "e_mcu.h"
 #include "outpaneltext.h"
 #include "utils.h"
 
@@ -178,7 +179,7 @@ bool GcbDebugger::mapFlashToSource()  // Map asm_source_line <=> gcb_source_line
 
             QString type = "uint8";
             if( m_varTypes.contains( name ) ) type = m_varTypes.value( name );
-            ///eMcu::self()->getRamTable()->addVariable( name, address ,type  );
+            eMcu::self()->getRamTable()->addVariable( name, address ,type  );
 
             if( type.contains( "array" ) )
             {
@@ -190,7 +191,7 @@ bool GcbDebugger::mapFlashToSource()  // Map asm_source_line <=> gcb_source_line
                 for( int i=1; i<size; i++ )
                 {
                     QString elmName = name+"("+QString::number( i )+")";
-                    ///eMcu::self()->getRamTable()->addVariable( elmName, address+i ,"uint8"  );
+                    eMcu::self()->getRamTable()->addVariable( elmName, address+i ,"uint8"  );
                     if( !m_varTypes.contains( elmName ) )
                     {
                         m_varTypes[ elmName ] = m_typesList.value("uint8");
@@ -250,7 +251,7 @@ bool GcbDebugger::mapFlashToSource()  // Map asm_source_line <=> gcb_source_line
     m_outPane->appendLine( QString::number( varList.size() )+" variables found" );
     //m_outPane->appendLine( QString::number( m_functions.size() )+" functions found" ); /// FIXME: not working?
     m_outPane->appendLine( QString::number( m_flashToSource.size() )+" lines mapped" );
-    ///eMcu::self()->getRamTable()->setVariables( varList );
+    eMcu::self()->getRamTable()->setVariables( varList );
 
     return !m_flashToSource.isEmpty();
 }

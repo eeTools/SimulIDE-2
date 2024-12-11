@@ -18,6 +18,7 @@
 class creCompDialog;
 class CircuitView;
 class SubPackage;
+class SubCircuit;
 class Simulator;
 class Node;
 
@@ -105,6 +106,9 @@ class Circuit : public QGraphicsScene
 
         SubPackage* getBoard() { return m_board; }
         void setBoard( SubPackage* b ) { m_board = b; }
+
+        SubCircuit* getSubcircuit() { return m_subCircuit; }
+        void setSubcircuit( SubCircuit* sc ) { m_subCircuit = sc; }
 
         bool pasting() { return m_pasting; }
         bool isBusy()  { return m_busy || m_pasting | m_deleting; }
@@ -213,6 +217,7 @@ class Circuit : public QGraphicsScene
         QList<Node*>      m_nodeList;   // Node list
 
         SubPackage* m_board;
+        SubCircuit* m_subCircuit;
 
         QMap<QString, PinBase*>  m_pinMap;   // Pin Id to PinBase*
         QMap<QString, PinBase*>  m_LdPinMap; // Pin Id to PinBase* while loading/pasting/importing

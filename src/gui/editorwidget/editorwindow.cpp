@@ -17,15 +17,12 @@
 
 #include "gcbdebugger.h"
 #include "inodebugger.h"
-#include "b16asmdebugger.h"
 #include "avrgccdebugger.h"
 #include "xc8debugger.h"
 #include "sdccdebugger.h"
-#include "picasmdebugger.h"
 #include "asdebugger.h"
 
-
-EditorWindow* EditorWindow::m_pSelf = NULL;
+EditorWindow* EditorWindow::m_pSelf = nullptr;
 
 EditorWindow::EditorWindow( QWidget* parent )
             : EditorWidget( parent )
@@ -51,7 +48,7 @@ void EditorWindow::updateStep()
     QString debugFile = m_debugLine.file;
     int     debugLine = m_debugLine.lineNumber;
 
-    uint64_t cycle = -1; /// eMcu::self()->cycle();
+    uint64_t cycle = 0; /// eMcu::self()->cycle();
     double time    = Simulator::self()->circTime()/1e6;
 
     QString lineStr = QString::number( debugLine );
@@ -230,7 +227,7 @@ void EditorWindow::stopDebbuger()
 
         Simulator::self()->remFromUpdateList( this );
     }
-    m_debugger = nullptr;
+    m_debugger = NULL;
 }
 
 BaseDebugger* EditorWindow::createDebugger( QString name, CodeEditor* ce, QString code )
@@ -249,10 +246,7 @@ BaseDebugger* EditorWindow::createDebugger( QString name, CodeEditor* ce, QStrin
     else if( type == "sdcc" )    debugger = new SdccDebugger( ce, &m_outPane );
     else if( type == "gcbasic" ) debugger = new GcbDebugger( ce, &m_outPane );
     else if( type == "ascript" ) debugger = new asDebugger( ce, &m_outPane );
-    //else if( type == "gputils" ) debugger = new PicAsmDebugger( ce, &m_outPane );
-    //else if( type == "b16asm" )  debugger = new B16AsmDebugger( ce, &m_outPane );
-    else
-    {
+    else{
         debugger = new BaseDebugger( ce, &m_outPane );
         if( name != "None" ) code = type.right( 2 );
         debugger->setLstType( code.right( 1 ).toInt() );
@@ -269,10 +263,10 @@ void EditorWindow::loadCompilers()
     compilsPath = MainWindow::self()->getUserFilePath("codeeditor/compilers/assemblers");
     loadCompilerSet( compilsPath, &m_assemblers );
 
-    //compilsPath = MainWindow::self()->getFilePath("data/codeeditor/compilers/compilers");
-    //loadCompilerSet( compilsPath, &m_compilers );
-    //compilsPath = MainWindow::self()->getFilePath("data/codeeditor/compilers/assemblers");
-    //loadCompilerSet( compilsPath, &m_assemblers );
+    compilsPath = MainWindow::self()->getFilePath("data/codeeditor/compilers/compilers");
+    loadCompilerSet( compilsPath, &m_compilers );
+    compilsPath = MainWindow::self()->getFilePath("data/codeeditor/compilers/assemblers");
+    loadCompilerSet( compilsPath, &m_assemblers );
 }
 
 void EditorWindow::loadCompilerSet( QString compilsPath, QMap<QString, compilData_t>* compList )

@@ -11,7 +11,7 @@
 #include "subpackage.h"
 #include "utils.h"
 
-PackagePin::PackagePin( int angle, const QPoint pos, QString id, int index, SubPackage* parent )
+PackagePin::PackagePin( int angle, const QPoint pos, QString id, SubPackage* parent )
           : Pin( angle, pos, id, parent )
 {
     m_area = QRectF(-1.5,-2, 10, 4);

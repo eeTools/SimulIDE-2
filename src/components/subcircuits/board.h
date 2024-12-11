@@ -8,7 +8,7 @@
 
 #include "subcircuit.h"
 
-class ModuleSubc;
+class ShieldSubc;
 
 class BoardSubc : public SubCircuit
 {
@@ -16,11 +16,18 @@ class BoardSubc : public SubCircuit
         BoardSubc( QString id );
         ~BoardSubc();
 
-        void setBoard( BoardSubc* board );
+        virtual void setLogicSymbol( bool ls ) override;
+
+        void attachShield( ShieldSubc* shield );
+        void detachShield( ShieldSubc* shield ) { m_shields.removeAll( shield); }
+
         BoardSubc* parentBoard() { return m_parentBoard; }
 
+        virtual QString toString() override;
+
     protected:
-        QList<ModuleSubc*> m_shields; // A list of shields attached to this
+        QList<ShieldSubc*> m_shields; // A list of shields attached to this
         BoardSubc* m_parentBoard;     // A board this is attached to (this is a shield)
+
 };
 #endif

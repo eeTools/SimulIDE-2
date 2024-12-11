@@ -14,9 +14,9 @@
 #define tr(str) simulideTr("ModuleSubc",str)
 
 ModuleSubc::ModuleSubc( QString id )
-          : BoardSubc( id )
+          : ShieldSubc( id )
 {
-    m_subcType = Chip::Module;
+    m_subcType = "Module";
     setZValue( 2 );
 
     addPropGroup( { tr("Main"), {
@@ -46,10 +46,11 @@ void ModuleSubc::slotAttach()
         if( !(comp->itemType() == "Subcircuit") ) continue;  // Not a Subcircuit
 
         BoardSubc* board = (BoardSubc*)comp;
-        if( board->subcType() < Board ) continue;            // Not a Board
+        if( !board->isBoard() ) continue;            // Not a Board
 
-        if( board->subcType() > Board ){
-            ModuleSubc* shield = static_cast<ModuleSubc*>(board);
+        QString subcType = board->subcTypeStr();
+        if( subcType == "Shield" || subcType == "Module" ){
+            ShieldSubc* shield = static_cast<ShieldSubc*>(board);
             if( m_shields.contains( shield ) ) continue;     // Is my child
         }
         boardList.append( board );

@@ -8,8 +8,8 @@
 #include "basedebugger.h"
 #include "editorwindow.h"
 #include "simulator.h"
-///#include "cpubase.h"
-///#include "mcu.h"
+#include "cpubase.h"
+#include "mcu.h"
 #include "utils.h"
 
 #define tr(str) QCoreApplication::translate("BaseDebugger",str)
@@ -25,7 +25,7 @@ BaseDebugger::BaseDebugger( CodeEditor* parent, OutPanelText* outPane )
 }
 BaseDebugger::~BaseDebugger( )
 {
-    /// Fixme if( eMcu::self() ) eMcu::self()->getRamTable()->remDebugger( this );
+    if( eMcu::self() ) eMcu::self()->getRamTable()->remDebugger( this );
 }
 
 bool BaseDebugger::upload()
@@ -35,13 +35,13 @@ bool BaseDebugger::upload()
         m_outPane->appendLine( "\n"+tr("Error: Hex file doesn't exist:")+"\n"+m_firmware );
         return false;
     }
-    /*if( !Mcu::self() )
+    if( !Mcu::self() )
     {
         m_outPane->appendLine( "\n"+tr("Error: No Mcu in Simulator... ") );
         return false;
-    }*/
+    }
     bool ok = true;
-    /*if( !m_firmware.isEmpty() )
+    if( !m_firmware.isEmpty() )
     {
         ok = Mcu::self()->load( m_firmware );
         if( ok ) m_outPane->appendText( "\n"+tr("FirmWare Uploaded to ") );
@@ -55,7 +55,7 @@ bool BaseDebugger::upload()
         m_running = false;
         eMcu::self()->setDebugger( this );
         if( m_fileExt != ".hex" ) ok = postProcess();
-    }*/
+    }
     return ok;
 }
 
@@ -249,7 +249,7 @@ void BaseDebugger::stepDebug()
 {
     if( !m_debugStep ) return;
 
-    /*int lastPC = eMcu::self()->cpu()->getPC();
+    int lastPC = eMcu::self()->cpu()->getPC();
     eMcu::self()->stepCpu();
     int PC = eMcu::self()->cpu()->getPC();
 
@@ -276,8 +276,7 @@ void BaseDebugger::stepDebug()
             {
                 m_prevLine = line;
                 EditorWindow::self()->lineReached( line );
-    }   }   }   */
-}
+}   }   }   }
 
 QString BaseDebugger::getValueInFile( QString line, QString key ) // Static
 {
@@ -315,9 +314,14 @@ bool BaseDebugger::isNoValid( QString line )
 
 void BaseDebugger::setLineToFlash( codeLine_t line, int addr )
 {
+    //int lineNumber = line.lineNumber;
     if( !m_flashToSource.contains( addr ) )
     {
+        //qDebug() << " line:" << line << "addr:" << addr;
+        //if( lineNumber > m_lastLine ) m_lastLine = lineNumber;
         m_flashToSource[ addr ] = line;
+        ///qDebug() <<addr<<line.lineNumber<<line.file;
+        //m_sourceToFlash[ lineNumber ] = addr;
     }
 }
 
@@ -347,3 +351,5 @@ QString BaseDebugger::getVarType( QString var )
 {
     return m_varTypes.value( var );
 }
+
+//#include "moc_basedebugger.cpp"

@@ -9,6 +9,7 @@
 #include "chip.h"
 
 class Tunnel;
+class LibraryItem;
 
 class SubCircuit : public Chip
 {

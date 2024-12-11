@@ -7,6 +7,7 @@
 #include "circuitwidget.h"
 #include "mainwindow.h"
 #include "simulator.h"
+//#include "wire.h"
 #include "circuit.h"
 #include "utils.h"
 #include "pin.h"
@@ -21,14 +22,23 @@ Chip::Chip( QString id )
     , m_label( this )
 {
     m_id = id;
-    /// m_name = m_type;
+    QStringList list = id.split("-");
+    if( list.size() > 1 ) m_name = list.at( list.size()-2 ); // for example: "atmega328-1" to: "atmega328"
 
-    m_subcType = None;
+    m_subcType = "None";
+    m_isBoard = false;
+
     m_isLS = false;
     m_initialized = false;
     m_package  = "";
-    m_backPixmap = nullptr;
-    m_backData   = nullptr;
+    m_backPixmap = NULL;
+    m_backData   = NULL;
+
+    m_topMargin    = 0;
+    m_bottomMargin = 0;
+    m_rightMargin  = 0;
+    m_leftMargin   = 0;
+    m_margins = "0,0,0,0";
     
     m_lsColor = QColor( 255, 255, 255 );
     m_icColor = QColor( 50, 50, 70 );
@@ -83,7 +93,7 @@ bool Chip::setPropStr( QString prop, QString val )
     return Component::setPropStr( prop, val );
 }
 
-QMap<QString, QString> Chip::getPackages( QString compFile )
+QMap<QString, QString> Chip::getPackages( QString compFile ) // Static
 {
     QMap<QString, QString> packageList;
 
@@ -100,6 +110,7 @@ QMap<QString, QString> Chip::getPackages( QString compFile )
         if( itemType.name != "itemtype") continue;
         if( itemType.value != "Package") break;    // All packages processed
 
+        bool addPackage = false;
         QString pkgName;
         QString pkgStr = "Package; ";
 
@@ -107,17 +118,20 @@ QMap<QString, QString> Chip::getPackages( QString compFile )
         {
             QString propName  = prop.name.toString();
             QString propValue = prop.value.toString();
-            if     ( propName == "SubcType" && propValue != "None") s_subcType = propValue; // Only for Subcircuits
-            else if( propName == "label") pkgName = propValue;
+
+            if     ( propName == "SubcType" ) { if( propValue != "None" ) s_subcType = propValue; } // Only for Subcircuits
+            else if( propName == "label"    ) pkgName = propValue;
+            //else if( propName == "Logic_Symbol") ls = ( propValue == "true");
 
             if( propName == "Pins"){
-                propValue.replace("&#xa;","\n"); ///.replace("&#x3D;", "=");
+                propValue.replace("&#xa;","\n");
+                if( propValue.contains("&") ) propValue = cleanPinName( propValue );
                 pkgStr += "\n"+propValue;
+                addPackage = true;         // Package contains Pin info (new circuits)
             }
             else pkgStr += propName+"="+propValue+"; ";
         }
-        if( !pkgName.isEmpty() ) packageList[pkgName] = pkgStr;
-        //qDebug() << pkgStr;
+        if( addPackage && !pkgName.isEmpty() ) packageList[pkgName] = pkgStr;
     }
     return packageList;
 }
@@ -142,21 +156,32 @@ QString Chip::convertPackage( QString pkgText ) // Static, converts xml to new f
             {
                 QString propName  = prop.name.toString();
                 QString propValue = prop.value.toString();
-                pkgStr += propName+"="+propValue+"; ";
-
                 if( propName == "type" ) s_subcType = propValue.remove("subc");
+                pkgStr += propName+"="+propValue+"; ";
             }
         }else if( !properties.isEmpty() )
         {
             pkgStr += "Pin; ";
             for( propStr_t prop : properties )
-                pkgStr += prop.name.toString()+"="+prop.value.toString()+"; ";
+            {
+                QString value = prop.value.toString();
+                if( value.contains("&") ) value = cleanPinName( value );
+                pkgStr += prop.name.toString()+"="+value+"; ";
+            }
         }
         pkgStr += "\n";
     }
     //qDebug() << pkgStr;
 
     return pkgStr;
+}
+
+QString Chip::cleanPinName( QString name )
+{
+    name.replace("&#x3D;", "=").replace("&#x3C;", "<").replace("&#x3E;", ">")
+        .replace("&#x3D" , "=").replace("&#x3C" , "<").replace("&#x3E" , ">")
+        .replace("&lt;", "<") ;
+    return name;
 }
 
 void Chip::setName( QString name )
@@ -176,15 +201,17 @@ void Chip::setPackage( QString package )
 
     m_package = package;
 
-    setLogicSymbol( !package.endsWith("DIP") );
+    m_isLS = !package.endsWith("DIP");
 
     QString pkgStr = m_packageList.value( package );
     initPackage( pkgStr );
+    setLogicSymbol( m_isLS );
 }
 
 void Chip::initPackage( QString pkgStr )
 {
     if( Simulator::self()->isRunning() ) CircuitWidget::self()->powerCircOff();
+    m_customColor = false;
     m_tempPins.clear();
     for( Pin* pin : m_ncPins ) m_tempPins.append( pin );
     for( Pin* pin : m_pin    ) m_tempPins.append( pin );
@@ -199,20 +226,22 @@ void Chip::initPackage( QString pkgStr )
         if( line.isEmpty() ) continue;
 
         QVector<propStr_t> properties = parseProps( line );
+        if( properties.isEmpty() ) break;
+
         QStringRef item = properties.takeFirst().name;
         if( item == "Package" )
         {
             for( propStr_t property : properties )
             {
-                QStringRef name = property.name;  // Property_name
-                QStringRef val  = property.value; // Property value
+                QString   name = property.name.toString().toLower();  // Property name
+                QStringRef val = property.value;                      // Property value
 
-                if     ( name == "width"       ) m_width  = val.toInt();
-                else if( name == "height"      ) m_height = val.toInt();
-                else if( name == "name"        ) embedName = val.toString();
-                else if( name == "background"  ) setBackground( val.toString() );
-                else if( name == "bckgnddata"  ) setBckGndData( val.toString() );
-                else if( name == "logic_symbol") setLogicSymbol( val == "true" );
+                if     ( name == "width"     ) m_width  = val.split(" ").first().toInt();
+                else if( name == "height"    ) m_height = val.split(" ").first().toInt();
+                else if( name == "name"      ) embedName = val.toString();
+                else if( name == "background") setBackground( val.toString() );
+                else if( name == "bckgnddata") setBckGndData( val.toString() );
+                else if( name == "logic_symbol") m_isLS = ( val == "true" );
             }
         }
         else if( item == "Pin" ) setPinStr( properties );
@@ -223,10 +252,9 @@ void Chip::initPackage( QString pkgStr )
         pin->setVisible( false );
         pin->setLabelText("");
     }
-
     m_initialized = true;
     m_area = QRect( 0, 0, 8*m_width, 8*m_height );
-    if( m_subcType >= Board ) setTransformOriginPoint( toGrid( boundingRect().center()) );
+    if( this->isBoard() ) setTransformOriginPoint( toGrid( boundingRect().center()) );
 
     if( embedName == "Package" ) embedName = m_name;
     setName( embedName );
@@ -297,9 +325,8 @@ void Chip::addNewPin( QString id, QString type, QString label, int pos, int xpos
     if( !pin ) return;
 
     if( pin->unused() ) m_ncPins.append( pin );
-    else{
-        m_pin.emplace_back( pin );
-    }
+    else                m_pin.emplace_back( pin );
+
     m_tempPins.removeOne( pin );
 }
 
@@ -309,9 +336,9 @@ void Chip::setLogicSymbol( bool ls )
     QColor labelColor = QColor( 0, 0, 0 );
 
     if( ls ){
-        m_color = m_lsColor;
+        if( !m_customColor ) m_color = m_lsColor;
     }else{
-        m_color = m_icColor;
+        if( !m_customColor ) m_color = m_icColor;
         labelColor = QColor( 250, 250, 200 );
     }
     for( Pin* pin : m_pin ) pin->setLabelColor( labelColor );
@@ -343,7 +370,6 @@ void Chip::setBckGndData( QString data )
 
 void Chip::setBackground( QString bck )
 {
-    /// TODO: mostly repeated in SubPackage::setBackground
     m_background = bck;
 
     if( bck.startsWith("color") )
@@ -353,16 +379,19 @@ void Chip::setBackground( QString bck )
         if( rgb.size() < 3 ) return;
 
         m_color = QColor( rgb.at(0).toInt(), rgb.at(1).toInt(), rgb.at(2).toInt() );
+        m_customColor = true;
     }
-    else if( bck != "" ){
-        QDir dir = QFileInfo( m_dataFile ).absoluteDir();
-        QString pixmapPath = dir.absoluteFilePath( bck );  // Image in subcircuit folder
+    else if( bck != "" )
+    {
+        QString pixmapPath = ""; /// MainWindow::self()->getCircFilePath( bck ); // Image in circuit/data folder
 
         if( !QFile::exists( pixmapPath ) ){
-            dir = QFileInfo( Circuit::self()->getFilePath() ).absoluteDir();
-            pixmapPath = dir.absoluteFilePath( bck );    // Image in circuit/data folder
+            QDir dir = QFileInfo( m_dataFile ).absoluteDir();
+            pixmapPath = dir.absoluteFilePath( bck );              // Image in subcircuit folder
         }
-        if( !QFile::exists( pixmapPath ) ) pixmapPath = MainWindow::self()->getDataFilePath("images/"+bck );
+        if( !QFile::exists( pixmapPath ) )                    // Image in user/data/images or simulide/data/images
+            pixmapPath = MainWindow::self()->getDataFilePath("images/"+bck );
+
         if( QFile::exists( pixmapPath ) )
         {
             if( !m_backPixmap ) m_backPixmap = new QPixmap();
@@ -389,15 +418,34 @@ void Chip::findHelp()
     else                                m_help = MainWindow::self()->getHelp( m_name, false );
 }
 
+void Chip::setMargins( QString margins )
+{
+    m_margins = margins;
+
+    QStringList mList = margins.split(",");
+    mList.removeAll("");
+    if( margins.size() ) m_topMargin    = mList.takeFirst().toInt();
+    if( margins.size() ) m_bottomMargin = mList.takeFirst().toInt();
+    if( margins.size() ) m_rightMargin  = mList.takeFirst().toInt();
+    if( margins.size() ) m_leftMargin   = mList.takeFirst().toInt();
+}
+
 void Chip::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     Component::paint( p, o, w );
 
-    if( m_backPixmap ) p->drawPixmap( QRect(m_area.x(), m_area.y(), m_width*8, m_height*8), *m_backPixmap );
+    QRect imgArea = QRect( m_area.x()+m_leftMargin
+                         , m_area.y()+m_topMargin
+                         , m_area.width()-m_leftMargin-m_rightMargin
+                         , m_area.height()-m_topMargin-m_bottomMargin );
+
+    if( m_backPixmap ) p->drawPixmap( imgArea, *m_backPixmap );
     else{
         p->drawRoundedRect( m_area, 1, 1);
         if( m_backData  )
         {
+            p->setRenderHint( QPainter::Antialiasing, true );
+
             double w = m_backData->size();
             double h = m_backData->at(0).size();
 
@@ -412,9 +460,9 @@ void Chip::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
                     painter.fillRect( QRectF( x, y*3, 3, 3 ), QColor(m_backData->at(col).at(y) ) );
             }
             painter.end();
-            p->drawImage( m_area, img );
+            p->drawImage( imgArea, img );
         }
-        else if( m_subcType < Board && !m_isLS /*&& m_background.isEmpty()*/ )
+        else if( !this->isBoard() && !m_isLS /*&& m_background.isEmpty()*/ )
         {
             p->setPen( QColor( 170, 170, 150 ) );
             if( m_width == m_height ) p->drawEllipse( 4, 4, 4, 4);

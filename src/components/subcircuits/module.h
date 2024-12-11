@@ -6,9 +6,9 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include "board.h"
+#include "shield.h"
 
-class ModuleSubc : public BoardSubc
+class ModuleSubc : public ShieldSubc
 {
     public:
         ModuleSubc( QString id );
@@ -17,9 +17,9 @@ class ModuleSubc : public BoardSubc
         double zVal() { return zValue(); }
         void setZVal( double v);
 
-        virtual void slotAttach();
+        virtual void slotAttach() override;
 
     protected:
-        virtual void renameTunnels();
+        virtual void renameTunnels() override;
 };
 #endif

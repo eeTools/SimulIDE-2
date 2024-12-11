@@ -61,6 +61,8 @@ Circuit::Circuit( int width, int height, CircuitView* parent )
     m_creCompDialog = nullptr;
     m_board = nullptr;
     m_newWire = nullptr;
+    m_subCircuit = nullptr;
+
     m_seqNumber = 0;
     m_conNumber = 0;
     m_maxUndoSteps = 100;
@@ -199,8 +201,6 @@ void Circuit::loadStrDoc( QString &doc )
     QList<Wire*>      connList;   // Pasting Connector list
     QList<Node*>      nodeList;   // Pasting node list
 
-    Component* lastComp = nullptr;
-
     m_circRev = 0;
     m_busy  = true;
     if( !m_undo && !m_redo ) m_LdPinMap.clear();
@@ -320,16 +320,16 @@ void Circuit::loadStrDoc( QString &doc )
                 m_compMap[newUid] = joint;
             }
             else{
-                lastComp = nullptr;
+                m_subCircuit = nullptr;  // Subcircuits set this value at
                 Component* comp = createItem( type, newUid );
 
                 if( !comp ){ qDebug() << " ERROR Creating Component: "<< type << uid;
                     continue; }
 
-                if( type == "Subcircuit")
+                /*if( type == "Subcircuit")
                 {
                     lastComp  = comp;
-                }
+                }*/
                 /// Why?? // comp->setPropStr("label", label ); //setIdLabel( label );
 
                 comp->loadProperties( properties );

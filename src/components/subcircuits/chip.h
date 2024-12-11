@@ -15,14 +15,9 @@ class Chip : public Component, public Element
         Chip( QString id );
         ~Chip();
 
-        enum subcType_t{
-            None=0,
-            Logic,
-            Board,
-            Module
-        };
-
         virtual bool setPropStr( QString prop, QString val ) override;
+
+        bool isBoard() { return m_isBoard; }
 
         QString package() { return m_package; }
         virtual void setPackage( QString package );
@@ -36,11 +31,16 @@ class Chip : public Component, public Element
         QString name() { return m_name; }
         void setName( QString name );
 
-        subcType_t subcType() { return m_subcType; }
+        //subcType_t subcType() { return m_subcType; }
+        QString subcTypeStr() { return m_subcType; }
+        virtual void setSubcTypeStr( QString s ){ m_subcType = s; }
 
         int pkgWidth() { return m_width; }
 
         void setBackData( std::vector<std::vector<int>>* d ) { m_backData = d; }
+
+        void setMargins( QString margins );
+        QString getMargins() { return m_margins; }
 
         virtual void setflip() override;
 
@@ -48,6 +48,7 @@ class Chip : public Component, public Element
 
  static QMap<QString, QString> getPackages( QString compText );
  static QString convertPackage( QString pkgText );
+ static QString cleanPinName( QString name );
  static QString s_subcType;
 
     protected:
@@ -68,11 +69,18 @@ class Chip : public Component, public Element
 
         int m_width;
         int m_height;
+        int m_topMargin;
+        int m_bottomMargin;
+        int m_rightMargin;
+        int m_leftMargin;
+        QString m_margins;
         
         bool m_isLS;
         bool m_initialized;
+        bool m_customColor;
+        bool m_isBoard;
 
-        subcType_t m_subcType;
+        QString m_subcType;
 
         QColor m_lsColor;
         QColor m_icColor;

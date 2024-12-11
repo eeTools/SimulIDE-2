@@ -62,7 +62,10 @@ class BaseDebugger : public Compiler    // Base Class for all debuggers
 
         codeLine_t m_prevLine;
 
-        int m_exitPC;
+        int  m_exitPC;
+        //QList<int>* m_brkPoints;
+
+        //int m_lastLine;
         int m_lstType;   // Bit0: 0 doesn't use ":" (gpasm ), 1 uses ":" (avra, gavrasm)
                          // Bit1: position of flash address (0 or 1)
         int m_langLevel; // 0 for asm, 1 for high level
@@ -70,11 +73,12 @@ class BaseDebugger : public Compiler    // Base Class for all debuggers
 
         QString m_appPath;
         
-        QMap<QString, QString> m_typesList;
-        QMap<QString, QString> m_varTypes;     // Variable name-Type got from source file
-        QMap<int, codeLine_t> m_flashToSource; // Map flash adress to Source code line
-        QMap<QString, int> m_functions;        // Function name list->start Address
-        QList<int>          m_funcAddr;        // Function start Address list
+        QHash<QString, QString> m_typesList;
+        QHash<QString, QString> m_varTypes;     // Variable name-Type got from source file
+        QHash<int, codeLine_t> m_flashToSource; // Map flash adress to Source code line
+        //QHash<int, int> m_sourceToFlash;        // Map Source code line to flash adress
+        QHash<QString, int> m_functions;        // Function name list->start Address
+        QList<int>          m_funcAddr;         // Function start Address list
 };
 
 #endif

@@ -63,10 +63,6 @@ CodeEditor::CodeEditor( QWidget* parent, OutPanelText* outPane )
 
     m_tab = EditorWindow::self()->tabString();
 
-    m_enumUids = m_enumNames = EditorWindow::self()->compilers()+EditorWindow::self()->assemblers();
-    m_enumUids.prepend("None");
-    m_enumNames.prepend(tr("None"));
-
     setFont( EditorWindow::self()->getFont() );
 
     setAcceptDrops( false );
@@ -102,8 +98,13 @@ CodeEditor::CodeEditor( QWidget* parent, OutPanelText* outPane )
                                 , this, &CodeEditor::itemType, &CodeEditor::setItemType ),
             }, groupHidden} );
 
+    QString enums = EditorWindow::self()->compilers().join(",")
+            +EditorWindow::self()->assemblers().join(",");
+
+    enums = "None,"+enums+";"+tr("None")+","+enums;
+
     addPropGroup( { tr("File Settings"), {
-        new StrProp <CodeEditor>("Compiler", tr("Compiler"),""
+        new StrProp <CodeEditor>("Compiler", tr("Compiler"), enums
                                 , this, &CodeEditor::compName, &CodeEditor::setCompName, 0, "enum"),
 
         new BoolProp<CodeEditor>("SaveAtClose", tr("Save Settings at file close"),""
@@ -689,9 +690,11 @@ void CodeEditor::keyPressEvent( QKeyEvent* event )
             }
         }else{
             QString text = event->text();
-            for( QPair<QString, QString> pair : pairs )  // Auto close pairs
+            for( int i=0; i<pairs.size(); ++i )  // Auto close pairs
             {
+                QPair<QString, QString> pair = pairs.at(i);
                 if( pair.first != text ) continue;
+                if( !(m_autoClose & 1<<i) ) continue;
                 insertPlainText( pair.second );
                 moveCursor( QTextCursor::MoveOperation::Left );
                 break;
@@ -812,7 +815,7 @@ void CodeEditor::saveConfig()
     //config += "file=\""+m_file+"\" ";
     config += ">\n";
     config += this->toString();
-    if( getEnumIndex( compName() ) ) config += m_compiler->toString();
+    if( !compName().isEmpty() ) config += m_compiler->toString();
     config += "\n</document>";
 
     if( !file.open( QFile::WriteOnly | QFile::Text) )
