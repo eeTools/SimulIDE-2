@@ -15,11 +15,11 @@ listItem_t Header::libraryItem(){
         "Connectors",
         "header.png",
         "Header",
-        [](QString type, QString id){ return (Component*)new Header( type, id ); } };
+        [](QString id){ return (Component*)new Header( id ); } };
 }
 
-Header::Header( QString type, QString id )
-      : ConnBase( type, id )
+Header::Header( QString id )
+      : ConnBase( id )
 {
     this->setZValue(-1 );
 

@@ -12,7 +12,7 @@
 class Dialed : public Component
 {
     public:
-        Dialed( QString type, QString id );
+        Dialed( QString id );
         ~Dialed();
 
         QList<ComProperty*> dialProps();

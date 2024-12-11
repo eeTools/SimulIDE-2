@@ -12,7 +12,7 @@
 class Chip : public Component, public Element
 {
     public:
-        Chip( QString type, QString id );
+        Chip( QString id );
         ~Chip();
 
         enum subcType_t{

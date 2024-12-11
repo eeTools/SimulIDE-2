@@ -17,7 +17,7 @@ class QGraphicsProxyWidget;
 class PlotBase : public Component//, public ScriptBase
 {
     public:
-        PlotBase( QString type, QString id );
+        PlotBase( QString id );
         ~PlotBase();
 
         virtual bool setPropStr( QString prop, QString val ) override;

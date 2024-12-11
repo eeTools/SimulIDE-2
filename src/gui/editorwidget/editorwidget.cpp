@@ -29,7 +29,7 @@
 
 EditorWidget::EditorWidget( QWidget* parent )
             : QWidget( parent )
-            , CompBase( "Editor", "" )
+            , CompBase("")
             , m_outPane( this )
             , m_settingsMenu( this )
             , m_fileMenu( this )

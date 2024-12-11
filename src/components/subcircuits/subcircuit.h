@@ -13,10 +13,10 @@ class Tunnel;
 class SubCircuit : public Chip
 {
     public:
-        SubCircuit( QString type, QString id );
+        SubCircuit( QString id );
         ~SubCircuit();
 
- static Component* construct( QString type, QString id );
+ static Component* construct( QString id );
  static listItem_t libraryItem();
 
         virtual void remove() override;

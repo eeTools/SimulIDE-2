@@ -26,8 +26,8 @@
 int  Component::m_error = 0;
 bool Component::m_boardMode = false;
 
-Component::Component( QString type, QString id )
-         : CompBase( type, id )
+Component::Component( QString id )
+         : CompBase( id )
          , QGraphicsItem()
 {
     m_help = "";
@@ -74,7 +74,7 @@ Component::Component( QString type, QString id )
     m_idLabel->setFont( font );
     setLabelPos(-16,-24, 0 );
     setShowId( false );
-    Component::setIdLabel( type+"-"+id );
+    Component::setIdLabel( m_type+"-"+id );
     
     m_valLabel = new Label( this );
     m_valLabel->setDefaultTextColor( Qt::darkRed );

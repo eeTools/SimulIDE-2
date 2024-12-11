@@ -13,8 +13,8 @@
 
 #define tr(str) simulideTr("ConnBase",str)
 
-ConnBase::ConnBase( QString type, QString id )
-        : Component( type, id )
+ConnBase::ConnBase( QString id )
+        : Component( id )
         , Element( id )
 {
     m_graphical = true;

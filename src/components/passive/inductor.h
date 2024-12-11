@@ -3,20 +3,24 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef VOLTMETER_H
-#define VOLTMETER_H
+#ifndef INDUCTOR_H
+#define INDUCTOR_H
 
-#include "meter.h"
+#include "component.h"
+#include "inductance.h"
 
-class Voltmeter : public Meter
+class Inductor : public Component, public Inductance
 {
     public:
-        Voltmeter( QString id );
-        ~Voltmeter();
+        Inductor( QString id );
+        ~Inductor();
 
  static listItem_t libraryItem();
 
-        virtual void updateStep() override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+
+    protected:
+
 };
 
 #endif

@@ -24,11 +24,11 @@ listItem_t Probe::libraryItem(){
         "Meters",
         "probe.png",
         "Probe",
-        [](QString type, QString id){ return (Component*)new Probe( type, id ); } };
+        [](QString id){ return (Component*)new Probe( id ); } };
 }
 
-Probe::Probe( QString type, QString id )
-     : Component( type, id )
+Probe::Probe( QString id )
+     : Component( id )
      , Element( id )
 {
     setZValue( 200 );

@@ -20,7 +20,7 @@ struct sample_t{
 class LAnalizer : public PlotBase
 {
     public:
-        LAnalizer( QString type, QString id );
+        LAnalizer( QString id );
         ~LAnalizer();
 
  static listItem_t libraryItem();

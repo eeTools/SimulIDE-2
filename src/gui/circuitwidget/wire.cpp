@@ -17,8 +17,8 @@
 
 #define tr(str) simulideTr("Wire",str)
 
-Wire::Wire( QString type, QString id, PinBase* startpin, PinBase* endpin )
-    : CompBase( type, id )
+Wire::Wire( QString id, PinBase* startpin, PinBase* endpin )
+    : CompBase( id )
     , QGraphicsItem()
 {
     m_type = "Wire";
@@ -223,7 +223,7 @@ void Wire::splitCon( int index, Node* node )
 
     QPoint cutPoint = node->scenePos().toPoint();
 
-    Wire* wire0 = new Wire( "Wire", Circuit::self()->newWireId(), m_startPin );
+    Wire* wire0 = new Wire( Circuit::self()->newWireId(), m_startPin );
     Circuit::self()->conList()->append( wire0 );
 
     QList<QPoint> poinVector;
@@ -273,7 +273,7 @@ bool Wire::connectToWire( QPoint cutPoint )
 
     if( !Circuit::self()->is_constarted() ) Circuit::self()->beginUndoStep(); // A new Wire started here
 
-    Node* node = new Node( "Node", Circuit::self()->newSceneId() );     // Now add the Node
+    Node* node = new Node( Circuit::self()->newSceneId() );     // Now add the Node
     node->setPos( cutPoint );
     Circuit::self()->addNode( node );
 

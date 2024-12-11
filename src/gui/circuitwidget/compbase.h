@@ -33,7 +33,7 @@ class PropDialog;
 class CompBase
 {
     public:
-        CompBase( QString type, QString id );
+        CompBase( QString id );
         virtual ~CompBase();
 
         void addPropGroup( propGroup pg, bool list=true );
@@ -56,7 +56,7 @@ class CompBase
         void setUid( QString uid ) { m_id = uid; }
 
         QString itemType()  { return m_type; }
-        void setItemType( QString ) {;}
+        void setItemType( QString t ) { m_type = t; }
 
         virtual bool isHidden() { return false;}
 

@@ -10,8 +10,8 @@
 
 #define tr(str) simulideTr("LogicSubc",str)
 
-LogicSubc::LogicSubc( QString type, QString id )
-         : SubCircuit( type, id )
+LogicSubc::LogicSubc( QString id )
+         : SubCircuit( id )
 {
     m_subcType = Chip::Logic;
 

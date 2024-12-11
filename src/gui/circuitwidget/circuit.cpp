@@ -284,7 +284,7 @@ void Circuit::loadStrDoc( QString &doc )
                     int number = uid.split("-").last().toInt();
                     if( number > m_conNumber ) m_conNumber = number; // Adjust Connector counter: m_conNumber
                 }
-                Wire* con = new Wire( type, uid, startpin, endpin );
+                Wire* con = new Wire( uid, startpin, endpin );
                 con->setPointList( pointList );
                 connList.append( con );
             }
@@ -311,7 +311,7 @@ void Circuit::loadStrDoc( QString &doc )
 
             if( type == "Node")
             {
-                Node* joint = new Node( type, newUid );
+                Node* joint = new Node( newUid );
 
                 joint->loadProperties( properties );
 
@@ -571,13 +571,14 @@ void Circuit::removeNode( Node* node )
     m_removedComps.append( node );
 }
 
-void Circuit::removeWire( Wire* conn )
+void Circuit::removeWire( Wire* wire )
 {
-    if( !m_connList.contains(conn) ) return;
-    conn->remove();
-    m_connList.removeOne( conn );
-    m_compMap.remove( conn->getUid() );
-    m_removedComps.append( conn );
+    if( !m_connList.contains( wire ) ) return;
+    wire->remove();
+    m_connList.removeOne( wire );
+    m_compMap.remove( wire->getUid() );
+    m_removedComps.append( wire );
+    removeItem( wire );
 }
 
 void Circuit::clearCircuit() // Remove everything ( Clear Circuit )
@@ -868,7 +869,7 @@ void Circuit::newWire( PinBase* startpin, bool save )
 
     QString id = newWireId() ;
 
-    m_newWire = new Wire( "Wire", id, startpin );
+    m_newWire = new Wire( id, startpin );
     m_connList.append( m_newWire );
 }
 

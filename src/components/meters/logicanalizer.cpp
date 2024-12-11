@@ -28,11 +28,11 @@ listItem_t LAnalizer::libraryItem(){
         "Meters",
         "lanalizer.png",
         "LAnalizer",
-        [](QString type, QString id){ return (Component*)new LAnalizer( type, id ); } };
+        [](QString id){ return (Component*)new LAnalizer( id ); } };
 }
 
-LAnalizer::LAnalizer( QString type, QString id )
-         : PlotBase( type, id )
+LAnalizer::LAnalizer( QString id )
+         : PlotBase( id )
 {
     m_numChannels = 8;
     m_bufferSize = 100000;

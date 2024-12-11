@@ -11,7 +11,7 @@
 class Socket : public ConnBase
 {
     public:
-        Socket( QString type, QString id );
+        Socket( QString id );
         ~Socket();
 
  static listItem_t libraryItem();

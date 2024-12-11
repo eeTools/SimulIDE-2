@@ -17,8 +17,8 @@
 
 #define tr(str) simulideTr("Dialed",str)
 
-Dialed::Dialed( QString type, QString id )
-      : Component( type, id )
+Dialed::Dialed( QString id )
+      : Component( id )
 {
     m_areaDial = QRectF(-11, 8, 22, 22 );
     m_areaComp = QRectF(-11,-11, 22, 16 );

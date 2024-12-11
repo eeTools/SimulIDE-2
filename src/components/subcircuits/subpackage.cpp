@@ -41,11 +41,11 @@ listItem_t SubPackage::libraryItem(){
         "Other",
         "resistordip.png",
         "Package",
-        [](QString type, QString id){ return (Component*)new SubPackage( type, id ); } };
+        [](QString id){ return (Component*)new SubPackage( id ); } };
 }
 
-SubPackage::SubPackage( QString type, QString id )
-          : Chip( type, id )
+SubPackage::SubPackage( QString id )
+          : Chip( id )
 {
     m_linkCursor = QCursor( QPixmap(":/expose.png"), 10, 10 );
 

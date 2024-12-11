@@ -11,7 +11,7 @@
 class ModuleSubc : public BoardSubc
 {
     public:
-        ModuleSubc( QString type, QString id );
+        ModuleSubc( QString id );
         ~ModuleSubc();
         
         double zVal() { return zValue(); }

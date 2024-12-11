@@ -14,7 +14,7 @@ class IoPin;
 class Meter : public Component, public Resistance
 {
     public:
-        Meter( QString type, QString id );
+        Meter( QString id );
         ~Meter();
 
         virtual bool setPropStr( QString prop, QString val ) override;

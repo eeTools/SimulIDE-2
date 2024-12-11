@@ -3,20 +3,24 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef VOLTMETER_H
-#define VOLTMETER_H
+#ifndef RESISTOR_H
+#define RESISTOR_H
 
-#include "meter.h"
+#include "component.h"
+#include "resistance.h"
 
-class Voltmeter : public Meter
+class Resistor : public Component, public Resistance
 {
     public:
-        Voltmeter( QString id );
-        ~Voltmeter();
+        Resistor( QString id );
+        ~Resistor();
 
  static listItem_t libraryItem();
 
-        virtual void updateStep() override;
+        void initialize() override;
+
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 };
 
 #endif
+

@@ -15,13 +15,13 @@ QString Chip::s_subcType = "None";
 
 #define tr(str) simulideTr("Chip",str)
 
-Chip::Chip( QString type, QString id )
-    : Component( type, id )
+Chip::Chip( QString id )
+    : Component( id )
     , Element( id )
     , m_label( this )
 {
     m_id = id;
-    m_name = type;
+    /// m_name = m_type;
 
     m_subcType = None;
     m_isLS = false;

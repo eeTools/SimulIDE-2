@@ -23,7 +23,7 @@ class Wire : public CompBase, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        Wire( QString type, QString id, PinBase* startpin, PinBase* endpin=nullptr );
+        Wire( QString id, PinBase* startpin, PinBase* endpin=nullptr );
         ~Wire();
 
         enum { Type = UserType + 2 };

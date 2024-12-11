@@ -6,27 +6,27 @@
 #include "voltmeter.h"
 #include "pin.h"
 
-#define tr(str) simulideTr("Voltimeter",str)
+#define tr(str) simulideTr("Voltmeter",str)
 
-listItem_t Voltimeter::libraryItem(){
+listItem_t Voltmeter::libraryItem(){
     return {
         tr("Voltmeter"),
         "Meters",
         "voltmeter.png",
         "Voltmeter",
-        [](QString type, QString id){ return (Component*)new Voltimeter( type, id ); } };
+        [](QString id){ return (Component*)new Voltmeter( id ); } };
 }
 
-Voltimeter::Voltimeter( QString type, QString id )
-          : Meter( type, id )
+Voltmeter::Voltmeter( QString id )
+          : Meter( id )
 {
     m_unit = "V";
     setResistance( high_imp );
     m_display.setText( " 0.000\n V");
 }
-Voltimeter::~Voltimeter(){}
+Voltmeter::~Voltmeter(){}
 
-void Voltimeter::updateStep()
+void Voltmeter::updateStep()
 {
     double volt = m_pin[0]->getVoltage()-m_pin[1]->getVoltage();
     

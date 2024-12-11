@@ -16,11 +16,11 @@ listItem_t Socket::libraryItem(){
         "Connectors",
         "socket.png",
         "Socket",
-        [](QString type, QString id){ return (Component*)new Socket( type, id ); } };
+        [](QString id){ return (Component*)new Socket( id ); } };
 }
 
-Socket::Socket( QString type, QString id )
-      : ConnBase( type, id )
+Socket::Socket( QString id )
+      : ConnBase( id )
 {
     setZValue(-2 );
 

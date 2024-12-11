@@ -27,11 +27,11 @@ listItem_t Tunnel::libraryItem(){
         "Connectors",
         "tunnel.png",
         "Tunnel",
-        [](QString type, QString id){ return (Component*)new Tunnel( type, id ); } };
+        [](QString id){ return (Component*)new Tunnel( id ); } };
 }
 
-Tunnel::Tunnel( QString type, QString id )
-      : Component( type, id )
+Tunnel::Tunnel( QString id )
+      : Component( id )
 {
     m_size = 20;
     m_blocked = false;

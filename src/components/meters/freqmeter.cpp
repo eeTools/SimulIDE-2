@@ -21,11 +21,11 @@ listItem_t FreqMeter::libraryItem(){
         "Meters",
         "frequencimeter.png",
         "FreqMeter",
-        [](QString type, QString id){ return (Component*)new FreqMeter( type, id ); } };
+        [](QString id){ return (Component*)new FreqMeter( id ); } };
 }
 
-FreqMeter::FreqMeter( QString type, QString id )
-         : Component( type, id )
+FreqMeter::FreqMeter( QString id )
+         : Component( id )
          , Element( id )
          , m_display( this )
 {

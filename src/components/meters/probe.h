@@ -14,7 +14,7 @@ class IoPin;
 class Probe : public Component, public Element
 {
     public:
-        Probe( QString type, QString id );
+        Probe( QString id );
         ~Probe();
 
  static listItem_t libraryItem();

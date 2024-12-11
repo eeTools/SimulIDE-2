@@ -11,7 +11,7 @@
 class Header : public ConnBase
 {
     public:
-        Header( QString type, QString id );
+        Header( QString id );
         ~Header();
 
  static listItem_t libraryItem();

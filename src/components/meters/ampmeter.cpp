@@ -13,11 +13,11 @@ listItem_t Amperimeter::libraryItem(){
         "Meters",
         "amperimeter.png",
         "Amperimeter",
-        [](QString type, QString id){ return (Component*)new Amperimeter( type, id ); } };
+        [](QString id){ return (Component*)new Amperimeter( id ); } };
 }
 
-Amperimeter::Amperimeter( QString type, QString id )
-           : Meter( type, id )
+Amperimeter::Amperimeter( QString id )
+           : Meter( id )
 {
     m_unit = "A";
     m_dispValue = 0;

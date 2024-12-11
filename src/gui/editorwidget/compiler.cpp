@@ -21,7 +21,7 @@
 
 Compiler::Compiler( CodeEditor* editor, OutPanelText* outPane )
         : QObject( editor )
-        , CompBase( "Compiler", "" )
+        , CompBase( "" )
         , m_compProcess( this )
 {
     m_editor = editor;

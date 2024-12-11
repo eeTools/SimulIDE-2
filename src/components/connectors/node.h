@@ -14,7 +14,7 @@ class Node : public Component
     public:
         QRectF boundingRect() const override { return QRect(-4,-4, 8, 8 ); }
 
-        Node( QString type, QString id );
+        Node( QString id );
         ~Node();
 
         Pin* getPin( int pin ) const { return m_pin[pin]; }

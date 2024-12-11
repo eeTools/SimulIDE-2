@@ -10,10 +10,10 @@
 
 #include "stringprop.h"
 
-CompBase::CompBase( QString type, QString id )
+CompBase::CompBase( QString id )
 {
     m_id   = id;
-    m_type = type;
+    //m_type = type;
 
     m_propDialog = nullptr;
 

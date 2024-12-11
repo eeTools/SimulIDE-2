@@ -15,7 +15,7 @@ class DataWidget;
 class Oscope : public PlotBase
 {
     public:
-        Oscope( QString type, QString id );
+        Oscope( QString id );
         ~Oscope();
 
  static listItem_t libraryItem();

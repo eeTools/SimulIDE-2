@@ -26,7 +26,7 @@
 QString SubCircuit::m_subcDir = "";
 QStringList SubCircuit::s_graphProps;
 
-Component* SubCircuit::construct( QString type, QString id )
+Component* SubCircuit::construct( QString id )
 {
     m_error = 0;
     m_subcDir = "";
@@ -111,10 +111,10 @@ Component* SubCircuit::construct( QString type, QString id )
     }
 
     SubCircuit* subcircuit = NULL;
-    if     ( subcTyp == "Logic"  ) subcircuit = new LogicSubc( type, id );
-    else if( subcTyp == "Board"  ) subcircuit = new BoardSubc( type, id );
-    else if( subcTyp == "Module" ) subcircuit = new ModuleSubc( type, id );
-    else                           subcircuit = new SubCircuit( type, id );
+    if     ( subcTyp == "Logic"  ) subcircuit = new LogicSubc( id );
+    else if( subcTyp == "Board"  ) subcircuit = new BoardSubc( id );
+    else if( subcTyp == "Module" ) subcircuit = new ModuleSubc( id );
+    else                           subcircuit = new SubCircuit( id );
 
     if( m_error != 0 )
     {
@@ -156,11 +156,11 @@ listItem_t SubCircuit::libraryItem(){
         "",         // Category Not dispalyed
         "",
         "Subcircuit",
-        [](QString type, QString id){ return SubCircuit::construct( type, id ); } };
+        [](QString id){ return SubCircuit::construct( id ); } };
 }
 
-SubCircuit::SubCircuit( QString type, QString id )
-          : Chip( type, id )
+SubCircuit::SubCircuit( QString id )
+          : Chip( id )
 {
     m_lsColor = QColor( 235, 240, 255 );
     m_icColor = QColor( 20, 30, 60 );
@@ -243,7 +243,7 @@ void SubCircuit::loadSubCircuit( QString doc )
                 QString uid = circId.value.toString();
                 QString newUid = numId+"@"+uid;
 
-                if( type == "Node" ) comp = new Node( type, newUid );
+                if( type == "Node" ) comp = new Node( newUid );
                 else                 comp = circ->createItem( type, newUid, false );
 
                 if( comp ){
@@ -318,7 +318,7 @@ Pin* SubCircuit::addPin( QString id, QString type, QString label, int, int xpos,
         if( !m_isLS ) color = QColor( 250, 250, 200 );
 
         QString pId = m_id+"-"+id;
-        Tunnel* tunnel = new Tunnel("Tunnel", pId );
+        Tunnel* tunnel = new Tunnel( pId );
         m_compList.append( tunnel );
 
         tunnel->setParentItem( this );

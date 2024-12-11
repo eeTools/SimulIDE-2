@@ -53,7 +53,7 @@ class Circuit : public QGraphicsScene
         void removeComp( Component* comp) ;
         void compRemoved( bool removed ) { m_compRemoved = removed; }
         void removeNode( Node* node );
-        void removeWire( Wire* conn );
+        void removeWire( Wire* wire );
         void clearCircuit();
 
         //--- Undo/Redo ----------------------------------

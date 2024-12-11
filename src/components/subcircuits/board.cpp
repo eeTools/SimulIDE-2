@@ -6,8 +6,8 @@
 #include "board.h"
 #include "circuit.h"
 
-BoardSubc::BoardSubc( QString type, QString id )
-         : SubCircuit( type, id )
+BoardSubc::BoardSubc( QString id )
+         : SubCircuit( id )
 {
     m_graphical = true;
     m_subcType = Chip::Board;

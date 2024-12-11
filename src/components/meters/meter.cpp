@@ -15,8 +15,8 @@
 
 #include "boolprop.h"
 
-Meter::Meter( QString type, QString id )
-     : Component( type, id )
+Meter::Meter( QString id )
+     : Component( id )
      , Resistance( id )
      , m_display( this )
 {

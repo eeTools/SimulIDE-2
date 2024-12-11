@@ -12,7 +12,7 @@
 class FreqMeter : public Component, public Element
 {
     public:
-        FreqMeter( QString type, QString id );
+        FreqMeter( QString id );
         ~FreqMeter();
 
  static listItem_t libraryItem();

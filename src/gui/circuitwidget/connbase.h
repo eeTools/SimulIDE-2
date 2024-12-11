@@ -13,7 +13,7 @@
 class ConnBase : public Component, public Element
 {
     public:
-        ConnBase( QString type, QString id );
+        ConnBase( QString id );
         ~ConnBase();
 
         int  size() { return m_size; }

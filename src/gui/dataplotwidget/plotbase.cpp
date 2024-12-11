@@ -19,8 +19,8 @@
 
 #define tr(str) simulideTr("PlotBase",str)
 
-PlotBase::PlotBase( QString type, QString id )
-        : Component( type, id )
+PlotBase::PlotBase( QString id )
+        : Component( id )
         //, ScriptBase( id )
 {
     m_graphical = true;

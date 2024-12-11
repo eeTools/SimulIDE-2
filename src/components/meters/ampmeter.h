@@ -11,7 +11,7 @@
 class Amperimeter : public Meter
 {
     public:
-        Amperimeter( QString type, QString id );
+        Amperimeter( QString id );
         ~Amperimeter();
 
  static listItem_t libraryItem();

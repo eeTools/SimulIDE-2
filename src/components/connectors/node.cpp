@@ -14,8 +14,8 @@
 #include "pointprop.h"
 #include "pin.h"
 
-Node::Node( QString type, QString id )
-    : Component( type, id )
+Node::Node( QString id )
+    : Component( id )
 {
     setZValue( 101 );
 

@@ -13,8 +13,8 @@
 
 #define tr(str) simulideTr("ModuleSubc",str)
 
-ModuleSubc::ModuleSubc( QString type, QString id )
-          : BoardSubc( type, id )
+ModuleSubc::ModuleSubc( QString id )
+          : BoardSubc( id )
 {
     m_subcType = Chip::Module;
     setZValue( 2 );

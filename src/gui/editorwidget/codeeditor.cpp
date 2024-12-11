@@ -41,7 +41,7 @@ QList<CodeEditor*> CodeEditor::m_documents;
 
 CodeEditor::CodeEditor( QWidget* parent, OutPanelText* outPane )
           : QPlainTextEdit( parent )
-          , CompBase("File", "" )
+          , CompBase("")
 {
     m_documents.append( this );
 

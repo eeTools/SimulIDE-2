@@ -333,7 +333,7 @@ QString ComponentList::getIcon( QString folder, QString name )
 Component* ComponentList::createComponent( QString type, QString id )
 {
     listItem_t item = m_componentFactory.value( type );
-    return item.construct( item.type, id );
+    return item.construct( id );
 }
 
 void ComponentList::addItem( listItem_t item )
@@ -628,8 +628,14 @@ void ComponentList::writeSettings()
 
     Circuit::self()->saveString( m_listFile, treeStr );
 }
-/*
+
 //BEGIN Item includes
+#include "capacitor.h"
+#include "inductor.h"
+#include "resistor.h"
+
+/*
+
 #include "ampmeter.h"
 #include "adc.h"
 #include "aip31068_i2c.h"
@@ -679,7 +685,7 @@ void ComponentList::writeSettings()
 #include "image.h"
 #include "i2cram.h"
 #include "i2ctoparallel.h"
-#include "inductor.h"
+
 #include "keypad.h"
 #include "ky023.h"
 #include "ky040.h"
@@ -708,7 +714,7 @@ void ComponentList::writeSettings()
 #include "rail.h"
 #include "rectangle.h"
 #include "relay.h"
-#include "resistor.h"
+
 #include "resistordip.h"
 #include "rtd.h"
 #include "serialport.h"
@@ -745,176 +751,176 @@ void ComponentList::writeSettings()
 
 void ComponentList::LoadLibraryItems()
 {
-    /*addCategory( tr("Meters"),"Meters", "", "" );
-    addItem( Probe::libraryItem() );
-    addItem( Voltimeter::libraryItem() );
-    addItem( Amperimeter::libraryItem() );
-    addItem( FreqMeter::libraryItem() );
-    addItem( Oscope::libraryItem() );
-    addItem( LAnalizer::libraryItem() );
+    addCategory( tr("Meters"),"Meters", "", "" );
+    //addItem( Probe::libraryItem() );
+    //addItem( Voltimeter::libraryItem() );
+    //addItem( Amperimeter::libraryItem() );
+    //addItem( FreqMeter::libraryItem() );
+    //addItem( Oscope::libraryItem() );
+    //addItem( LAnalizer::libraryItem() );
 
     addCategory( tr("Sources"),"Sources", "", "" );
-    addItem( FixedVolt::libraryItem() );
-    addItem( Clock::libraryItem() );
-    addItem( WaveGen::libraryItem() );
-    addItem( VoltSource::libraryItem() );
-    addItem( CurrSource::libraryItem() );
-    addItem( Csource::libraryItem() );
-    addItem( Battery::libraryItem() );
-    addItem( Rail::libraryItem() );
-    addItem( Ground::libraryItem() );
+    //addItem( FixedVolt::libraryItem() );
+    //addItem( Clock::libraryItem() );
+    //addItem( WaveGen::libraryItem() );
+    //addItem( VoltSource::libraryItem() );
+    //addItem( CurrSource::libraryItem() );
+    //addItem( Csource::libraryItem() );
+    //addItem( Battery::libraryItem() );
+    //addItem( Rail::libraryItem() );
+    //addItem( Ground::libraryItem() );
 
     addCategory( tr("Switches"),"Switches", "", "" );
-    addItem( Push::libraryItem() );
-    addItem( Switch::libraryItem() );
-    addItem( SwitchDip::libraryItem() );
-    addItem( Relay::libraryItem() );
-    addItem( KeyPad::libraryItem() );
+    //addItem( Push::libraryItem() );
+    //addItem( Switch::libraryItem() );
+    //addItem( SwitchDip::libraryItem() );
+    //addItem( Relay::libraryItem() );
+    //addItem( KeyPad::libraryItem() );
 
     addCategory( tr("Passive"),"Passive", "", "" );
     addCategory( tr("Resistors"),"Resistors", "Passive", "resistors.png" );
     addItem( Resistor::libraryItem() );
-    addItem( ResistorDip::libraryItem() );
-    addItem( Potentiometer::libraryItem() );
-    addItem( VarResistor::libraryItem() );
+    //addItem( ResistorDip::libraryItem() );
+    //addItem( Potentiometer::libraryItem() );
+    //addItem( VarResistor::libraryItem() );
 
-    addCategory( tr("Resistive Sensors"),"Resistive Sensors", "Passive", "resistorsensors.png" );
-    addItem( Ldr::libraryItem() );
-    addItem( Thermistor::libraryItem() );
-    addItem( RTD::libraryItem() );
-    addItem( Strain::libraryItem() );
+    //addCategory( tr("Resistive Sensors"),"Resistive Sensors", "Passive", "resistorsensors.png" );
+    //addItem( Ldr::libraryItem() );
+    //addItem( Thermistor::libraryItem() );
+    //addItem( RTD::libraryItem() );
+    //addItem( Strain::libraryItem() );
 
     addCategory( tr("Reactive"),"Reactive", "Passive", "reactive.png" );
     addItem( Capacitor::libraryItem() );
-    addItem( elCapacitor::libraryItem() );
+    //addItem( elCapacitor::libraryItem() );
     addItem( Inductor::libraryItem() );
-    addItem( Transformer::libraryItem() );
+    //addItem( Transformer::libraryItem() );
 
     addCategory( tr("Active"),"Active", "", "" );
-    addCategory( tr("Rectifiers"),"Rectifiers", "Active", "" );
-    addItem( Diode::libraryItem() );
-    addItem( Zener::libraryItem() );
-    addItem( SCR::libraryItem() );
-    addItem( Diac::libraryItem() );
-    addItem( Triac::libraryItem() );
+    //addCategory( tr("Rectifiers"),"Rectifiers", "Active", "" );
+    //addItem( Diode::libraryItem() );
+    //addItem( Zener::libraryItem() );
+    //addItem( SCR::libraryItem() );
+    //addItem( Diac::libraryItem() );
+    //addItem( Triac::libraryItem() );
 
     addCategory( tr("Transistors"),"Transistors", "Active", "" );
-    addItem( BJT::libraryItem() );
-    addItem( Mosfet::libraryItem() );
+    //addItem( BJT::libraryItem() );
+    //addItem( Mosfet::libraryItem() );
 
     addCategory( tr("Other Active"),"Other Active", "Active", "" );
-    addItem( OpAmp::libraryItem() );
-    addItem( Comparator::libraryItem() );
-    addItem( VoltReg::libraryItem() );
-    addItem( MuxAnalog::libraryItem() );
+    //addItem( OpAmp::libraryItem() );
+    //addItem( Comparator::libraryItem() );
+    //addItem( VoltReg::libraryItem() );
+    //addItem( MuxAnalog::libraryItem() );
 
-    addCategory( tr("Outputs"),"Outputs", "", "" );
-    addCategory( tr("Leds"),"Leds", "Outputs", "" );
-    addItem( Led::libraryItem() );
-    addItem( LedRgb::libraryItem() );
-    addItem( LedBar::libraryItem() );
-    addItem( SevenSegment::libraryItem() );
-    addItem( LedMatrix::libraryItem() );
-    addItem( Max72xx_matrix::libraryItem() );
-    addItem( WS2812::libraryItem() );
+    //addCategory( tr("Outputs"),"Outputs", "", "" );
+    //addCategory( tr("Leds"),"Leds", "Outputs", "" );
+    //addItem( Led::libraryItem() );
+    //addItem( LedRgb::libraryItem() );
+    //addItem( LedBar::libraryItem() );
+    //addItem( SevenSegment::libraryItem() );
+    //addItem( LedMatrix::libraryItem() );
+    //addItem( Max72xx_matrix::libraryItem() );
+    //addItem( WS2812::libraryItem() );
 
-    addCategory( tr("Displays"),"Displays", "Outputs", "" );
-    addItem( Hd44780::libraryItem() );
-    addItem( Aip31068_i2c::libraryItem() );
-    addItem( Pcd8544::libraryItem() );
-    addItem( Ks0108::libraryItem() );
-    addItem( Ssd1306::libraryItem() );
-    addItem( Ili9341::libraryItem() );
+    //addCategory( tr("Displays"),"Displays", "Outputs", "" );
+    //addItem( Hd44780::libraryItem() );
+    //addItem( Aip31068_i2c::libraryItem() );
+    //addItem( Pcd8544::libraryItem() );
+    //addItem( Ks0108::libraryItem() );
+    //addItem( Ssd1306::libraryItem() );
+    //addItem( Ili9341::libraryItem() );
 
-    addCategory( tr("Motors"),"Motors", "Outputs", "" );
-    addItem( DcMotor::libraryItem() );
-    addItem( Stepper::libraryItem() );
-    addItem( Servo::libraryItem() );
+    //addCategory( tr("Motors"),"Motors", "Outputs", "" );
+    //addItem( DcMotor::libraryItem() );
+    //addItem( Stepper::libraryItem() );
+    //addItem( Servo::libraryItem() );
 
-    addCategory( tr("Other Outputs"),"Other Outputs", "Outputs", "" );
-    addItem( AudioOut::libraryItem() );
-    addItem( Lamp::libraryItem() );
+    //addCategory( tr("Other Outputs"),"Other Outputs", "Outputs", "" );
+    //addItem( AudioOut::libraryItem() );
+    //addItem( Lamp::libraryItem() );
 
-    addCategory( tr("Micro"),"Micro", "", "" );
-    //addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", NULL ) );
-    //addItem( new LibraryItem( "PIC" , "Micro", "ic2.png","PIC", NULL ) );
-    //addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", NULL ) );
-    //addItem( new LibraryItem("MCS65", "Micro", "ic2.png","MCS65", NULL ) );
-    //addItem( new LibraryItem("Z80"  , "Micro", "ic2.png","Z80", NULL ) );
-    /// addItem( Mcu::libraryItem() );
-    //addItem( new LibraryItem( QObject::tr("Arduino"), "Micro", "board.png","Arduino", NULL ) );
-    //addItem( new LibraryItem( QObject::tr("Shields"), "Micro", "shield.png","Shields", NULL ) );
+    //addCategory( tr("Micro"),"Micro", "", "" );
+    ////addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", NULL ) );
+    ////addItem( new LibraryItem( "PIC" , "Micro", "ic2.png","PIC", NULL ) );
+    ////addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", NULL ) );
+    ////addItem( new LibraryItem("MCS65", "Micro", "ic2.png","MCS65", NULL ) );
+    ////addItem( new LibraryItem("Z80"  , "Micro", "ic2.png","Z80", NULL ) );
+    ///// addItem( Mcu::libraryItem() );
+    ////addItem( new LibraryItem( QObject::tr("Arduino"), "Micro", "board.png","Arduino", NULL ) );
+    ////addItem( new LibraryItem( QObject::tr("Shields"), "Micro", "shield.png","Shields", NULL ) );
 
-    addCategory( tr("Sensors"),"Sensors", "Micro", "1to2.png" );
-    addItem( SR04::libraryItem() );
-    addItem( Dht22::libraryItem() );
-    addItem( DS1621::libraryItem() );
-    addItem( Ds18b20::libraryItem() );
+    //addCategory( tr("Sensors"),"Sensors", "Micro", "1to2.png" );
+    //addItem( SR04::libraryItem() );
+    //addItem( Dht22::libraryItem() );
+    //addItem( DS1621::libraryItem() );
+    //addItem( Ds18b20::libraryItem() );
 
-    addCategory( tr("Peripherals"),"Peripherals", "Micro", "perif.png" );
-    addItem( SerialPort::libraryItem() );
-    addItem( SerialTerm::libraryItem() );
-    addItem( TouchPad::libraryItem() );
-    addItem( KY023::libraryItem() );
-    addItem( KY040::libraryItem() );
-    addItem( DS1307::libraryItem() );
-    addItem( Esp01::libraryItem() );
+    //addCategory( tr("Peripherals"),"Peripherals", "Micro", "perif.png" );
+    //addItem( SerialPort::libraryItem() );
+    //addItem( SerialTerm::libraryItem() );
+    //addItem( TouchPad::libraryItem() );
+    //addItem( KY023::libraryItem() );
+    //addItem( KY040::libraryItem() );
+    //addItem( DS1307::libraryItem() );
+    //addItem( Esp01::libraryItem() );
 
-    addCategory( tr("Logic"),"Logic", "", "" );
-    addCategory( tr("Gates"),"Gates", "Logic", "gates.png" );
-    addItem( Buffer::libraryItem() );
-    addItem( AndGate::libraryItem() );
-    addItem( OrGate::libraryItem() );
-    addItem( XorGate::libraryItem() );
+    //addCategory( tr("Logic"),"Logic", "", "" );
+    //addCategory( tr("Gates"),"Gates", "Logic", "gates.png" );
+    //addItem( Buffer::libraryItem() );
+    //addItem( AndGate::libraryItem() );
+    //addItem( OrGate::libraryItem() );
+    //addItem( XorGate::libraryItem() );
 
-    addCategory( tr("Arithmetic"),"Arithmetic", "Logic", "2to2.png" );
-    addItem( BinCounter::libraryItem() );
-    addItem( FullAdder::libraryItem() );
-    addItem( MagnitudeComp::libraryItem() );
-    addItem( ShiftReg::libraryItem() );
-    addItem( Function::libraryItem() );
+    //addCategory( tr("Arithmetic"),"Arithmetic", "Logic", "2to2.png" );
+    //addItem( BinCounter::libraryItem() );
+    //addItem( FullAdder::libraryItem() );
+    //addItem( MagnitudeComp::libraryItem() );
+    //addItem( ShiftReg::libraryItem() );
+    //addItem( Function::libraryItem() );
 
-    addCategory( tr("Memory"),"Memory", "Logic", "subc.png" );
-    addItem( FlipFlopD::libraryItem() );
-    addItem( FlipFlopT::libraryItem() );
-    addItem( FlipFlopRS::libraryItem() );
-    addItem( FlipFlopJK::libraryItem() );
-    addItem( LatchD::libraryItem() );
-    addItem( SRAM::libraryItem() );
-    addItem( DRAM::libraryItem() );
-    addItem( I2CRam::libraryItem() );
+    //addCategory( tr("Memory"),"Memory", "Logic", "subc.png" );
+    //addItem( FlipFlopD::libraryItem() );
+    //addItem( FlipFlopT::libraryItem() );
+    //addItem( FlipFlopRS::libraryItem() );
+    //addItem( FlipFlopJK::libraryItem() );
+    //addItem( LatchD::libraryItem() );
+    //addItem( SRAM::libraryItem() );
+    //addItem( DRAM::libraryItem() );
+    //addItem( I2CRam::libraryItem() );
 
-    addCategory( tr("Converters"),"Converters", "Logic", "1to2.png" );
-    addItem( Mux::libraryItem() );
-    addItem( Demux::libraryItem() );
-    addItem( BcdToDec::libraryItem() );
-    addItem( DecToBcd::libraryItem() );
-    addItem( BcdTo7S::libraryItem() );
-    addItem( I2CToParallel::libraryItem() );
+    //addCategory( tr("Converters"),"Converters", "Logic", "1to2.png" );
+    //addItem( Mux::libraryItem() );
+    //addItem( Demux::libraryItem() );
+    //addItem( BcdToDec::libraryItem() );
+    //addItem( DecToBcd::libraryItem() );
+    //addItem( BcdTo7S::libraryItem() );
+    //addItem( I2CToParallel::libraryItem() );
 
-    addCategory( tr("Other Logic"),"Other Logic", "Logic", "2to3.png" );
-    addItem( ADC::libraryItem() );
-    addItem( DAC::libraryItem() );
-    addItem( SevenSegmentBCD::libraryItem() );
-    addItem( Lm555::libraryItem() );
+    //addCategory( tr("Other Logic"),"Other Logic", "Logic", "2to3.png" );
+    //addItem( ADC::libraryItem() );
+    //addItem( DAC::libraryItem() );
+    //addItem( SevenSegmentBCD::libraryItem() );
+    //addItem( Lm555::libraryItem() );
 
-    /// addItem( SubCircuit::libraryItem() );
-    // Connectors
-    addCategory( tr("Connectors"),"Connectors", "", "" );
-    addItem( Bus::libraryItem() );
-    addItem( Tunnel::libraryItem() );
-    addItem( Socket::libraryItem() );
-    addItem( Header::libraryItem() );
+    ///// addItem( SubCircuit::libraryItem() );
+    //// Connectors
+    //addCategory( tr("Connectors"),"Connectors", "", "" );
+    //addItem( Bus::libraryItem() );
+    //addItem( Tunnel::libraryItem() );
+    //addItem( Socket::libraryItem() );
+    //addItem( Header::libraryItem() );
 
-    addCategory( tr("Graphical"),"Graphical", "", "" );
-    addItem( Image::libraryItem() );
-    addItem( TextComponent::libraryItem() );
-    addItem( Rectangle::libraryItem() );
-    addItem( Ellipse::libraryItem() );
-    addItem( Line::libraryItem() );
+    //addCategory( tr("Graphical"),"Graphical", "", "" );
+    //addItem( Image::libraryItem() );
+    //addItem( TextComponent::libraryItem() );
+    //addItem( Rectangle::libraryItem() );
+    //addItem( Ellipse::libraryItem() );
+    //addItem( Line::libraryItem() );
 
-    addCategory( tr("Other"),"Other", "", "" );
-    addItem( SubPackage::libraryItem() );
-    addItem( TestUnit::libraryItem() );
-    addItem( Dial::libraryItem() );*/
+    //addCategory( tr("Other"),"Other", "", "" );
+    //addItem( SubPackage::libraryItem() );
+    //addItem( TestUnit::libraryItem() );
+    //addItem( Dial::libraryItem() );
 }

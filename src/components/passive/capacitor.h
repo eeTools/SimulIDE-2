@@ -3,20 +3,23 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef VOLTMETER_H
-#define VOLTMETER_H
+#ifndef CAPACITOR_H
+#define CAPACITOR_H
 
-#include "meter.h"
+#include "component.h"
+#include "capacitance.h"
 
-class Voltmeter : public Meter
+class Capacitor : public Component, public Capacitance
 {
     public:
-        Voltmeter( QString id );
-        ~Voltmeter();
+        Capacitor( QString id );
+        ~Capacitor();
 
  static listItem_t libraryItem();
 
-        virtual void updateStep() override;
+        void initialize() override;
+
+       void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 };
 
 #endif

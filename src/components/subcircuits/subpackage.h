@@ -16,7 +16,7 @@ class SubPackage : public Chip, public Linker
         friend class Circuit;
 
     public:
-        SubPackage( QString type, QString id );
+        SubPackage( QString id );
         ~SubPackage();
 
  static listItem_t libraryItem();

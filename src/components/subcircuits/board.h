@@ -13,7 +13,7 @@ class ModuleSubc;
 class BoardSubc : public SubCircuit
 {
     public:
-        BoardSubc( QString type, QString id );
+        BoardSubc( QString id );
         ~BoardSubc();
 
         void setBoard( BoardSubc* board );

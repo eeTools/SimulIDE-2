@@ -27,11 +27,11 @@ listItem_t Oscope::libraryItem(){
         "Meters",
         "oscope.png",
         "Oscope",
-        [](QString type, QString id){ return (Component*)new Oscope( type, id ); } };
+        [](QString id){ return (Component*)new Oscope( id ); } };
 }
 
-Oscope::Oscope( QString type, QString id )
-      : PlotBase( type, id )
+Oscope::Oscope( QString id )
+      : PlotBase( id )
 {
     m_numChannels = 4;
     m_trigger = 4;

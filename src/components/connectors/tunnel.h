@@ -13,7 +13,7 @@ class Pin;
 class Tunnel : public Component
 {
     public:
-        Tunnel( QString type, QString id );
+        Tunnel( QString id );
         ~Tunnel();
 
  static listItem_t libraryItem();

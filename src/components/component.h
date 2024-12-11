@@ -24,7 +24,7 @@ struct listItem_t{
     QString category;
     QString icon;
     QString type;
-    Component* (*construct)(QString,QString);
+    Component* (*construct)(QString);
 };
 
 class Component : public CompBase, public QGraphicsItem, public Updatable
@@ -34,10 +34,11 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
     public:
         QRectF boundingRect() const override { return QRectF( m_area.x()-2, m_area.y()-2, m_area.width()+4, m_area.height()+4 ); }
 
-        Component( QString type, QString id );
+        Component( QString id );
         ~Component();
 
         virtual void setup() override;
+        virtual void initialize(){;}
 
         enum { Type = UserType + 1 };
         int type() const override { return Type; }
