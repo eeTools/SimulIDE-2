@@ -13,6 +13,9 @@ class Updatable
         ~Updatable();
 
         virtual void updateStep(){;}
+
+    protected:
+        bool m_changed;
 };
 
 #endif

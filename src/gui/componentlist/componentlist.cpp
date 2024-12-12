@@ -333,7 +333,9 @@ QString ComponentList::getIcon( QString folder, QString name )
 Component* ComponentList::createComponent( QString type, QString id )
 {
     listItem_t item = m_componentFactory.value( type );
-    return item.construct( id );
+    Component* comp = item.construct( id );
+    comp->setItemType( item.type );
+    return comp;
 }
 
 void ComponentList::addItem( listItem_t item )
@@ -633,12 +635,15 @@ void ComponentList::writeSettings()
 #include "ampmeter.h"
 
 #include "capacitor.h"
+#include "fixedvolt.h"
 #include "freqmeter.h"
+#include "ground.h"
 #include "header.h"
 #include "inductor.h"
 #include "logicanalizer.h"
 #include "oscope.h"
 #include "probe.h"
+#include "rail.h"
 #include "resistor.h"
 #include "socket.h"
 #include "subcircuit.h"
@@ -679,7 +684,7 @@ void ComponentList::writeSettings()
 #include "elcapacitor.h"
 #include "ellipse.h"
 #include "esp01.h"
-#include "fixedvolt.h"
+
 #include "flipflopd.h"
 #include "flipflopjk.h"
 #include "flipfloprs.h"
@@ -690,7 +695,6 @@ void ComponentList::writeSettings()
 #include "gate_and.h"
 #include "gate_or.h"
 #include "gate_xor.h"
-#include "ground.h"
 
 #include "hd44780.h"
 #include "ili9341.h"
@@ -723,7 +727,7 @@ void ComponentList::writeSettings()
 
 #include "potentiometer.h"
 #include "push.h"
-#include "rail.h"
+
 #include "rectangle.h"
 #include "relay.h"
 
@@ -771,15 +775,15 @@ void ComponentList::LoadLibraryItems()
     addItem( LAnalizer::libraryItem() );
 
     addCategory( tr("Sources"),"Sources", "", "" );
-    //addItem( FixedVolt::libraryItem() );
+    addItem( FixedVolt::libraryItem() );
     //addItem( Clock::libraryItem() );
     //addItem( WaveGen::libraryItem() );
     //addItem( VoltSource::libraryItem() );
     //addItem( CurrSource::libraryItem() );
     //addItem( Csource::libraryItem() );
     //addItem( Battery::libraryItem() );
-    //addItem( Rail::libraryItem() );
-    //addItem( Ground::libraryItem() );
+    addItem( Rail::libraryItem() );
+    addItem( Ground::libraryItem() );
 
     addCategory( tr("Switches"),"Switches", "", "" );
     //addItem( Push::libraryItem() );

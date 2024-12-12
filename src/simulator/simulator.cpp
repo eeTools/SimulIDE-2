@@ -229,7 +229,7 @@ void Simulator::startSim( bool paused )
     createNodes();
     Kcl::createCells();
 
-    /// for( Component* comp : m_componentList ) comp->initialize();
+    for( Component* comp : m_componentList ) comp->initialize();
     for( Element*   elem : m_elements      ) elem->stampAdmit();
 
     //Kcl::preCalculate();

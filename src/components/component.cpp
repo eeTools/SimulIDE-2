@@ -11,6 +11,7 @@
 #include "wire.h"
 #include "circuitwidget.h"
 #include "circuit.h"
+#include "simulator.h"
 #include "utils.h"
 #include "propdialog.h"
 #include "linker.h"
@@ -30,6 +31,8 @@ Component::Component( QString id )
          : CompBase( id )
          , QGraphicsItem()
 {
+    Simulator::self()->addToComponentList( this );
+
     m_help = "";
     m_Hflip  = 1;
     m_Vflip  = 1;
@@ -114,7 +117,10 @@ new IntProp  <Component>("boardHflip","","",this, &Component::boardHflip, &Compo
 new IntProp  <Component>("boardVflip","","",this, &Component::boardVflip, &Component::setBoardVflip ),
     }, groupHidden | groupNoCopy } );*/
 }
-Component::~Component(){}
+Component::~Component()
+{
+    Simulator::self()->remFromComponentList( this );
+}
 
 void Component::setup()
 {

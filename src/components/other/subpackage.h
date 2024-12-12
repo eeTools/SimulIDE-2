@@ -90,7 +90,6 @@ class SubPackage : public Chip, public Linker
  static QString m_lastPkg;
 
         bool m_fakePin; // Data for drawing pin when hovering
-        bool m_changed;
 
         int m_angle;  
         int m_p1X;

@@ -242,10 +242,10 @@ void Circuit::loadStrDoc( QString &doc )
             QString uid;
             for( propStr_t prop : properties )
             {
-                if     ( prop.name == "pin0"  ) startpinid = prop.value.toString();
-                else if( prop.name == "pin1"  ) endpinid   = prop.value.toString();
-                else if( prop.name == "points") pointList  = prop.value.toString().split(",");
-                else if( prop.name == "uid"   ) uid        = prop.value.toString();
+                if     ( prop.name == "pin0" ) startpinid = prop.value.toString();
+                else if( prop.name == "pin1" ) endpinid   = prop.value.toString();
+                else if( prop.name == "pList") pointList  = prop.value.toString().split(",");
+                else if( prop.name == "uid"  ) uid        = prop.value.toString();
             }
             if( m_pasting )
             {

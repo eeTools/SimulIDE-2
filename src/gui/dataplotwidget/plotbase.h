@@ -134,7 +134,6 @@ class PlotBase : public Component//, public ScriptBase
         bool m_autoExport;
         QString m_exportFile;
 
-        bool m_changed;
         bool m_connectGnd;
         double m_inputAdmit;
 

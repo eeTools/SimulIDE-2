@@ -114,7 +114,7 @@ void Kcl::preCalculate()
 
 void Kcl::addAdmitance( double* a, int x, int y ) // Add pointers to admit
 {
-    if( x < 0 || y < 0 ) return;
+    if( x < 0 ) return;
     m_admiMatrix[x][x].values.emplace_back(a);
     if( y >= 0 ){
         m_admiMatrix[x][y].values.emplace_back(a);
