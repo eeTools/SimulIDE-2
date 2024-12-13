@@ -26,6 +26,7 @@ class ePin
         void setInverted( bool i ) { m_inverted = i; }
 
         void setId( QString id ) { m_id = id; }
+
     protected:
         int m_enode;
 

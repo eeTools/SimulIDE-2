@@ -14,8 +14,7 @@
 
 IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode )
      : Pin( angle, pos, id, parent )
-     , Element( id )
-     , m_pinSource( id )
+     , PinSource( id )
 {
     m_outState = false;
     m_stateZ   = false;
@@ -26,7 +25,7 @@ IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMod
     m_inpLowV  = 2.5;
     m_outHighV = cero_doub;
     m_outLowV  = cero_doub;
-    m_outVolt  = cero_doub;
+    m_voltage  = cero_doub;
 
     m_vddAdmit = 0;
     m_gndAdmit = cero_doub;
@@ -36,7 +35,7 @@ IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMod
     m_inputImp = high_imp;
     m_openImp  = 100/cero_doub;
     m_outputImp = 40;
-    m_admit = 1/cero_doub;
+    m_admitance = 1/cero_doub;
 
     m_steps = 0;
     m_timeRis = 3750; // picoseconds
@@ -57,13 +56,15 @@ void IoPin::stampAdmit()
     m_outState  = false;
     m_nextState = false;
 
+    m_nodes[0] = m_enode;
+
     if( m_skipStamp ) return;
 
-    //ePin::setEnodeComp( &m_gndEnode );
-    /// ePin::createCurrent();
     setPinMode( m_pinMode );
-    stampAll();
+    //stampAll();
     updateStep();
+
+    PinSource::stampAdmit();
 }
 
 void IoPin::updateStep()
@@ -107,8 +108,8 @@ void IoPin::updateStep()
         }else{
             double delta = m_step;
             if( m_step == 0 ) delta = 1e-5;
-            if( nextState ) stampVolt( m_outLowV+delta*(m_outHighV-m_outLowV)/m_steps ); // L to H
-            else            stampVolt( m_outHighV-delta*(m_outHighV-m_outLowV)/m_steps );// H to L
+            if( nextState ) updtVoltage( m_outLowV+delta*(m_outHighV-m_outLowV)/m_steps ); // L to H
+            else            updtVoltage( m_outHighV-delta*(m_outHighV-m_outLowV)/m_steps );// H to L
         }
         int time = nextState ? m_timeRis : m_timeFal;
         Simulator::self()->addEvent( time/m_steps, this );
@@ -134,20 +135,18 @@ void IoPin::scheduleState( bool state, uint64_t time )
 void IoPin::startLH()
 {
     m_step = 0;
-    stampVolt( m_outLowV+(m_outLowV+m_outHighV)/100 );
+    updtVoltage( m_outLowV+(m_outLowV+m_outHighV)/100 );
 
 }
 void IoPin::startHL()
 {
     m_step = 0;
-    stampVolt( m_outHighV-(m_outLowV+m_outHighV)/100 );
+    updtVoltage( m_outHighV-(m_outLowV+m_outHighV)/100 );
 }
 
 void IoPin::setPinMode( pinMode_t mode )
 {
-    return; /// TODO: fixme
-
-    if( m_pinMode == mode ) return;
+    //if( m_pinMode == mode ) return;
     m_pinMode = mode;
 
     switch( mode )
@@ -159,8 +158,8 @@ void IoPin::setPinMode( pinMode_t mode )
             m_gndAdmit = 1/m_inputImp;
             break;
         case output:
-            m_admit = 1/m_outputImp;
-            m_pinSource.updtAdmitance( m_admit );
+            m_admitance = 1/m_outputImp;
+            updtAdmitance( m_admitance );
             break;
         case openCo:
             m_vddAdmit = cero_doub;
@@ -183,9 +182,9 @@ void IoPin::setPinMode( pinMode_t mode )
 
     double vddAdmit = m_vddAdmit + m_vddAdmEx;
     double gndAdmit = m_gndAdmit + m_gndAdmEx;
-    m_admit         = vddAdmit+gndAdmit;
+    m_admitance         = vddAdmit+gndAdmit;
 
-    m_outVolt = m_outHighV*vddAdmit/m_admit;
+    m_voltage = m_outHighV*vddAdmit/m_admitance;
     stampAll();
 }*/
 
@@ -211,15 +210,15 @@ void IoPin::setOutState( bool high ) // Set Output to Hight or Low
         m_gndAdmit = high ? 1/1e8 : 1/m_outputImp;
         updtState();
     }else{
-        m_outVolt = high ? m_outHighV : m_outLowV;
-        stampVolt( m_outVolt );
+        double voltage = high ? m_outHighV : m_outLowV;
+        updtVoltage( voltage );
 }   }
 
 void IoPin::setStateZ( bool z )
 {
     m_stateZ = z;
     if( z ){
-        m_outVolt = m_outLowV;
+        m_voltage = m_outLowV;
         setImpedance( m_openImp );
     }else {
         pinMode_t pm = m_pinMode; // Force old pinMode
@@ -230,10 +229,10 @@ void IoPin::setStateZ( bool z )
 double IoPin::getVoltage()
 {
     if     ( m_enode >= 0 )      return m_kcl->getVoltage( m_enode );//m_enode->getVolt();
-    else if( m_pinMode > input ) return m_outVolt;
+    else if( m_pinMode > input ) return m_voltage;
     else{
         double vddAdmit = m_vddAdmit + m_vddAdmEx;
-        double voltage = m_outHighV*vddAdmit/m_admit;
+        double voltage = m_outHighV*vddAdmit/m_admitance;
         return voltage;
     }
     return 0;
@@ -249,8 +248,7 @@ void IoPin::setPullup( bool up )
 
 void IoPin::setImpedance( double imp )
 {
-    m_admit = 1/imp;
-    stampAll();
+    updtAdmitance( 1/imp );
 }
 
 void IoPin::setInputImp( double imp )
@@ -260,8 +258,8 @@ void IoPin::setInputImp( double imp )
     {
         //m_gndAdmit = 1/m_inputImp;
         //updtState();
-        m_admit = 1/m_inputImp;
-        m_pinSource.updtAdmitance( m_admit );
+        m_admitance = 1/m_inputImp;
+        updtAdmitance( m_admitance );
     }
 }
 
@@ -272,8 +270,8 @@ void IoPin::setOutputImp( double imp )
     {
         //m_vddAdmit = 1/m_outputImp;
         //updtState();
-        m_admit = 1/m_outputImp;
-        m_pinSource.updtAdmitance( m_admit );
+        m_admitance = 1/m_outputImp;
+        updtAdmitance( m_admitance );
     }
 }
 
@@ -284,14 +282,8 @@ void IoPin::setInverted( bool invert )
     m_inverted = inverted;
 
     if( m_pinMode > input ) setOutState( m_outState );
-    else                    m_pinSource.updtAdmitance( m_admit );
+    else                    updtAdmitance( m_admitance );
     update();
-}
-
-void IoPin::stampAll()
-{
-    m_pinSource.updtAdmitance( m_admit );
-    stampVolt( m_outVolt );
 }
 
 void IoPin::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )

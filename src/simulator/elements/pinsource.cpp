@@ -46,9 +46,7 @@ void PinSource::updtVoltage( double v )
     if( m_voltage == v ) return;
     m_voltage = v;
 
-    m_current = m_voltage*m_admitance;
-    *m_currGroupChg = true;
-    *m_currChanged = true;
+    updateCurrent();
 }
 
 double PinSource::getVoltage()
@@ -59,11 +57,10 @@ double PinSource::getVoltage()
 
 void PinSource::updtAdmitance( double a )
 {
-    if( m_node == -1 ) return; // Not connected
-
     if( m_admitance == a ) return;
     m_admitance = a;
 
+    if( m_node == -1 ) return; // Not connected
     m_kcl->admitChanged( m_node, -1, m_nodeGroup );
 }
 

@@ -9,7 +9,6 @@
 #include <QColor>
 
 #include "pin.h"
-#include "element.h"
 #include "pinsource.h"
 
 enum pinMode_t{
@@ -23,7 +22,7 @@ enum pinMode_t{
 class eNode;
 class asIScriptEngine;
 
-class IoPin : public Pin, public Element
+class IoPin : public Pin, public PinSource
 {
         friend class Function;
     public:
@@ -43,7 +42,7 @@ class IoPin : public Pin, public Element
         void setInputHighV( double volt ) { m_inpHighV = volt; }
         void setInputLowV( double volt )  { m_inpLowV  = volt; }
         void setInputImp( double imp );
-        void setInputAdmit( double a ) { m_admit = a; }
+        void setInputAdmit( double a ) { m_admitance = a; }
 
         double outHighV() { return m_outHighV; }
         void  setOutHighV( double v ) { m_outHighV = v; }
@@ -65,15 +64,14 @@ class IoPin : public Pin, public Element
         double getVoltage() override;
         inline void setVoltage( double volt )
         {
-            if( m_outVolt == volt ) return;
-            m_outVolt = volt;
-            m_pinSource.updtVoltage( m_outVolt );
+            if( m_voltage == volt ) return;
+            updtVoltage( volt );
         }
         inline void setOutStatFast( bool state )
         {
             m_outState = m_nextState = state;
-            m_outVolt = state ? m_outHighV : m_outLowV;
-            m_pinSource.updtVoltage( m_outVolt );
+            double voltage = state ? m_outHighV : m_outLowV;
+            updtVoltage( voltage );
         }
 
         void setStateZ( bool z );
@@ -98,21 +96,17 @@ class IoPin : public Pin, public Element
         {
             double vddAdmit = m_vddAdmit + m_vddAdmEx;
             double gndAdmit = m_gndAdmit + m_gndAdmEx;
-            m_admit         = vddAdmit+gndAdmit;
+            updtAdmitance( vddAdmit+gndAdmit );
 
-            m_outVolt = m_outHighV*vddAdmit/m_admit;
-            m_pinSource.updtAdmitance( m_admit );
-            m_pinSource.updtVoltage( m_outVolt );
+            m_voltage = m_outHighV*vddAdmit/m_admitance;
+            updateCurrent();
         }
-        inline void stampAll();
-        inline void stampVolt( double v) { m_pinSource.updtVoltage( v ); }
 
         double m_inpHighV;  // currently in eClockedDevice
         double m_inpLowV;
 
         double m_outHighV;
         double m_outLowV;
-        double m_outVolt;
 
         double m_vddAdmit;  // Out stage
         double m_gndAdmit;  // Out Stage
@@ -122,7 +116,6 @@ class IoPin : public Pin, public Element
         double m_inputImp;
         double m_outputImp;
         double m_openImp;
-        double m_admit;
 
         bool m_inpState;
         bool m_outState;
@@ -138,7 +131,5 @@ class IoPin : public Pin, public Element
         uint64_t m_timeFal;  // Time for Output voltage to switch from 100% to 0%
 
         pinMode_t m_pinMode;
-
-        PinSource m_pinSource;
 };
 #endif

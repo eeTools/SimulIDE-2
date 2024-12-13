@@ -27,6 +27,12 @@ class PinSource : public Element
         void updtAdmitance( double a );
 
     protected:
+        inline void updateCurrent()
+        {
+            m_current = m_voltage*m_admitance;
+            *m_currGroupChg = true;
+            *m_currChanged = true;
+        }
         double m_voltage;
         double m_admitance;
         double m_current;

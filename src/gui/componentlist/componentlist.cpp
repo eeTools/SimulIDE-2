@@ -633,8 +633,8 @@ void ComponentList::writeSettings()
 
 //BEGIN Item includes
 #include "ampmeter.h"
-
 #include "capacitor.h"
+#include "clock.h"
 #include "fixedvolt.h"
 #include "freqmeter.h"
 #include "ground.h"
@@ -665,7 +665,7 @@ void ComponentList::writeSettings()
 #include "buffer.h"
 #include "bus.h"
 #include "capacitor.h"
-#include "clock.h"
+
 #include "comparator.h"
 #include "csource.h"
 #include "currsource.h"
@@ -776,7 +776,7 @@ void ComponentList::LoadLibraryItems()
 
     addCategory( tr("Sources"),"Sources", "", "" );
     addItem( FixedVolt::libraryItem() );
-    //addItem( Clock::libraryItem() );
+    addItem( Clock::libraryItem() );
     //addItem( WaveGen::libraryItem() );
     //addItem( VoltSource::libraryItem() );
     //addItem( CurrSource::libraryItem() );

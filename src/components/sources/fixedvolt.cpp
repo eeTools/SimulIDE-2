@@ -16,7 +16,7 @@
 
 #define tr(str) simulideTr("FixedVolt",str)
 
-listItem_t  FixedVolt::libraryItem(){
+listItem_t FixedVolt::libraryItem(){
     return {
         tr("Fixed Voltage"),
         "Sources",
@@ -85,7 +85,7 @@ void FixedVolt::updateStep()
 void FixedVolt::onbuttonclicked()
 {
     m_changed = true;
-    //if( !Simulator::self()->isRunning() ) updateStep();
+    if( !Simulator::self()->isRunning() ) updateStep();
 }
 
 /*void FixedVolt::updateOutput()

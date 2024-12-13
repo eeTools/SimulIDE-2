@@ -7,7 +7,6 @@
 #include "circuitwidget.h"
 #include "simulator.h"
 #include "circuit.h"
-//#include "pin.h"
 
 #include "intprop.h"
 
