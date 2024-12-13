@@ -58,7 +58,7 @@ class IoPort :public Element
 
     protected:
         void createPins( Component* comp, QString pins, uint32_t pinMask );
-        virtual IoPin* createPin( int i, QString id , Component* comp );
+        virtual IoPin* createPin( QString id, Component* comp );
 
         inline void nextStep();
 

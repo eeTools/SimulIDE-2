@@ -54,8 +54,8 @@ void ConnBase::createPins( int c )
 
     for( int i=start; i<m_size; i++ )
     {
-        m_pin[i] = new Pin( 180, QPoint(-8,-32+8+i*8 ), m_id+"-pin"+QString::number(i), this );
-        m_sockPins[i] = new Pin( 90, QPoint( 0,-32+8+i*8 ), m_id+"-pin"+QString::number(i+m_size), this );
+        m_pin[i] = new Pin( 180, QPoint(-8,-32+8+i*8 ), "pin"+QString::number(i)+"@"+m_id, this );
+        m_sockPins[i] = new Pin( 90, QPoint( 0,-32+8+i*8 ), "pin"+QString::number(i+m_size)+"@"+m_id, this );
         m_sockPins[i]->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
         m_sockPins[i]->setLength( 1 );
         m_sockPins[i]->setPinType( m_pinType );

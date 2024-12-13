@@ -33,7 +33,7 @@ FixedVolt::FixedVolt( QString id )
 
     m_graphical = true;
 
-    m_pin.emplace_back( new Pin( 0, QPoint(16,0), "Pin@"+id, this ) );
+    m_pin.emplace_back( new Pin( 0, QPoint(16,0), "outPin@"+id, this ) );
     m_out.setAdmitance( 1e9 );
 
     setValLabelPos(-16, 8 , 0 ); // x, y, rot 

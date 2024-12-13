@@ -126,6 +126,7 @@ void IoPort::setPinMode( pinMode_t mode )
 
 void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
 {
+    QString compId = comp->getUid();
     m_numPins = pins.toUInt(0,0);
     if( m_numPins )
     {
@@ -134,22 +135,22 @@ void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
         for( int i=0; i<m_numPins; ++i )
         {
             if( pinMask & 1<<i )
-                m_pins[i] = createPin( i, m_name+QString::number(i) , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
+                m_pins[i] = createPin( m_name+QString::number(i)+"@"+compId , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
         }
     }else{
         QStringList pinList = pins.split(",");
         for( QString pinName : pinList )
         {
-            IoPin* pin = createPin( m_numPins, m_name+pinName , comp );//new IoPin( this, i, m_name+pinName, IoComp );
+            IoPin* pin = createPin( m_name+pinName+"@"+compId , comp );//new IoPin( this, i, m_name+pinName, IoComp );
             m_pins.emplace_back( pin );
             m_numPins++;
         }
     }
 }
 
-IoPin* IoPort::createPin( int i, QString id, Component* comp )
+IoPin* IoPort::createPin( QString id, Component* comp )
 {
-    IoPin* pin = new IoPin( 0, QPoint(0,0), comp->getUid()+"-"+id, i, comp, input );
+    IoPin* pin = new IoPin( 0, QPoint(0,0), id, comp, input );
     pin->setOutHighV( 5 );
     return pin;
 }

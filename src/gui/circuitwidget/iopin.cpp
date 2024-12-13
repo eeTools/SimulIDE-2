@@ -12,7 +12,7 @@
 
 //eNode IoPin::m_gndEnode("");
 
-IoPin::IoPin( int angle, const QPoint pos, QString id, int index, Component* parent, pinMode_t mode )
+IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode )
      : Pin( angle, pos, id, parent )
      , Element( id )
      , m_pinSource( id )

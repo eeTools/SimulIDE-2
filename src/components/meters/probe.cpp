@@ -39,7 +39,7 @@ Probe::Probe( QString id )
     m_voltIn = 0;
 
     m_pin.resize(1); // Create Input Pin
-    m_pin[0] = m_inputPin = new IoPin( 180, QPoint(-22,0), id+"-inpin", 0, this, undef_mode );
+    m_pin[0] = m_inputPin = new IoPin( 180, QPoint(-22,0), "inPin@"+id, this, undef_mode );
     m_inputPin->setBoundingRect( QRect(-1, -1, 2, 2) );
     m_inputPin->setImpedance( 1e9 );
 

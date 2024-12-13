@@ -34,7 +34,7 @@ FreqMeter::FreqMeter( QString id )
     m_graphical = true;
 
     m_pin.resize( 1 );
-    m_pin[0] = new Pin( 180, QPoint(-40, 0), id+"-lPin", this);
+    m_pin[0] = new Pin( 180, QPoint(-40, 0), "inPin@"+id, this);
     
     m_idLabel->setPos(-12,-24);
     setLabelPos(-32,-24, 0);

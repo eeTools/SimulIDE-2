@@ -27,7 +27,7 @@ class IoPin : public Pin, public Element
 {
         friend class Function;
     public:
-        IoPin( int angle, const QPoint pos, QString id, int index, Component* parent, pinMode_t mode=source );
+        IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode=source );
         ~IoPin();
 
         void stampAdmit() override;

@@ -308,7 +308,7 @@ void Chip::addNewPin( QString id, QString type, QString label, int pos, int xpos
                 pin->setPos( xpos, ypos );
                 pin->setPinAngle( angle );
             }
-            else pin = new Pin( angle, QPoint(xpos, ypos), m_id+"-"+id, this ); // pos in package starts at 1
+            else pin = new Pin( angle, QPoint(xpos, ypos), id+"@"+m_id, this ); // pos in package starts at 1
 
             pin->setVisible( true );
             pin->setLabelText( label );

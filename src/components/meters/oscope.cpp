@@ -48,11 +48,11 @@ Oscope::Oscope( QString id )
 
     m_inPin.resize(5);
     m_pin.resize(5);
-    m_pin[4] = m_inPin[4] = new IoPin( 180, QPoint(-80-8, 64 ), id+"-PinG", 0, this, input );
+    m_pin[4] = m_inPin[4] = new IoPin( 180, QPoint(-80-8, 64 ), "inPin@"+id, this, input );
 
     for( int i=0; i<4; i++ )
     {
-        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-48+32*i ), id+"-Pin"+QString::number(i), 0, this, undef_mode );
+        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-48+32*i ), "inPin"+QString::number(i)+"@"+id, this, undef_mode );
         double admit = m_connectGnd ? m_inputAdmit : 0;
         m_inPin[i]->setInputAdmit( admit );
         m_channel[i] = new OscopeChannel( this, id+"Chan"+QString::number(i) );

@@ -26,7 +26,7 @@ Node::Node( QString id )
     m_pin.resize( 3 );
     for( int i=0; i<3; i++ )
     {
-        m_pin[i] = new Pin( 90*i, QPoint(0,0), id+"-"+uchar(48+i), this );
+        m_pin[i] = new Pin( 90*i, QPoint(0,0), "pin"+QString::number(i)+"@"+id, this );
         m_pin[i]->setLength( 0 );
     }
     remPropGroup( "CompGraphic" );

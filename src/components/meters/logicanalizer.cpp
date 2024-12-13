@@ -52,7 +52,7 @@ LAnalizer::LAnalizer( QString id )
     m_inPin.resize(8);
     for( int i=0; i<8; ++i )
     {
-        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-64+16*i ), id+"-Pin"+QString::number(i), 0, this, undef_mode );
+        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-64+16*i ), "Pin"+QString::number(i)+"@"+id, this, undef_mode );
         double admit = m_connectGnd ? m_inputAdmit : 0;
         m_inPin[i]->setInputAdmit( admit );
         LaChannel* ch = new LaChannel( this, id+"Chan"+QString::number(i) );
