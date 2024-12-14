@@ -25,6 +25,7 @@ class asIScriptEngine;
 class IoPin : public Pin, public PinSource
 {
         friend class Function;
+
     public:
         IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode=source );
         ~IoPin();
@@ -89,7 +90,6 @@ class IoPin : public Pin, public PinSource
  static QStringList registerScript( asIScriptEngine* engine );
 
     protected:
-
         void contextMenuEvent( QGraphicsSceneContextMenuEvent* event ) override;
 
         inline void updtState()
@@ -99,7 +99,7 @@ class IoPin : public Pin, public PinSource
             updtAdmitance( vddAdmit+gndAdmit );
 
             m_voltage = m_outHighV*vddAdmit/m_admitance;
-            updateCurrent();
+            if( m_node >= 0 ) updateCurrent();
         }
 
         double m_inpHighV;  // currently in eClockedDevice

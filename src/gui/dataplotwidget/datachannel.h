@@ -78,6 +78,7 @@ class DataChannel : public Element, public Updatable
         QString m_chTunnel;
 
         Pin* m_pin;
+        Pin* m_refPin;
 
         PlotBase* m_plotBase;
 };

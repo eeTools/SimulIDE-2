@@ -40,7 +40,7 @@ class PinSource : public Element
         int m_node;
         int m_nodeGroup;
 
-        int* m_currGroupChg;
+        int*  m_currGroupChg;
         bool* m_currChanged;
 };
 

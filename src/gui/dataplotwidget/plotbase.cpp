@@ -129,13 +129,12 @@ bool PlotBase::setPropStr( QString prop, QString val )
     return true;
 }
 
-/*void PlotBase::initialize()
+void PlotBase::initialize()
 {
-    if( m_testTime )
-        Simulator::self()->addEvent( m_testTime*1000, this );
+    /// if( m_testTime ) Simulator::self()->addEvent( m_testTime*1000, this );
 }
 
-void PlotBase::runEvent() // Test time reached, make comparison
+/*void PlotBase::runEvent() // Test time reached, make comparison
 {
     for( int i=0; i<m_numChannels; ++i )
     {

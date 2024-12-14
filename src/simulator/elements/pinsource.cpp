@@ -23,9 +23,7 @@ void PinSource::stampAdmit()
     m_voltage = 0;
 
     m_node = m_nodes[0];
-    if( m_node == -1 ) return;  // Not connected
-
-    m_kcl->addAdmitance( &m_admitance, m_node );
+    if( m_node >= 0 ) m_kcl->addAdmitance( &m_admitance, m_node );
 }
 
 void PinSource::stampCurrent()
@@ -41,12 +39,9 @@ void PinSource::stampCurrent()
 
 void PinSource::updtVoltage( double v )
 {
-    if( m_node == -1 ) return; // Not connected
-
     if( m_voltage == v ) return;
     m_voltage = v;
-
-    updateCurrent();
+    if( m_node >= 0 ) updateCurrent();
 }
 
 double PinSource::getVoltage()
@@ -60,8 +55,7 @@ void PinSource::updtAdmitance( double a )
     if( m_admitance == a ) return;
     m_admitance = a;
 
-    if( m_node == -1 ) return; // Not connected
-    m_kcl->admitChanged( m_node, -1, m_nodeGroup );
+    if( m_node >= 0 ) m_kcl->admitChanged( m_node, -1, m_nodeGroup );
 }
 
 void PinSource::setNode( int n )

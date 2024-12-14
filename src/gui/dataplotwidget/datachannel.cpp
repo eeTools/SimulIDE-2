@@ -17,7 +17,8 @@ DataChannel::DataChannel( PlotBase* plotBase, QString id )
     m_plotBase = plotBase;
 
     m_pin = nullptr;
-    m_nodes.resize( 1,-1 );
+    m_refPin = nullptr;
+    m_nodes.resize( 2,-1 );
 
     m_chTunnel = "";
     m_trigIndex = 0;
@@ -34,6 +35,7 @@ void DataChannel::stampAdmit()    // Called at Simulation Start
 void DataChannel::stampCurrent()
 {
     m_nodes[0] = m_pin->getNode();
+    if( m_refPin ) m_nodes[1] = m_refPin->getNode();
     bool connected = m_nodes[0] >= 0;
 
     if( connected ) m_kcl->addChangeCB( this, m_nodes[0] );

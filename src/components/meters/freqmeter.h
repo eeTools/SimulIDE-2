@@ -17,7 +17,7 @@ class FreqMeter : public Component, public Element
 
  static listItem_t libraryItem();
 
-        ///void initialize() override;
+        void initialize() override;
         ///void stamp() override;
         void updateStep() override;
         void voltChanged() override;

@@ -22,7 +22,7 @@ class PlotBase : public Component//, public ScriptBase
 
         virtual bool setPropStr( QString prop, QString val ) override;
 
-        //void initialize() override;
+        void initialize() override;
         //void runEvent() override;
 
         int baSizeX() { return m_baSizeX; }

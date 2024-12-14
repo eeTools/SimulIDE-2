@@ -59,7 +59,7 @@ new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
 }
 FreqMeter::~FreqMeter(){}
 
-/*void FreqMeter::initialize()
+void FreqMeter::initialize()
 {
     m_rising  = false;
     m_falling = false;
@@ -70,14 +70,12 @@ FreqMeter::~FreqMeter(){}
     m_lastMax  = 0;
     m_totalP   = 0;
     m_period   = 0;
+
+    int node = m_pin[0]->getNode();
+    if( node >= 0 ) m_kcl->addChangeCB( this, node );
     
     m_display.setText( "0 Hz" );
 }
-
-void FreqMeter::stamp()          // Called at Simulation Start
-{
-    m_ePin[0]->changeCallBack( this );
-}*/
 
 void FreqMeter::updateStep()
 {
