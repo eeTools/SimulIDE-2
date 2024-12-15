@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ColorVal</class>
- <widget class="QWidget" name="ColorVal">
+ <class>StrWidget</class>
+ <widget class="QWidget" name="StrWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>305</width>
+    <width>331</width>
     <height>29</height>
    </rect>
   </property>
@@ -18,9 +18,6 @@
   </property>
   <property name="windowTitle">
    <string notr="true">Form</string>
-  </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
@@ -44,23 +41,14 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string notr="true">TextLabel</string>
+      <string>TextLabel</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="colorW"/>
-   </item>
-   <item>
-    <widget class="QRadioButton" name="showVal">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QLineEdit" name="value">
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>

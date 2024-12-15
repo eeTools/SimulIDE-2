@@ -3,43 +3,38 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#include "strval.h"
+#include "strwidget.h"
 #include "component.h"
 #include "comproperty.h"
-//#include "mainwindow.h"
 #include "propdialog.h"
 
-StrVal::StrVal( PropDialog* parent, CompBase* comp, ComProperty* prop )
-      : PropVal( parent, comp, prop )
+StrWidget::StrWidget( PropDialog* parent, CompBase* comp, ComProperty* prop )
+         : PropWidget( parent, comp, prop )
 {
     setupUi(this);
 }
-StrVal::~StrVal() {}
+StrWidget::~StrWidget() {}
 
-void StrVal::setup( bool )
+void StrWidget::setup( bool )
 {
-    //float scale = MainWindow::self()->fontScale();
-    //QFont font = valLabel->font();
-    //font.setPixelSize( 11.0*scale );
-    //valLabel->setFont( font );
-
-    QFontMetrics fm( valLabel->font() );
-    float scale = fm.width(" ")/2;
-    value->setFixedWidth( 192.0*scale );
-
-    valLabel->setText( m_property->capt() );
+    valLabel->setText( m_property->name() );
     updtValues();
     this->adjustSize();
 }
 
-void StrVal::on_value_editingFinished()
+void StrWidget::updateName()
+{
+    valLabel->setText( m_property->name() );
+}
+
+void StrWidget::on_value_editingFinished()
 {
     prepareChange();
     m_property->setValStr( value->text() );
     saveChanges();
 }
 
-void StrVal::updtValues()
+void StrWidget::updtValues()
 {
     QString text = m_property->getValStr();
     value->setText( text );

@@ -7,23 +7,30 @@
 #define COMPROPERTY_H
 
 #include <QString>
+#include <QList>
 
 enum propFlags{
     propHidden = 1,
-    propNoCopy = 1<<1
+    propNoCopy = 1<<1,
+    propSignal = 1<<2,
+    propSlot   = 1<<3,
 };
+
+class PropWidget;
 
 class ComProperty
 {
     public:
-        ComProperty( QString name, QString caption, QString unit, QString type, uint8_t flags );
+        ComProperty( QString id, QString name, QString unit, QString type, uint8_t flags );
         virtual ~ComProperty(){;}
 
+        QString id();
         QString name();
-        QString capt();
         QString type();
         QString unit();
         uint8_t flags();
+
+        void setName( QString n );
 
         virtual void    setValStr( QString );
         virtual QString getValStr();
@@ -31,9 +38,17 @@ class ComProperty
 
         virtual QString toString();
 
+        void addCallBack( ComProperty* cb );
+
     protected:
+        virtual void createWidget(){;}
+
+        QList<ComProperty*> m_callbacks;
+
+        PropWidget* m_widget;
+
+        QString m_id;
         QString m_name;
-        QString m_capt;
         QString m_type;
         QString m_unit;
         uint8_t m_flags;

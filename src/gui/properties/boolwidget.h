@@ -3,28 +3,28 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef SRTINGVAL_H
-#define SRTINGVAL_H
+#ifndef BOOLWIDGET_H
+#define BOOLWIDGET_H
 
-#include "ui_strval.h"
-#include "propval.h"
+#include "ui_boolwidget.h"
+#include "propwidget.h"
 
 class Component;
 class PropDialog;
 
-class StrVal : public PropVal, private Ui::StrVal
+class BoolWidget : public PropWidget, private Ui::BoolWidget
 {
     Q_OBJECT
     
     public:
-        StrVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~StrVal();
-
+        BoolWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~BoolWidget();
+        
         virtual void setup( bool ) override;
         virtual void updtValues() override;
 
     public slots:
-        void on_value_editingFinished();
+        void on_trueVal_toggled( bool checked );
 };
 
 #endif

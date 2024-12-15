@@ -3,32 +3,30 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef NUMVAL_H
-#define NUMVAL_H
+#ifndef NUMWIDGET_H
+#define NUMWIDGET_H
 
-#include "ui_numval.h"
-#include "propval.h"
+#include "ui_numwidget.h"
+#include "propwidget.h"
 
 class Component;
 class PropDialog;
 
-class NumVal : public PropVal, private Ui::NumVal
+class NumWidget : public PropWidget, private Ui::NumWidget
 {
     Q_OBJECT
     
     public:
-        NumVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~NumVal();
+        NumWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~NumWidget();
 
         virtual void setup( bool isComp ) override;
         virtual void updtValues() override;
-
-        virtual QString getValWithUnit() override;
+        virtual void updateName() override;
 
     public slots:
         void on_showVal_toggled( bool checked );
         void on_valueBox_valueChanged( double val );
-        void on_unitBox_currentTextChanged( QString unit );
 
     private:
         QString m_type;

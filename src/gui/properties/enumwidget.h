@@ -3,27 +3,25 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef ENUMVAL_H
-#define ENUMVAL_H
+#ifndef ENUMWIDGET_H
+#define ENUMWIDGET_H
 
-#include "ui_enumval.h"
-#include "propval.h"
+#include "ui_enumwidget.h"
+#include "propwidget.h"
 
 class Component;
 class PropDialog;
 
-class EnumVal : public PropVal, private Ui::EnumVal
+class EnumWidget : public PropWidget, private Ui::EnumWidget
 {
     Q_OBJECT
     
     public:
-        EnumVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~EnumVal();
+        EnumWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~EnumWidget();
 
         virtual void setup( bool isComp ) override;
         virtual void updtValues() override;
-
-        void setEnums( QString e );
 
     public slots:
         void on_showVal_toggled( bool checked );

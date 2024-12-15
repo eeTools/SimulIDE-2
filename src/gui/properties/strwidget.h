@@ -3,37 +3,29 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef COLORVAL_H
-#define COLORVAL_H
+#ifndef STRWIDGET_H
+#define STRWIDGET_H
 
-#include "ui_colorval.h"
-#include "propval.h"
+#include "ui_strwidget.h"
+#include "propwidget.h"
 
 class Component;
 class PropDialog;
 
-class ColorVal : public PropVal, private Ui::ColorVal
+class StrWidget : public PropWidget, private Ui::StrWidget
 {
     Q_OBJECT
     
     public:
-        ColorVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~ColorVal();
+        StrWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~StrWidget();
 
         virtual void setup( bool ) override;
         virtual void updtValues() override;
+        virtual void updateName() override;
 
-        bool eventFilter( QObject* object, QEvent* event) override;
-
-    //public slots:
-
-
-    private:
-        void changeColor();
-
-        QColor m_color;
-
-        bool m_blocked;
+    public slots:
+        void on_value_editingFinished();
 };
 
 #endif

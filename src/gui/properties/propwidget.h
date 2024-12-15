@@ -3,8 +3,8 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PROPVAL_H
-#define PROPVAL_H
+#ifndef PROPWIDGET_H
+#define PROPWIDGET_H
 
 #include <QWidget>
 
@@ -13,35 +13,30 @@ class PropDialog;
 class QComboBox;
 class ComProperty;
 
-class PropVal : public QWidget
+class PropWidget : public QWidget
 {
     public:
-        PropVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~PropVal();
+        PropWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~PropWidget();
 
         virtual void setup( bool isComp )=0;
         virtual void updtValues() {;}
+        virtual void updateName() {;}
 
-        virtual QString getValWithUnit() { return ""; }
-
-        QString propName() { return m_propName; }
+        QString propId() { return m_propId; }
 
     protected:
-        void addDividers( QComboBox* unitBox, QString unit );
-        void addMultipliers( QComboBox* unitBox, QString unit );
-
         void prepareChange();
         void saveChanges();
 
         bool m_blocked;
         bool m_undo;
-        QString m_oldValue;
 
-        QString m_propName;
+        QString m_oldValue;
+        QString m_propId;
 
         CompBase*    m_component;
         ComProperty* m_property;
         PropDialog*  m_propDialog;
 };
-
 #endif

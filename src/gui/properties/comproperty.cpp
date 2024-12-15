@@ -4,21 +4,21 @@
  ***( see copyright.txt file at root folder )*******************************/
 
 #include "comproperty.h"
-#include "propval.h"
+#include "propwidget.h"
 #include "utils.h"
 
-ComProperty::ComProperty( QString name, QString caption, QString unit, QString type, uint8_t flags )
+ComProperty::ComProperty( QString id, QString name, QString unit, QString type, uint8_t flags )
 {
+    m_id    = id;
     m_name  = name;
-    m_capt  = caption;
     m_unit  = unit;
     m_type  = type;
     m_flags = flags;
 
     //m_widget = NULL;
 }
+QString ComProperty::id()   { return m_id; }
 QString ComProperty::name() { return m_name; }
-QString ComProperty::capt() { return m_capt; }
 QString ComProperty::type() { return m_type; }
 QString ComProperty::unit() { return m_unit; }
 uint8_t ComProperty::flags(){ return m_flags; }
@@ -28,3 +28,17 @@ QString ComProperty::getValStr(){ return ""; }
 double  ComProperty::getValue(){ return getValStr().toDouble(); }
 
 QString ComProperty::toString(){ return getValStr(); }
+
+void ComProperty::setName( QString n )
+{
+    m_name = n;
+    m_id = n.toLower().replace(" ", "_");
+    if( m_widget ) m_widget->updateName();
+}
+
+void ComProperty::addCallBack( ComProperty* cb )
+{
+    /// if( !m_signal ) m_signal = new ModSignal( "signal@"+m_id, hookProperty );
+    /// m_signal->connect( cb );
+    if( !m_callbacks.contains( cb ) ) m_callbacks.append( cb );
+}

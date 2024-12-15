@@ -3,19 +3,19 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef LABELVAL_H
-#define LABELVAL_H
+#ifndef LABELWIDGET_H
+#define LABELWIDGET_H
 
 #include <QWidget>
 
-#include "ui_labelval.h"
+#include "ui_labelwidget.h"
 
-class LabelVal : public QWidget, private Ui::LabelVal
+class LabelWidget : public QWidget, private Ui::LabelWidget
 {
     Q_OBJECT
     
     public:
-        LabelVal( QWidget* parent );
+        LabelWidget( QWidget* parent );
 
         void setLabelVal( QString caption );
 };
