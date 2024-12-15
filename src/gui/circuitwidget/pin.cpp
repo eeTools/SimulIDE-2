@@ -59,7 +59,7 @@ void Pin::updateStep()
 
 void Pin::removeWire()
 {
-    if( my_wire ) Circuit::self()->removeWire( my_wire );
+    if( m_wire ) Circuit::self()->removeWire( m_wire );
     PinBase::removeWire();
 }
 
@@ -139,8 +139,8 @@ Pin* Pin::connectPin( bool connect )      // Auto-Connect
 
 void Pin::isMoved()
 {
-    if( my_wire ) my_wire->updateConRoute( this );
-    else if( this->isVisible() && !my_wire )
+    if( m_wire ) m_wire->updateConRoute( this );
+    else if( this->isVisible() && !m_wire )
     {                                       // Auto-Connect
         if( !Circuit::self()->isBusy()
          && (QApplication::queryKeyboardModifiers() == Qt::ShiftModifier) )
@@ -155,7 +155,7 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
     
     if( event->button() == Qt::LeftButton ) // Start/Close Wire
     {
-        if( my_wire ) event->ignore();
+        if( m_wire ) event->ignore();
         else{
             if( Circuit::self()->is_constarted() )
             {

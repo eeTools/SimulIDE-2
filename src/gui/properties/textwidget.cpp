@@ -3,20 +3,20 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#include "textval.h"
+#include "textwidget.h"
 //#include "scripted.h"
 #include "comproperty.h"
 #include "propdialog.h"
 //#include "mainwindow.h"
 
-TextVal::TextVal( PropDialog* parent, CompBase* comp, ComProperty* prop )
-       : PropVal( parent, comp, prop )
+TextWidget::TextWidget( PropDialog* parent, CompBase* comp, ComProperty* prop )
+          : PropWidget( parent, comp, prop )
 {
     setupUi(this);
 }
-TextVal::~TextVal() {}
+TextWidget::~TextWidget() {}
 
-void TextVal::setup( bool )
+void TextWidget::setup( bool )
 {
     //float scale = MainWindow::self()->fontScale();
     //QFont font = textBox->font();
@@ -31,7 +31,7 @@ void TextVal::setup( bool )
     this->adjustSize();
 }
 
-/*void TextVal::on_saveButton_clicked()
+/*void TextWidget::on_saveButton_clicked()
 {
     QString script = textBox->toPlainText();
     QString excep  = m_scriptComp->evaluate( script );
@@ -46,19 +46,19 @@ void TextVal::setup( bool )
     evalText->setPlainText( excep );
 }*/
 
-void TextVal::on_textBox_textChanged()
+void TextWidget::on_textBox_textChanged()
 {
     m_property->setValStr( textBox->toPlainText() );
     m_propDialog->changed();
 }
 
-void TextVal::updatValue()
+void TextWidget::updatValue()
 {
     /// FIXME QString text = m_scriptComp->property( m_propName.toUtf8() ).toString();
     /// FIXME textBox->setPlainText( text );
 }
 
-void TextVal::updtValues()
+void TextWidget::updtValues()
 {
 
 }

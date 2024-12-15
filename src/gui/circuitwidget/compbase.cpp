@@ -86,6 +86,11 @@ void CompBase::remProperty( QString prop )
             return;
 }   }   }
 
+ComProperty* CompBase::getProperty( QString name )
+{
+    return m_propMap.value( name );
+}
+
 bool CompBase::setPropStr( QString prop, QString val )
 {
     ComProperty* p = m_propMap.value( prop );

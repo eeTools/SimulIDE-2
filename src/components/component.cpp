@@ -380,7 +380,7 @@ void Component::remove()
     Circuit::self()->compRemoved( true );
 }
 
-void Component::deletePin( Pin* pin )
+void Component::deletePin( PinBase* pin )
 {
     pin->removeWire();
     m_signalPin.removeAll( pin );
@@ -441,7 +441,7 @@ void Component::setflip()
     m_valLabel->setTransform( QTransform::fromScale( m_Hflip, m_Vflip ) );
     m_idLabel->updtLabelPos();
     m_valLabel->updtLabelPos();
-    for( Pin* pin : m_signalPin ) pin->flip( m_Hflip, m_Vflip );
+    for( PinBase* pin : m_signalPin ) pin->flip( m_Hflip, m_Vflip );
 
     if( !m_hidden ) moveSignal();    // Used by sockets
 }
@@ -511,15 +511,15 @@ void Component::setShowProp( QString prop )
 
 void Component::moveSignal()
 {
-    for( Pin* pin : m_signalPin ) pin->isMoved();
+    for( PinBase* pin : m_signalPin ) pin->isMoved();
 }
 
-void Component::addSignalPin( Pin* pin )
+void Component::addSignalPin( PinBase* pin )
 {
     if( !m_signalPin.contains( pin ) ) m_signalPin.append( pin );
 }
 
-void Component::remSignalPin( Pin* pin )
+void Component::remSignalPin( PinBase* pin )
 {
     m_signalPin.removeAll( pin );
 }

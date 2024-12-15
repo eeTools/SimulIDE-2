@@ -16,7 +16,7 @@
 #include "utils.h"
 
 #include "stringprop.h"
-#include "enumval.h"
+#include "enumwidget.h"
 
 InoDebugger::InoDebugger( CodeEditor* parent, OutPanelText* outPane )
            : AvrGccDebugger( parent, outPane )
@@ -378,7 +378,7 @@ void InoDebugger::compilerProps()
     m_propDialog->showProp("CustomBoard", m_board == "Custom");
 
     Compiler::compilerProps();
-    EnumVal* boardWidget = (EnumVal*)m_propDialog->getPropWidget("Board");
+    EnumWidget* boardWidget = (EnumWidget*)m_propDialog->getPropWidget("Board");
     QString userBoards = m_userBoards.join(",");
     QString enums = m_defaultBoards+",Custom,"+userBoards+";"+m_defaultBoards+","+tr("Custom")+","+userBoards;
     boardWidget->setEnums( enums );

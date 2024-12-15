@@ -3,22 +3,22 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PATHVAL_H
-#define PATHVAL_H
+#ifndef PATHWIDGET_H
+#define PATHWIDGET_H
 
-#include "ui_pathval.h"
-#include "propval.h"
+#include "ui_pathwidget.h"
+#include "propwidget.h"
 
 class Component;
 class PropDialog;
 
-class PathVal : public PropVal, private Ui::PathVal
+class PathWidget : public PropWidget, private Ui::PathWidget
 {
     Q_OBJECT
     
     public:
-        PathVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~PathVal();
+        PathWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~PathWidget();
 
         virtual void setup( bool ) override;
         virtual void updtValues() override;

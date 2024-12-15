@@ -43,6 +43,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/gui/appdialogs \
     $$PWD/src/gui/circuitwidget \
     $$PWD/src/gui/componentlist \
+    $$PWD/src/gui/composer \
     $$PWD/src/gui/dataplotwidget \
     $$PWD/src/gui/editorwidget \
     $$PWD/src/gui/editorwidget/debuggers \
@@ -56,6 +57,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/simulator/elements/active \
     $$PWD/src/simulator/elements/outputs \
     $$PWD/src/simulator/elements/passive \
+    $$PWD/src/simulator/modules \
     $$PWD/src/microsim \
     $$PWD/src/microsim/cores \
     $$PWD/src/microsim/cores/avr \

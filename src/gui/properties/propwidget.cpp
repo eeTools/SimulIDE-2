@@ -32,7 +32,7 @@ void PropWidget::prepareChange()
 void PropWidget::saveChanges()
 {
     if( m_undo ){ // Don'use endUndoStep() because We need addCompChange() before endCircuitBatch()
-        Circuit::self()->calculateChanges();
+        Circuit::self()->calcCircuitChanges();
         Circuit::self()->addCompChange( m_component->getUid(), m_propId, m_oldValue );
         Circuit::self()->endCircuitBatch();
     }

@@ -633,14 +633,17 @@ void ComponentList::writeSettings()
 
 //BEGIN Item includes
 #include "ampmeter.h"
+#include "bjt.h"
 #include "capacitor.h"
-#include "clock.h"
-#include "fixedvolt.h"
+//#include "clock.h"
+#include "diode.h"
+//#include "fixedvolt.h"
 #include "freqmeter.h"
 #include "ground.h"
 #include "header.h"
 #include "inductor.h"
 #include "logicanalizer.h"
+#include "mosfet.h"
 #include "oscope.h"
 #include "probe.h"
 #include "rail.h"
@@ -649,11 +652,10 @@ void ComponentList::writeSettings()
 #include "subcircuit.h"
 #include "subpackage.h"
 #include "tunnel.h"
-
 #include "voltmeter.h"
+//#include "wavegen.h"
 
 /*
-
 #include "adc.h"
 #include "aip31068_i2c.h"
 #include "audio_out.h"
@@ -661,7 +663,7 @@ void ComponentList::writeSettings()
 #include "bcdto7s.h"
 #include "bcdtodec.h"
 #include "bincounter.h"
-#include "bjt.h"
+
 #include "buffer.h"
 #include "bus.h"
 #include "capacitor.h"
@@ -676,7 +678,7 @@ void ComponentList::writeSettings()
 #include "dht22.h"
 #include "diac.h"
 #include "dial.h"
-#include "diode.h"
+
 #include "ds1307.h"
 #include "ds1621.h"
 #include "ds18b20.h"
@@ -718,19 +720,14 @@ void ComponentList::writeSettings()
 
 #include "magnitudecomp.h"
 #include "max72xx_matrix.h"
-#include "mosfet.h"
 #include "mux.h"
 #include "mux_analog.h"
 #include "op_amp.h"
-
 #include "pcd8544.h"
-
 #include "potentiometer.h"
 #include "push.h"
-
 #include "rectangle.h"
 #include "relay.h"
-
 #include "resistordip.h"
 #include "rtd.h"
 #include "serialport.h"
@@ -755,12 +752,10 @@ void ComponentList::writeSettings()
 #include "touchpad.h"
 #include "transformer.h"
 #include "triac.h"
-
 #include "varresistor.h"
 
 #include "volt_reg.h"
 #include "voltsource.h"
-#include "wavegen.h"
 #include "ws2812.h"
 #include "zener.h"*/
 
@@ -775,8 +770,8 @@ void ComponentList::LoadLibraryItems()
     addItem( LAnalizer::libraryItem() );
 
     addCategory( tr("Sources"),"Sources", "", "" );
-    addItem( FixedVolt::libraryItem() );
-    addItem( Clock::libraryItem() );
+    //addItem( FixedVolt::libraryItem() );
+    //addItem( Clock::libraryItem() );
     //addItem( WaveGen::libraryItem() );
     //addItem( VoltSource::libraryItem() );
     //addItem( CurrSource::libraryItem() );
@@ -812,16 +807,16 @@ void ComponentList::LoadLibraryItems()
     //addItem( Transformer::libraryItem() );
 
     addCategory( tr("Active"),"Active", "", "" );
-    //addCategory( tr("Rectifiers"),"Rectifiers", "Active", "" );
-    //addItem( Diode::libraryItem() );
+    addCategory( tr("Rectifiers"),"Rectifiers", "Active", "" );
+    addItem( Diode::libraryItem() );
     //addItem( Zener::libraryItem() );
     //addItem( SCR::libraryItem() );
     //addItem( Diac::libraryItem() );
     //addItem( Triac::libraryItem() );
 
     addCategory( tr("Transistors"),"Transistors", "Active", "" );
-    //addItem( BJT::libraryItem() );
-    //addItem( Mosfet::libraryItem() );
+    addItem( BJT::libraryItem() );
+    addItem( Mosfet::libraryItem() );
 
     addCategory( tr("Other Active"),"Other Active", "Active", "" );
     //addItem( OpAmp::libraryItem() );

@@ -22,6 +22,7 @@ class QSettings;
 enum Langs {
     English = 0,
     Chinese,
+    Traditional_Chinese,
     Czech,
     Dutch,
     French,
@@ -75,8 +76,8 @@ class MainWindow : public QMainWindow
         QString getFilePath( QString file );              // Get file path in SimulIDE folders
         QString getConfigPath( QString file );            // Get file path in config folder
         QString getDataFilePath( QString file );          // Get file path in data folder, first user folder, if not SimulIDE folder
-        QString getUserFilePath( QString f );             // Get file path in user folder
         QString getCircFilePath( QString file );          // Get file path in circuit folder
+        QString getUserFilePath( QString f );             // Get file path in user folder
         QString userPath() { return m_userDir; }          // User folder path
         void setUserPath( QString p );
         void getUserPath();                               // File open Dialog
@@ -99,8 +100,6 @@ class MainWindow : public QMainWindow
         bool m_blocked;
 
         void createWidgets();
-        void createMenus();
-        void createToolBars();
         void writeSettings();
         
         QString m_fontName;
@@ -122,16 +121,16 @@ class MainWindow : public QMainWindow
 
         QHash<QString, QString> m_help;
         
-        CircuitWidget* m_circuit;
+        CircuitWidget* m_circuitW;
         ComponentList* m_components;
-        QWidget*       m_componentWidget;
-        QVBoxLayout*   m_componentWidgetLayout;
+        QWidget*       m_listWidget;
         QLineEdit*     m_searchComponent;
         QPushButton*   m_clearButton;
+        FileWidget*    m_fileTree;
         EditorWindow*  m_editor;
         
-        QSplitter*  m_Centralsplitter;
-        FileWidget* m_fileSystemTree;
+        QSplitter*  m_mainSplitter;
+        QSplitter*  m_simSplitter;
 };
 
 #endif

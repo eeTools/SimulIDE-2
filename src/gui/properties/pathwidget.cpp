@@ -3,21 +3,21 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#include "pathval.h"
+#include "pathwidget.h"
 #include "component.h"
 #include "comproperty.h"
 #include "propdialog.h"
 #include "mainwindow.h"
 #include "utils.h"
 
-PathVal::PathVal( PropDialog* parent, CompBase* comp, ComProperty* prop )
-       : PropVal( parent, comp, prop )
+PathWidget::PathWidget( PropDialog* parent, CompBase* comp, ComProperty* prop )
+          : PropWidget( parent, comp, prop )
 {
     setupUi(this);
 }
-PathVal::~PathVal() {}
+PathWidget::~PathWidget() {}
 
-void PathVal::setup( bool )
+void PathWidget::setup( bool )
 {
     //float scale = MainWindow::self()->fontScale();
     //QFont font = valLabel->font();
@@ -26,26 +26,26 @@ void PathVal::setup( bool )
     //value->setFont( font );
     //setPathButton->setFont( font );
 
-    valLabel->setText( m_property->capt() );
+    valLabel->setText( m_property->name() );
     updtValues();
     this->adjustSize();
 }
 
-void PathVal::on_value_editingFinished()
+void PathWidget::on_value_editingFinished()
 {
     m_property->setValStr( value->text() );
     updtValues();
     m_propDialog->changed();
 }
 
-void PathVal::on_setPathButton_clicked()
+void PathWidget::on_setPathButton_clicked()
 {
     QString path = getDirDialog( tr("Select directory"), value->text() );
     value->setText( path );
     on_value_editingFinished();
 }
 
-void PathVal::updtValues()
+void PathWidget::updtValues()
 {
     QString text = m_property->getValStr();
     value->setText( text );

@@ -3,22 +3,22 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef TEXTVAL_H
-#define TEXTVAL_H
+#ifndef TEXTWIDGET_H
+#define TEXTWIDGET_H
 
-#include "ui_textval.h"
-#include "propval.h"
+#include "ui_textwidget.h"
+#include "propwidget.h"
 
 class PropDialog;
 class Scripted;
 
-class TextVal : public PropVal, private Ui::TextVal
+class TextWidget : public PropWidget, private Ui::TextWidget
 {
     Q_OBJECT
     
     public:
-        TextVal( PropDialog* parent, CompBase* comp, ComProperty* prop );
-        ~TextVal();
+        TextWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
+        ~TextWidget();
         
         virtual void setup( bool isComp ) override;
         virtual void updtValues() override;

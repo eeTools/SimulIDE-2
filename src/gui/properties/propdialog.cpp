@@ -7,14 +7,14 @@
 #include "component.h"
 #include "circuit.h"
 
-#include "labelval.h"
-#include "numval.h"
-#include "pathval.h"
-#include "strval.h"
-#include "textval.h"
-#include "enumval.h"
-#include "boolval.h"
-#include "colorval.h"
+#include "labelwidget.h"
+#include "numwidget.h"
+#include "pathwidget.h"
+#include "strwidget.h"
+#include "textwidget.h"
+#include "enumwidget.h"
+#include "boolwidget.h"
+#include "colorwidget.h"
 #include "mainwindow.h"
 
 #include "comproperty.h"
@@ -82,7 +82,7 @@ void PropDialog::setComponent( CompBase* comp, bool isComp )
 
                 if( prop->name() == "" ) // Just a label
                 {
-                    QString text = prop->capt();
+                    QString text = prop->name();
                     if( text == "separator")
                     {
                         QFrame* line = new QFrame;
@@ -90,24 +90,24 @@ void PropDialog::setComponent( CompBase* comp, bool isComp )
                         line->setFrameShadow( QFrame::Sunken );
                         groupWidget->layout()->addWidget( line );
                     }else{
-                        LabelVal* mp = new LabelVal( this );
+                        LabelWidget* mp = new LabelWidget( this );
                         mp->setLabelVal( text );
                         groupWidget->layout()->addWidget( mp );
                     }
                     continue;
                 }
                 QString type = prop->type();
-                PropVal* mp = NULL;
+                PropWidget* mp = NULL;
 
-                if     ( type == "double"  ) mp = new NumVal( this, comp, prop );
-                else if( type == "color"   ) mp = new ColorVal( this, comp, prop );
-                else if( type == "uint"    ) mp = new NumVal( this, comp, prop );
-                else if( type == "int"     ) mp = new NumVal( this, comp, prop );
-                else if( type == "string"  ) mp = new StrVal( this, comp, prop );
-                else if( type == "path"    ) mp = new PathVal( this, comp, prop );
-                else if( type == "textEdit") mp = new TextVal( this, comp, prop );
-                else if( type == "enum"    ) mp = new EnumVal( this, comp, prop );
-                else if( type == "bool"    ) mp = new BoolVal( this, comp, prop );
+                if     ( type == "double"  ) mp = new NumWidget( this, comp, prop );
+                else if( type == "color"   ) mp = new ColorWidget( this, comp, prop );
+                else if( type == "uint"    ) mp = new NumWidget( this, comp, prop );
+                else if( type == "int"     ) mp = new NumWidget( this, comp, prop );
+                else if( type == "string"  ) mp = new StrWidget( this, comp, prop );
+                else if( type == "path"    ) mp = new PathWidget( this, comp, prop );
+                else if( type == "textEdit") mp = new TextWidget( this, comp, prop );
+                else if( type == "enum"    ) mp = new EnumWidget( this, comp, prop );
+                else if( type == "bool"    ) mp = new BoolWidget( this, comp, prop );
 
                 if( !mp ) continue;
 
@@ -125,19 +125,19 @@ void PropDialog::setComponent( CompBase* comp, bool isComp )
     if( tabList->count() == 0 ) tabList->setVisible( false ); // Hide tab widget if empty
 }
 
-PropVal* PropDialog::getPropWidget( QString propName )
+PropWidget* PropDialog::getPropWidget( QString propName )
 {
-    for( PropVal* widget : m_propList )
-        if( widget->propName() == propName ) return widget;
+    for( PropWidget* widget : m_propList )
+        if( widget->propId() == propName ) return widget;
 
     return nullptr;
 }
 
 void PropDialog::showProp( QString name, bool show )
 {
-    for( PropVal* prop : m_propList )
+    for( PropWidget* prop : m_propList )
     {
-        if( prop->propName() != name ) continue;
+        if( prop->propId() != name ) continue;
         prop->setHidden( !show );
         if( show ) this->adjustSize();
         break;
@@ -146,9 +146,9 @@ void PropDialog::showProp( QString name, bool show )
 
 void PropDialog::enableProp( QString name, bool en )
 {
-    for( PropVal* prop : m_propList )
+    for( PropWidget* prop : m_propList )
     {
-        if( prop->propName() != name ) continue;
+        if( prop->propId() != name ) continue;
         prop->setEnabled( en );
         break;
     }
@@ -208,7 +208,7 @@ void PropDialog::adjustWidgets()
 
 void PropDialog::updtValues()
 {
-    for( PropVal* prop : m_propList ) prop->updtValues();
+    for( PropWidget* prop : m_propList ) prop->updtValues();
 }
 
 void PropDialog::changed()

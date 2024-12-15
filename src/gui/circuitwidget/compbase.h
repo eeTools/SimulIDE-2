@@ -40,6 +40,7 @@ class CompBase
         void remPropGroup( QString name );
         void addProperty( QString group, ComProperty* p );
         void remProperty( QString prop );
+        ComProperty* getProperty( QString name );
         QList<propGroup>* properties() { return &m_propGroups; } // Circuit needs pointer bcos properties can change (ex: loadHex changes Config)
 
         virtual void loadProperties( QVector<propStr_t> p );

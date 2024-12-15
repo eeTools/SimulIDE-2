@@ -42,3 +42,9 @@ void ComProperty::addCallBack( ComProperty* cb )
     /// m_signal->connect( cb );
     if( !m_callbacks.contains( cb ) ) m_callbacks.append( cb );
 }
+
+PropWidget* ComProperty::getWidget()
+{
+    if( !m_widget ) createWidget();
+    return m_widget;
+}

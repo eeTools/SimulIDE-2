@@ -23,4 +23,3 @@ class Resistor : public Component, public Resistance
 };
 
 #endif
-

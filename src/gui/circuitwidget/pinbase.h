@@ -47,7 +47,7 @@ class PinBase : public QGraphicsItem, public Updatable
         void setWireFlags( int flags ) { m_wireFlags = flags; }
         int  wireFlags() { return m_wireFlags; }
 
-        Wire* wire() { return my_wire; }
+        virtual Wire* wire() { return m_wire; }
         void setWire( Wire* c );
         virtual void removeWire();
 
@@ -111,7 +111,7 @@ class PinBase : public QGraphicsItem, public Updatable
         QColor m_color[8];
         QRectF m_area;
 
-        Wire*  my_wire;
+        Wire*  m_wire;
 
         PinBase* m_conPin;  // Pin at the other side of wire
 

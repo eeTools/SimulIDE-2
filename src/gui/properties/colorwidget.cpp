@@ -10,7 +10,7 @@
 #include "comproperty.h"
 #include "propdialog.h"
 
-ColorWidget::ColorWidget( PropDialog* parent, Component* comp, ComProperty* prop )
+ColorWidget::ColorWidget( PropDialog* parent, CompBase* comp, ComProperty* prop )
            : PropWidget( parent, comp, prop )
 {
     setupUi(this);

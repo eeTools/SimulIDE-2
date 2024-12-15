@@ -18,7 +18,7 @@
 #include "logicsubc.h"
 #include "board.h"
 #include "shield.h"
-#include "module.h"
+#include "modulesubc.h"
 
 #include "stringprop.h"
 

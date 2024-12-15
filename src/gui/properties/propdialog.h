@@ -11,7 +11,7 @@
 #include "ui_propdialog.h"
 
 class CompBase;
-class PropVal;
+class PropWidget;
 
 class PropDialog : public QDialog, private Ui::PropDialog
 {
@@ -27,8 +27,8 @@ class PropDialog : public QDialog, private Ui::PropDialog
 
         void changed();
 
-        PropVal* getPropWidget( QString propName );
-        //QList<PropVal*> propWidgets() { return m_propList; }
+        PropWidget* getPropWidget( QString propName );
+        //QList<Propwidget*> propWidgets() { return m_propList; }
 
     public slots:
         void on_labelBox_editingFinished();
@@ -46,7 +46,7 @@ class PropDialog : public QDialog, private Ui::PropDialog
         int m_minW;
         int m_minH;
 
-        QList<PropVal*> m_propList;
+        QList<PropWidget*> m_propList;
 };
 
 #endif

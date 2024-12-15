@@ -13,6 +13,7 @@
 #include "updatable.h"
 
 class Pin;
+class PinBase;
 class eNode;
 class Label;
 class Wire;
@@ -143,9 +144,9 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
 
         virtual void setflip();
 
-        void deletePin( Pin* pin );
-        void addSignalPin( Pin* pin );
-        void remSignalPin( Pin* pin );
+        void deletePin( PinBase* pin );
+        void addSignalPin( PinBase* pin );
+        void remSignalPin( PinBase* pin );
 
         virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* ) override;
 
@@ -230,7 +231,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         QList<Component*> m_compMoveList;
 
         std::vector<Pin*> m_pin;
-        QList<Pin*> m_signalPin;
+        QList<PinBase*> m_signalPin;
 
         //QGraphicsItemGroup* m_group;
 };

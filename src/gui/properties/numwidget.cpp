@@ -22,7 +22,7 @@ NumWidget::NumWidget( PropDialog* parent, CompBase* comp, ComProperty* prop )
         if( unit.startsWith("_") ) valueBox->setSuffix( unit.replace("_", " ") );
     }else{
         m_useMult = true;
-        valueBox->setUnitStr( unit );
+        /// valueBox->setUnitStr( unit );
         valueBox->setSuffix( " "+unit );
     }
 

@@ -21,7 +21,7 @@ PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int 
     m_animate = false;
     m_warning = false;
 
-    my_wire  = nullptr;
+    m_wire  = nullptr;
     m_angle  = angle;
     m_space = 0;
     m_Hflip = 1;
@@ -72,11 +72,11 @@ void PinBase::setUnused( bool unused )
 
 void  PinBase::setWire( Wire* wire )
 {
-    my_wire = wire;
+    m_wire = wire;
     m_warning = false;
 
-    if( my_wire ) setCursor( Qt::ArrowCursor );
-    else          setCursor( Qt::CrossCursor );
+    if( m_wire ) setCursor( Qt::ArrowCursor );
+    else         setCursor( Qt::CrossCursor );
 }
 
 void PinBase::removeWire()
@@ -93,7 +93,7 @@ void PinBase::flip( int h, int v )
 
 void PinBase::isMoved()
 {
-    if( my_wire ) my_wire->updateConRoute( this );
+    if( m_wire ) m_wire->updateConRoute( this );
     setLabelPos();
 }
 

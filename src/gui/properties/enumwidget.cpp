@@ -20,19 +20,38 @@ void EnumWidget::setup( bool isComp )
     valLabel->setText( m_property->name() );
     m_blocked = true;
 
-    QStringList enumNames = m_component->getEnumNames( m_propId );/// enums.sort();
-    for( QString val : enumNames ) valueBox->addItem( val );
-
-    m_enums = m_component->getEnumUids( m_propId );
+    setEnums( m_property->unit() );
 
     QString valStr = m_property->getValStr();
     valueBox->setCurrentIndex( m_enums.indexOf( valStr) );
+
+    QFontMetrics fm( valueBox->font() );
+    float scale = fm.width(" ")/2;
+    valueBox->setFixedWidth( 170.0*scale );
 
     if( !isComp ) showVal->setVisible( false );
 
     m_blocked = false;
     updtValues();
     this->adjustSize();
+}
+
+void EnumWidget::setEnums( QString e )
+{
+    QStringList list = e.split(";");
+    m_enums = list.takeFirst().split(",");
+    m_enums.removeAll("");
+
+    QStringList enumNames;
+    if( list.size() ) enumNames = list.first().split(",");
+    else              enumNames = m_enums;
+    enumNames.removeAll("");
+
+    bool isBlocked = m_blocked;
+    m_blocked = true;
+    valueBox->clear();
+    for( QString val : enumNames ) valueBox->addItem( val );
+    m_blocked = isBlocked;
 }
 
 void EnumWidget::on_showVal_toggled( bool checked )

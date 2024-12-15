@@ -17,7 +17,7 @@ class ColorWidget : public PropWidget, private Ui::ColorWidget
     Q_OBJECT
     
     public:
-        ColorWidget( PropDialog* parent, Component* comp, ComProperty* prop );
+        ColorWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
         ~ColorWidget();
 
         virtual void setup( bool ) override;

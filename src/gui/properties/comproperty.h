@@ -40,6 +40,8 @@ class ComProperty
 
         void addCallBack( ComProperty* cb );
 
+        virtual PropWidget* getWidget();
+
     protected:
         virtual void createWidget(){;}
 
