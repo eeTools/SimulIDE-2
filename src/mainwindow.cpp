@@ -27,18 +27,18 @@
 #include "blocklist.h"
 #include "utils.h"
 
-MainWindow* MainWindow::m_pSelf = NULL;
+MainWindow* MainWindow::m_pSelf = nullptr;
 
 MainWindow::MainWindow()
           : QMainWindow()
 {
-    setWindowIcon( QIcon(":/simulide.png") );
     m_pSelf   = this;
-    m_circuitW = NULL;
+    m_circuitW = nullptr;
     m_autoBck = 15;
     m_state = "■";
     m_revision = 2300; /// FIXME
     m_version = "SimulIDE_"+QString( APP_VERSION )+"-"+QString( REVNO );
+    setWindowIcon( QIcon(":/simulide.png") );
 
     this->setWindowTitle( m_version );
 
@@ -118,7 +118,7 @@ void MainWindow::keyPressEvent( QKeyEvent* event)
 
 void MainWindow::closeEvent( QCloseEvent *event )
 {
-    if( !m_editor->close() )      { event->ignore(); return; }
+    if( !m_editor->close() )       { event->ignore(); return; }
     if( !m_circuitW->newCircuit()) { event->ignore(); return; }
 
     writeSettings();

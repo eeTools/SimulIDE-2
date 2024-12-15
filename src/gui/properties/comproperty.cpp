@@ -15,7 +15,7 @@ ComProperty::ComProperty( QString id, QString name, QString unit, QString type, 
     m_type  = type;
     m_flags = flags;
 
-    //m_widget = NULL;
+    m_widget = nullptr;
 }
 QString ComProperty::id()   { return m_id; }
 QString ComProperty::name() { return m_name; }

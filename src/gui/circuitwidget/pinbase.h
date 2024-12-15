@@ -24,7 +24,8 @@ class PinBase : public QGraphicsItem, public Updatable
             pinSocket,
             pinHeader,
             pinNull,
-            pinRst
+            pinRst,
+            pinHook
         };
 
         QRectF boundingRect() const override { return m_area; }

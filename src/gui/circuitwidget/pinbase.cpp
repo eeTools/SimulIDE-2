@@ -21,6 +21,7 @@ PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int 
     m_animate = false;
     m_warning = false;
 
+    m_pinType = pinNormal;
     m_wire  = nullptr;
     m_angle  = angle;
     m_space = 0;
@@ -108,7 +109,7 @@ void PinBase::setLabelText( QString label, bool over )
         label.remove( 0, 1 );// replace("!","");
     }
     /// Hack: if ItemStacksBehindParent then overscore does not paint
-    setFlag( QGraphicsItem::ItemStacksBehindParent, m_overScore == -1 );
+    if( m_pinType != pinHook ) setFlag( QGraphicsItem::ItemStacksBehindParent, m_overScore == -1 );
     m_label.setText( label );
     setLabelPos();
 }

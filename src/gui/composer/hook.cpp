@@ -20,14 +20,15 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
 {
     m_id = id;
     m_hookType = type;
-    m_area = QRect(-5,-5, 10, 10);
+    m_pinType = pinHook;
+    m_wireFlags = wireFunc;
 
     m_output = (angle == 0);
     m_angle = angle;
     m_space = 0;
 
-    m_wireFlags = wireFunc;
-    
+    m_area = QRect(-5,-5, 10, 10);
+
     m_color[0] = QColor(  50,  50,  50 ); // None
     m_color[1] = QColor( 250, 240, 240 ); // Property
     m_color[2] = QColor(  50, 150, 255 ); // Input bit
@@ -43,6 +44,8 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     setAcceptHoverEvents( true );
 
     m_label.setBrush( m_color[type] );
+
+    setFlag( QGraphicsItem::ItemStacksBehindParent, false );
 
     //Circuit::self()->addHook( this, id );
 
