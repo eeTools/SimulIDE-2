@@ -7,6 +7,7 @@
 #define DOUBPROP_H
 
 #include "numprop.h"
+#include "numwidget.h"
 
 template <class Comp>
 class DoubProp : public NumProp
@@ -27,8 +28,8 @@ class DoubProp : public NumProp
         { return (m_comp->*m_getter)(); }
 
     private:
-        virtual void setVal( double v ) override
-        { (m_comp->*m_setter)(v); }
+        void createWidget() override { m_widget = new NumWidget( nullptr, m_comp, this ); }
+        void setVal( double v ) override { (m_comp->*m_setter)(v); }
 
         Comp* m_comp;
         double (Comp::*m_getter)();

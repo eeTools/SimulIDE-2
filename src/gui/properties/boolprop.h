@@ -7,6 +7,7 @@
 #define BOOLPROP_H
 
 #include "comproperty.h"
+#include "boolwidget.h"
 
 template <class Comp>
 class BoolProp : public ComProperty
@@ -30,6 +31,8 @@ class BoolProp : public ComProperty
         { return (m_comp->*m_getter)() ? "true" : "false"; }
 
     private:
+        void createWidget() override { m_widget = new BoolWidget( nullptr, m_comp, this ); }
+
         Comp* m_comp;
         bool (Comp::*m_getter)();
         void (Comp::*m_setter)(bool);

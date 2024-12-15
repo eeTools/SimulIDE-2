@@ -29,7 +29,7 @@ class fComponent : public Component, public Element
         fComponent( QString type, QString id, QGraphicsScene* canvas );
         ~fComponent();
 
-        void setup();
+        void setup() override;
 
         void initialize() override;
         void voltChanged() override;

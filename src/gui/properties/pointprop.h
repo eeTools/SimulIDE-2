@@ -31,6 +31,8 @@ class PointProp : public ComProperty
         { return getStrPointF( (m_comp->*m_getter)() ); }
 
     private:
+        void createWidget() override {}
+
         Comp* m_comp;
         QPointF (Comp::*m_getter)();
         void    (Comp::*m_setter)(QPointF);

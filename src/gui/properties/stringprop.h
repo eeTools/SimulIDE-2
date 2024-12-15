@@ -7,6 +7,8 @@
 #define STRPROP_H
 
 #include "comproperty.h"
+#include "strwidget.h"
+#include "enumwidget.h"
 
 template <class Comp>
 class StrProp : public ComProperty
@@ -30,6 +32,11 @@ class StrProp : public ComProperty
         { return (m_comp->*m_getter)(); }
 
     private:
+        void createWidget() override
+        {
+            if     ( m_type == "string"  ) m_widget = new StrWidget ( nullptr, m_comp, this );
+            else if( m_type == "enum"    ) m_widget = new EnumWidget( nullptr, m_comp, this );
+        }
         Comp* m_comp;
         QString (Comp::*m_getter)();
         void    (Comp::*m_setter)(QString);

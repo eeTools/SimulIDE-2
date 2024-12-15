@@ -7,6 +7,7 @@
 #define SCRIPTPROP_H
 
 #include "comproperty.h"
+#include "strwidget.h"
 
 template <class Comp>
 class ScriptProp : public ComProperty
@@ -30,6 +31,8 @@ class ScriptProp : public ComProperty
         { return (m_comp->*m_getter)(this); }
 
     private:
+        void createWidget() override { m_widget = new StrWidget( nullptr, m_comp, this ); }
+
         Comp* m_comp;
         QString (Comp::*m_getter)(ComProperty*);
         void    (Comp::*m_setter)(ComProperty*, QString);
