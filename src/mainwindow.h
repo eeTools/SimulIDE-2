@@ -13,6 +13,8 @@ class ComponentList;
 class CircuitWidget;
 class EditorWindow;
 class FileWidget;
+class ComposerWidget;
+class BlockList;
 class QVBoxLayout;
 class QLineEdit;
 class QPushButton;
@@ -81,8 +83,6 @@ class MainWindow : public QMainWindow
         QString userPath() { return m_userDir; }          // User folder path
         void setUserPath( QString p );
         void getUserPath();                               // File open Dialog
-        
-        QTabWidget* m_sidepanel;
 
     protected:
         void closeEvent( QCloseEvent* event );
@@ -91,6 +91,7 @@ class MainWindow : public QMainWindow
     private slots:
         void searchChanged();
         void clearSearch();
+        void tabClicked( int t );
 
     private:
  static MainWindow* m_pSelf;
@@ -121,13 +122,17 @@ class MainWindow : public QMainWindow
 
         QHash<QString, QString> m_help;
         
-        CircuitWidget* m_circuitW;
-        ComponentList* m_components;
-        QWidget*       m_listWidget;
-        QLineEdit*     m_searchComponent;
-        QPushButton*   m_clearButton;
-        FileWidget*    m_fileTree;
-        EditorWindow*  m_editor;
+        QTabWidget*     m_mainPanel;
+        QTabWidget*     m_sidePanel;
+        CircuitWidget*  m_circuitW;
+        ComponentList*  m_components;
+        QWidget*        m_listWidget;
+        QLineEdit*      m_searchComponent;
+        QPushButton*    m_clearButton;
+        FileWidget*     m_fileTree;
+        EditorWindow*   m_editor;
+        ComposerWidget* m_composer;
+        BlockList*     m_blockList;
         
         QSplitter*  m_mainSplitter;
         QSplitter*  m_simSplitter;

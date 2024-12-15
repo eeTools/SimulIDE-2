@@ -22,7 +22,9 @@
 #include "componentlist.h"
 #include "editorwindow.h"
 #include "circuitwidget.h"
+#include "composerwidget.h"
 #include "filewidget.h"
+#include "blocklist.h"
 #include "utils.h"
 
 MainWindow* MainWindow::m_pSelf = NULL;
@@ -253,12 +255,17 @@ void MainWindow::createWidgets()
 
     m_fileTree = new FileWidget( this );
 
-    m_sidepanel = new QTabWidget( this );
-    m_sidepanel->setTabPosition( QTabWidget::North );
+    m_blockList = new BlockList( this );
+    m_blockList->setVisible( false );
+
+    m_sidePanel = new QTabWidget( this );
+    m_sidePanel->setTabPosition( QTabWidget::North );
     QString fontSize = QString::number( int(12*m_fontScale) );
-    m_sidepanel->tabBar()->setStyleSheet("QTabBar { font-size:"+fontSize+"px; }");
-    m_sidepanel->addTab( m_listWidget, tr("Components") );
-    m_sidepanel->addTab( m_fileTree, tr("Files") );
+    m_sidePanel->tabBar()->setStyleSheet("QTabBar { font-size:"+fontSize+"px; }");
+    m_sidePanel->addTab( m_listWidget, tr("Components") );
+    m_sidePanel->addTab( m_blockList, tr("Functions") );
+    m_sidePanel->addTab( m_fileTree, tr("Files") );
+    m_sidePanel->setTabVisible( 1, false );
 
     m_circuitW = new CircuitWidget( this );
     m_editor   = new EditorWindow( this );
@@ -267,15 +274,39 @@ void MainWindow::createWidgets()
     m_simSplitter->addWidget( m_editor );
     //m_simSplitter->setSizes( {350, 500} );
 
+    m_composer = new ComposerWidget( this );
+
+    m_mainPanel = new QTabWidget( this );
+    m_mainPanel->setTabPosition( QTabWidget::East );
+    m_mainPanel->tabBar()->setStyleSheet("QTabBar { font-size:"+fontSize+"px; }");
+    m_mainPanel->addTab( m_simSplitter, tr("Simulation") );
+    m_mainPanel->addTab( m_composer, tr("Composer") );
+    connect( m_mainPanel, SIGNAL( tabBarClicked(int) ),
+             this,          SLOT( tabClicked(int)) );
+
     m_mainSplitter = new QSplitter( this );
     m_mainSplitter->setOrientation( Qt::Horizontal );
-    m_mainSplitter->addWidget( m_sidepanel );
-    m_mainSplitter->addWidget( m_simSplitter );
+    m_mainSplitter->addWidget( m_sidePanel );
+    m_mainSplitter->addWidget( m_mainPanel );
     setCentralWidget( m_mainSplitter );
 
     m_mainSplitter->setSizes( {150, 500} );
 
     this->showMaximized();
+}
+
+void MainWindow::tabClicked( int t )
+{
+    if( t > 1 ) return;
+    bool composer = (t==1);
+
+    int index = m_sidePanel->currentIndex();
+    if     ( index == 0 ) index = 1;
+    else if( index == 1 ) index = 0;
+
+    m_sidePanel->setTabVisible( 0, !composer );
+    m_sidePanel->setTabVisible( 1, composer );
+    m_sidePanel->setCurrentIndex( index );
 }
 
 void MainWindow::clearSearch()
