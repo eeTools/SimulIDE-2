@@ -9,7 +9,7 @@
 
 #include "pinbase.h"
 #include "lachannel.h"
-#include "wire.h"
+#include "route.h"
 #include "simulator.h"
 
 PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int length )
@@ -71,7 +71,7 @@ void PinBase::setUnused( bool unused )
     update();
 }
 
-void  PinBase::setWire( Wire* wire )
+void  PinBase::setWire( Route* wire )
 {
     m_wire = wire;
     m_warning = false;

@@ -18,7 +18,7 @@ ComposerView* ComposerView::m_pSelf = nullptr;
 
 ComposerView::ComposerView( QWidget* parent )
             : QGraphicsView( parent )
-            , m_scene(-1600,-1200, 3200, 2400, this )
+            , m_scene( 3200, 2400, this )
 {
     m_pSelf = this;
     m_scale = 1;
@@ -174,5 +174,5 @@ void ComposerView::contextMenuEvent( QContextMenuEvent* event )
 
     QGraphicsView::contextMenuEvent( event );
 
-    if( m_scene.is_constarted() ) m_scene.deleteNewWire();
+    if( m_scene.getNewWire() ) m_scene.deleteNewWire();
 }

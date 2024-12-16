@@ -6,99 +6,49 @@
 #ifndef WIRE_H
 #define WIRE_H
 
-#include <QGraphicsItem>
+#include "route.h"
 
-#include "compbase.h"
+class WireLine;
 
-class Node;
-class PinBase;
-
-enum wireFlags_t{
-    wireFunc = 1<<0,
-    wireBus  = 1<<1
-};
-
-class Wire : public CompBase, public QGraphicsItem
+class Wire : public Route
 {
-    Q_INTERFACES(QGraphicsItem)
+    friend class WireLine;
 
     public:
         Wire( QString id, PinBase* startpin, PinBase* endpin=nullptr );
         ~Wire();
 
-        enum { Type = UserType + 2 };
-        int type() const override { return Type; }
+        void setPointListStr( QString pl ) override;
+        void setPointList( QStringList pl ) override;
 
-        QRectF boundingRect() const override;
+        void updateConRoute( PinBase* pin ) override;
+        void updateConRoute( QPointF thisPoint ) override;
+        void closeCon( PinBase* endpin ) override;
 
-        void dummySetter( QString ) {;}
+        void setVisib( bool vis ) override;
+        void select( bool selected ) override;
 
-        QString startPinId();
-        QString endPinId();
+        void move( QPointF delta ) override;
+        void remove() override;
 
-        PinBase* startPin() { return m_startPin;}
-        void setStartPin( PinBase* pin ) { m_startPin = pin; }
-
-        PinBase* endPin() { return m_endPin; }
-        void setEndPin( PinBase* pin) { m_endPin = pin; }
-
-        void writeWireFlag( int flag, bool val );
-        void setWireFlags( int flags ) { m_wireFlags = flags; }
-        int  wireFlags() { return m_wireFlags; }
-
-        QString pListStr() { refreshPointList(); return m_pointList.join(","); }
-        QList<QPoint> pointVector() { return m_pList; }
-
-        void setPointListStr( QString pl );
-        void setPointList( QStringList pl );
-        void setPointVector( QList<QPoint> pv );
-
-        void incActLine() { if( m_actLine < m_pList.size()-1 ) m_actLine += 1; }
-
-        bool connectToWire( QPoint cutPoint );
-        void updateConRoute( QPointF thisPoint );
-        void updateConRoute( PinBase* nod );
-        void closeCon( PinBase* endpin );
+        WireLine* addConLine( int x1, int y1, int x2, int y2, int index );
 
         double getVoltage();
-        
-        void move( QPointF delta );
-
-        void remove();
-
-        bool m_freeLine;
-
-        QPainterPath shape() const override;
 
     protected:
-        void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
-        void mouseMoveEvent( QGraphicsSceneMouseEvent* event ) override;
-        void mouseReleaseEvent( QGraphicsSceneMouseEvent* event ) override;
-        void contextMenuEvent( QGraphicsSceneContextMenuEvent* event ) override;
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
+        void refreshPointList() override;
+        void updateConRoute( PinBase* pin, QPointF thisPoint );
+        void remConLine( WireLine* line  );
+        void connectLines( int index1, int index2 );
+        void disconnectLines( int index1, int index2 );
+        void addConLine( WireLine* line, int index );
+        void splitCon( int index, PinBase* pin0, PinBase* pin2 );
+        QList<WireLine*>* lineList() { return &m_wireLineList; }
+        void updateLines();
+        void remNullLines();
+        void remLines();
 
-    private:
-        void moveLine( QPoint delta );
-        void refreshPointList();
-        void splitCon( int index, Node* node );
-        int  eventPointIndex( QPoint cutPoint );
-
-        int m_actLine;
-        int m_lastIndex;
-        int m_wireFlags;
-
-        bool m_moving;
-
-        PinBase* m_startPin;
-        PinBase* m_endPin;
-
-        QStringList m_pointList;
-        QList<QPoint> m_pList;
-
-        QPoint m_lastPoint;
-        QPoint m_eventPoint;
-
-        QPainterPath m_path;
+        QList<WireLine*> m_wireLineList;
 };
 
 #endif

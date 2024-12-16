@@ -332,6 +332,8 @@ QString ComponentList::getIcon( QString folder, QString name )
 
 Component* ComponentList::createComponent( QString type, QString id )
 {
+    if( !m_componentFactory.contains( type ) ) return nullptr;
+
     listItem_t item = m_componentFactory.value( type );
     Component* comp = item.construct( id );
     comp->setItemType( item.type );

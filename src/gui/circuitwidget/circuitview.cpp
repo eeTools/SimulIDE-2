@@ -26,7 +26,7 @@
 
 #define tr(str) QCoreApplication::translate("CircuitView",str)
 
-CircuitView*  CircuitView::m_pSelf = NULL;
+CircuitView* CircuitView::m_pSelf = nullptr;
 
 CircuitView::CircuitView( QWidget *parent )
            : QGraphicsView( parent )
@@ -34,20 +34,14 @@ CircuitView::CircuitView( QWidget *parent )
     setObjectName( "CircuitView" );
     m_pSelf = this;
 
-    //setBackgroundBrush(QColor("red"));
-
     m_scale = 1;
     m_help = "";
-    m_circuit   = NULL;
-    m_enterItem = NULL;
+    m_circuit   = nullptr;
+    m_enterItem = nullptr;
 
-    //viewport()->setFixedSize( 3200, 2400 );
     bool scrollBars = MainWindow::self()->settings()->value( "Circuit/showScroll" ).toBool();
     setShowScroll( scrollBars );
 
-    //setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
-    //setCacheMode( CacheBackground );
-    //setRenderHint( QPainter::Antialiasing );
     setRenderHints( QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
     setTransformationAnchor( AnchorUnderMouse );
     setResizeAnchor( AnchorUnderMouse );
@@ -60,14 +54,14 @@ CircuitView::~CircuitView() { }
 void CircuitView::clear()
 {
     if( m_circuit ){
-        m_circuit->clearCircuit();
+        m_circuit->clearCanvas();
         m_circuit->deleteLater();
     }
     m_circuit = new Circuit( 3200, 2400, this );
     setScene( m_circuit );
     resetMatrix();
     m_scale = 1;
-    m_enterItem = NULL;
+    m_enterItem = nullptr;
     centerOn( 0, 0 );
 }
 
@@ -93,7 +87,7 @@ void CircuitView::wheelEvent( QWheelEvent* event )
 
 void CircuitView::dragEnterEvent( QDragEnterEvent* event )
 {
-    m_enterItem = NULL;
+    m_enterItem = nullptr;
 
     QString text  = event->mimeData()->text();
 
@@ -140,7 +134,8 @@ void CircuitView::dragLeaveEvent( QDragLeaveEvent* event )
 
     m_circuit->removeComp( m_enterItem );
     Circuit::self()->removeLastUndo();
-    m_enterItem = NULL;
+
+    m_enterItem = nullptr;
 }
 
 void CircuitView::mousePressEvent( QMouseEvent* event )
@@ -150,7 +145,7 @@ void CircuitView::mousePressEvent( QMouseEvent* event )
     if( event->button()   == Qt::LeftButton
      && event->modifiers() & Qt::ControlModifier
      && event->modifiers() & Qt::ShiftModifier
-     && !m_circuit->is_constarted() )                   // Prepare Copy by drag
+     && !m_circuit->getNewWire())                   // Prepare Copy by drag
     {
         QGraphicsItem* item = itemAt( event->pos() );
         if( item ){                                                 // Check if item exists before start drag:
@@ -225,7 +220,7 @@ void CircuitView::contextMenuEvent( QContextMenuEvent* event )
     QGuiApplication::restoreOverrideCursor();
     QGraphicsView::contextMenuEvent( event );
 
-    if( m_circuit->is_constarted() ) m_circuit->deleteNewWire();
+    if( m_circuit->getNewWire() ) m_circuit->deleteNewWire();
     else if( !event->isAccepted() )
     {
         QPointF eventPos = mapToScene( event->globalPos() ) ;

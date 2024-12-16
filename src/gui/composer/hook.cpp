@@ -12,7 +12,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "hook.h"
-#include "wire.h"
+#include "linkage.h"
 #include "composer.h"
 
 Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGraphicsItem* parent )
@@ -73,7 +73,7 @@ void Hook::mousePressEvent( QGraphicsSceneMouseEvent* event )
         if( Composer::self()->getNewWire() ){
             if( !m_output && !m_wire ) Composer::self()->closeWire( this );
         }
-        else if( m_output ) Composer::self()->newWire( this );
+        else if( m_output ) Composer::self()->startWire( this );
     }
 }
 

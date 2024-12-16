@@ -8,6 +8,7 @@
 
 #include "probe.h"
 #include "wire.h"
+#include "wireline.h"
 #include "circuit.h"
 #include "simulator.h"
 #include "label.h"
@@ -88,7 +89,8 @@ void Probe::updateStep()
             break;
         }else if( it->type() == UserType+2 )        // ConnectorLine
         {
-            Wire* wire =  qgraphicsitem_cast<Wire*>( it );
+            WireLine* line =  qgraphicsitem_cast<WireLine*>( it );
+            Wire* wire = line->connector();
             setVolt( wire->getVoltage() );
             break;
 }   }   }

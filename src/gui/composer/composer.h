@@ -19,16 +19,15 @@ class Hook;
 class Composer : public CanvasBase
 {
     public:
-        Composer( qreal x, qreal y, qreal w, qreal h, ComposerView* parent );
+        Composer( qreal w, qreal h, ComposerView* parent );
         ~Composer();
 
         void clearCanvas() override;
 
-        QString newSceneId() { return QString::number(++m_seqNumber); }
-        QString newConnId()  { return QString::number(++m_conNumber); }
-
         FuncBlock* createBlock( Module* module, QString type="", QString id="" );
         void       removeBlock( FuncBlock* fb );
+
+        Route* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
 
         void loadComponent( QString path );
 

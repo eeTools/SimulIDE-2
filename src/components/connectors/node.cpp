@@ -7,12 +7,12 @@
 #include <QDebug>
 
 #include "node.h"
+#include "pin.h"
 #include "wire.h"
 #include "circuit.h"
 
 #include "doubleprop.h"
 #include "pointprop.h"
-#include "pin.h"
 
 Node::Node( QString id )
     : Component( id )
@@ -61,7 +61,7 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
 
     for( int i=0; i<3; i++ )
     {
-        Wire* wire = m_pin[i]->wire();
+        Wire* wire = static_cast<Wire*>(m_pin[i]->wire());
         if( wire )
         {
             /// FIXME
@@ -91,28 +91,52 @@ bool Node::checkRemove() // Only remove if there are less than 3 connectors
 void Node::joinConns( int c0, int c1 )
 {
     m_blocked = true;
+
     PinBase* pin0 = m_pin[c0];
     PinBase* pin1 = m_pin[c1];
 
-    Wire* wire0 = pin0->wire();
-    Wire* wire1 = pin1->wire();
+    Wire* wire0 = static_cast<Wire*>(pin0->wire());
+    Wire* wire1 = static_cast<Wire*>(pin1->wire());
     if( !wire0 || !wire1 ) return;
 
-    PinBase* endPin = wire1->endPin();
+    if( pin1->conPin() != pin0 )
+    {
+        Wire* wire = new Wire( "Wire-"+Circuit::self()->newWireId() , pin0->conPin() );
+        Circuit::self()->wireList()->append( wire );
 
-    if( pin0 == wire0->startPin() ) wire0->updateConRoute( pin0 );             // Forze Node pin to be endPin
-    if( pin1 == endPin            ) wire1->updateConRoute( wire1->startPin() ); // Forze Node pin to be startPin
+        QStringList list0 = wire0->pointList();
+        QStringList list1 = wire1->pointList();
+        QStringList plist;
 
-    QList<QPoint> pv1 = wire1->pointVector();
-    pv1.takeFirst();
-    QList<QPoint> pointVector = wire0->pointVector() + pv1;
-    pointVector.append( endPin->scenePos().toPoint() );
+        if( pin0 == wire0->startPin() ){
+            while( !list0.isEmpty() )
+            {
+                QString p2 = list0.takeLast();
+                plist.append(list0.takeLast());
+                plist.append(p2);
+        }   }
+        else while( !list0.isEmpty() ) plist.append( list0.takeFirst() );
 
+        if( pin1 == wire1->endPin() ){
+            while( !list1.isEmpty() )
+            {
+                QString p2 = list1.takeLast();
+                plist.append(list1.takeLast());
+                plist.append(p2);
+        }   }
+        else while( !list1.isEmpty() ) plist.append( list1.takeFirst() );
+
+        wire->setPointList( plist );
+        wire->closeCon( pin1->conPin() );
+        if( this->isSelected() ) wire->select( true );
+    }
+    wire0->setStartPin( NULL );
+    wire0->setEndPin( NULL );
+    Circuit::self()->removeWire( wire0 );
+
+    wire1->setStartPin( NULL );
+    wire1->setEndPin( NULL );
     Circuit::self()->removeWire( wire1 );
-
-    wire0->setPointVector( pointVector );
-    wire0->setEndPin( endPin );
-    wire0->closeCon( endPin );
 
     m_blocked = false;
 }
@@ -125,15 +149,15 @@ void Node::setHidden( bool hid, bool , bool )
     this->setVisible( !hid );
 }
 
-void Node::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget )
+void Node::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     if( m_hidden ) return;
 
     //p->setBrush( Qt::blue );
     //p->drawRect( boundingRect() );
 
-    Component::paint( p, option, widget );
-    
+    Component::paint( p, o, w);
+
     if( m_isBus ) p->drawEllipse( QPointF(0,0), 1.8, 1.8  );
     else          p->drawEllipse( QPointF(0,0), 1.4, 1.4 );
 

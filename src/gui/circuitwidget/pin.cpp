@@ -13,6 +13,7 @@
 #include "lachannel.h"
 #include "circuit.h"
 #include "wire.h"
+#include "wireline.h"
 #include "component.h"
 #include "simulator.h"
 
@@ -59,7 +60,7 @@ void Pin::updateStep()
 
 void Pin::removeWire()
 {
-    if( m_wire ) Circuit::self()->removeWire( m_wire );
+    if( m_wire ) Circuit::self()->removeWire( (Wire*)m_wire );
     PinBase::removeWire();
 }
 
@@ -120,17 +121,17 @@ Pin* Pin::connectPin( bool connect )      // Auto-Connect
               && pin->isVisible() && !pin->isObscuredBy( m_component ) ) _pin = pin;
             if( connect )
             {
-                Circuit::self()->newWire( this, true );
+                Circuit::self()->startWire( this, true );
                 Circuit::self()->closeWire( pin, true );
             }
             break;
         }
         else if( connect && (it->type() == UserType+2) ) // WireLine
         {
-            Wire* wire =  qgraphicsitem_cast<Wire*>( it );
-            if( m_wireFlags != wire->wireFlags() ) continue;
-            Circuit::self()->newWire( this );
-            wire->connectToWire( QPoint( scenePos().x(), scenePos().y()) );
+            WireLine* line =  qgraphicsitem_cast<WireLine*>( it );
+            if( m_wireFlags != line->connector()->wireFlags() ) continue;
+            Circuit::self()->startWire( this );
+            line->connectToWire( QPoint( scenePos().x(), scenePos().y()) );
             break;
         }
     }
@@ -157,15 +158,16 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
     {
         if( m_wire ) event->ignore();
         else{
-            if( Circuit::self()->is_constarted() )
+            Route* wire = Circuit::self()->getNewWire();
+            if( wire )
             {
-                Wire* wire = Circuit::self()->getNewWire();
+
                 if( m_wireFlags != wire->wireFlags()  ) // Avoid connect Bus with no-Bus
                 { event->ignore(); return; }
             }
             event->accept();
-            if( Circuit::self()->is_constarted() ) Circuit::self()->closeWire( this, true );
-            else                                   Circuit::self()->newWire( this, true );
+            if( wire ) Circuit::self()->closeWire( this, true );
+            else       Circuit::self()->startWire( this, true );
 }   }   }
 
 void Pin::animate( bool an )

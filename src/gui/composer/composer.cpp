@@ -19,27 +19,21 @@
 #include "fblock.h"
 #include "module.h"
 #include "hook.h"
-#include "wire.h"
+#include "linkage.h"
 #include "utils.h"
 
 Composer* Composer::m_pSelf = nullptr;
 
-Composer::Composer( qreal x, qreal y, qreal w, qreal h, ComposerView* parent )
-        : CanvasBase( x, y, w, h, parent )
+Composer::Composer( qreal w, qreal h, ComposerView* parent )
+        : CanvasBase( w, h, parent )
 {
     m_pSelf = this;
-
-    m_seqNumber = 0;
-    m_conNumber = 0;
-    m_newWire = nullptr;
-
-    setSceneRect( QRectF(x, y, w, h) );
 
     this->setBackgroundBrush( QColor( 200, 200, 200 ) );
 }
 Composer::~Composer(){}
 
-void Composer::clearCanvas() // Remove everything ( Clear Circuit )
+void Composer::clearCanvas() // Remove everything
 {
     if( m_newWire ) deleteNewWire();
     //m_deleting = true;
@@ -61,7 +55,7 @@ QString Composer::toString()
     QString component;
 
     for( FuncBlock* block : m_blockList ) component += block->toString();
-    for( Wire* conn  : m_wireList  ) component += conn->toString();
+    for( Route* conn  : m_wireList  ) component += conn->toString();
     component += "\n";
 
     return component;
@@ -109,8 +103,8 @@ void Composer::loadStrDoc( QString doc )
 
         if( type == "Wire" )
         {
-            Wire* wire = createWire( properties, newUid );
-            if( wire ) m_wireList.insert( wire );
+            Route* wire = createWire( properties, newUid );
+            if( wire ) m_wireList.append( wire );
             /*Hook* hook0 = nullptr;
             Hook* hook1 = nullptr;
             for( prop_t prop : properties ){
@@ -182,3 +176,7 @@ Hook* Composer::getHook( QString id )
     return nullptr;
 }
 
+Route* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
+{
+    return new Linkage( id, startPin, endPin );
+}

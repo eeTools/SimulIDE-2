@@ -10,7 +10,7 @@
 
 #include "updatable.h"
 
-class Wire;
+class Route;
 class eNode;
 
 class PinBase : public QGraphicsItem, public Updatable
@@ -48,8 +48,8 @@ class PinBase : public QGraphicsItem, public Updatable
         void setWireFlags( int flags ) { m_wireFlags = flags; }
         int  wireFlags() { return m_wireFlags; }
 
-        virtual Wire* wire() { return m_wire; }
-        void setWire( Wire* c );
+        virtual Route* wire() { return m_wire; }
+        void setWire( Route* c );
         virtual void removeWire();
 
         void setConPin( PinBase* pin ) { m_conPin = pin; }
@@ -112,7 +112,7 @@ class PinBase : public QGraphicsItem, public Updatable
         QColor m_color[8];
         QRectF m_area;
 
-        Wire*  m_wire;
+        Route* m_wire;
 
         PinBase* m_conPin;  // Pin at the other side of wire
 

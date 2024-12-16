@@ -12,14 +12,16 @@
 
 #include "canvasbase.h"
 #include "mainwindow.h"
+#include "wireline.h"
 #include "node.h"
 #include "utils.h"
 
-CanvasBase::CanvasBase( qreal x, qreal y, qreal w, qreal h, QGraphicsView* parent )
-          : QGraphicsScene( x, y, w, h, parent )
+CanvasBase::CanvasBase( qreal w, qreal h, QGraphicsView* parent )
+          : QGraphicsScene( parent )
 {
     setParent( parent );
-    setSceneRect( QRectF(x, y, w, h) );
+
+    setSize( w, h );
 
     m_newWire = nullptr;
 
@@ -64,9 +66,9 @@ void CanvasBase::clearCanvas()
     m_deleting = false;
 }
 
-Wire* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
+Route* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
 {
-    Wire* wire = nullptr;
+    Route* wire = nullptr;
     PinBase* startpin = nullptr;
     PinBase* endpin   = nullptr;
     QString startpinid, endpinid;
@@ -120,7 +122,7 @@ Wire* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
             int number = newUid.toInt();
             if( number > m_conNumber ) m_conNumber = number; // Adjust Wire counter: m_conNumber
         }
-        wire = new Wire( newUid, startpin, endpin );
+        wire = newWire( newUid, startpin, endpin );
         wire->setPointList( pointList );
     }
     else if( !m_pasting /*&& !m_undo && !m_redo*/ )// Start or End pin not found
@@ -186,16 +188,16 @@ PinBase* CanvasBase::findPin( int x, int y, QString id )
 void CanvasBase::addNode( Node* node )
 {
     addItem( node );
-    m_nodeList.insert( node );
+    m_nodeList.append( node );
     m_compMap.insert( node->getUid(), node );
 }
 
-void CanvasBase::newWire( PinBase* startpin, bool save )
+void CanvasBase::startWire( PinBase* startpin, bool save )
 {
     if( save ) beginUndoStep();
 
-    m_newWire = new Wire( newWireId(), startpin );
-    m_wireList.insert( m_newWire );
+    m_newWire = newWire( newWireId(), startpin, nullptr );
+    m_wireList.append( m_newWire );
 }
 
 void CanvasBase::closeWire( PinBase* endpin, bool save )
@@ -215,24 +217,24 @@ void CanvasBase::deleteNewWire()
     update();
 }
 
-void CanvasBase::removeWire( Wire* wire )
+void CanvasBase::removeWire( Route* wire )
 {
     if( !m_wireList.contains(wire) ) return;
     wire->remove();
-    removeItem( wire );
-    m_wireList.remove( wire );
+    /// removeItem( wire );
+    m_wireList.removeOne( wire );
     m_compMap.remove( wire->getUid() );
-    m_removedComps.insert( wire );
+    m_removedComps.append( wire );
 }
 
 void CanvasBase::removeNode( Node* node )
 {
     if( !m_nodeList.contains(node) ) return;
     if( m_deleting ) return;
-    m_nodeList.remove( node );
+    m_nodeList.removeOne( node );
     m_compMap.remove( node->getUid() );
     removeItem( node );
-    m_removedComps.insert( node );
+    m_removedComps.append( node );
 }
 
 void CanvasBase::importCircuit()
@@ -274,7 +276,8 @@ void CanvasBase::copy( QPointF eventpoint )
         }
         else if( item->type() == QGraphicsItem::UserType+2 ) // Wire
         {
-            Wire* wire = qgraphicsitem_cast<Wire*>( item );
+            WireLine* line =  qgraphicsitem_cast<WireLine*>( item );
+            CompBase* wire = (CompBase*)line->connector();
             if( !conlist.contains( wire ) ) conlist.append( wire );
     }   }
 
@@ -347,8 +350,8 @@ void CanvasBase::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     if( m_newWire )
     {
         event->accept();
-        if( event->modifiers() & Qt::ShiftModifier) m_newWire->m_freeLine = true;
-        m_newWire->updateConRoute( event->scenePos() );
+        ///if( event->modifiers() & Qt::ShiftModifier) m_newWire->m_freeLine = true;
+        ///m_newWire->updateConRoute( event->scenePos() );
     }
     QGraphicsScene::mouseMoveEvent( event );
 }
@@ -424,7 +427,6 @@ void CanvasBase::removeLastUndo()
     m_undoIndex--;
 }
 
-
 void CanvasBase::deleteRemoved()
 {
     for( CompBase* comp : m_removedComps ) delete comp;
@@ -447,7 +449,6 @@ void CanvasBase::endCircuitBatch() // Don't create/remove
     }
 }
 
-
 void CanvasBase::endUndoStep()   //
 {
     calculateChanges();
@@ -465,6 +466,15 @@ void CanvasBase::cancelUndoStep()
     }
     else m_cicuitBatch = 0;
     /// qDebug() << "Circuit::cancelUndoStep--------------------------------"<<endl;
+}
+
+void CanvasBase::setSize( int width, int height )
+{
+    m_sceneWidth  = width;
+    m_sceneHeight = height;
+    m_scenerect.setRect(-width/2,-height/2, width, height );
+    setSceneRect( m_scenerect );
+    update();
 }
 
 #include "moc_canvasbase.cpp"

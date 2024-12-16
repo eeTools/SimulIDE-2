@@ -9,6 +9,7 @@
 #include "label.h"
 #include "mainwindow.h"
 #include "wire.h"
+#include "wireline.h"
 #include "circuitwidget.h"
 #include "circuit.h"
 #include "simulator.h"
@@ -211,7 +212,8 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
         {
             if( item->type() == UserType+2 )          // ConnectorLine selected
             {
-                Wire* wire =  qgraphicsitem_cast<Wire*>( item );
+                WireLine* line =  qgraphicsitem_cast<WireLine*>( item );
+                Wire* wire = line->connector();
                 if( !m_wireMoveList.contains( wire ) )  // Connectors selected
                 {
                     m_wireMoveList.append( wire );
@@ -227,7 +229,7 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
                 for( Pin* pin : pins )
                 {                                     // Connectors attached to selected Component
                     if( !pin ) continue;
-                    Wire* wire = pin->wire();
+                    Wire* wire =  static_cast<Wire*>(pin->wire());
                     if( wire && !m_wireMoveList.contains( wire ) ){
                         m_wireMoveList.append( wire );
                         Circuit::self()->addCompChange( wire->getUid(), "pointList", wire->pListStr() );
@@ -238,10 +240,9 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     }
     for( QGraphicsItem* item : itemlist )                        // Move ConnectorLine
     {
-        /// Fixme:
-        ///if( item->type() != UserType+2 ) continue;
-        ///ConnectorLine* line =  qgraphicsitem_cast<ConnectorLine*>( item );
-        ///line->moveSimple( delta );
+        if( item->type() != UserType+2 ) continue;
+        WireLine* line =  qgraphicsitem_cast<WireLine*>( item );
+        line->moveSimple( delta );
     }
     for( Component* comp : m_compMoveList ) comp->move( delta ); // Move Components selected
     for( Wire* wire  : m_wireMoveList )                       // Update Connectors
