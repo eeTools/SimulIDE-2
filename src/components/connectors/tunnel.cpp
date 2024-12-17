@@ -209,7 +209,7 @@ void Tunnel::contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu )
 void Tunnel::renameGroup()
 {
     bool ok;
-    QString text = QInputDialog::getText( NULL, tr("Rename Tunnels"),
+    QString text = QInputDialog::getText( nullptr, tr("Rename Tunnels"),
                                          tr("New name:"), QLineEdit::Normal,
                                          m_name, &ok );
     if( ok && !text.isEmpty() )

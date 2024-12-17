@@ -19,7 +19,7 @@
 
 #include "callback.h"
 
-Simulator* Simulator::m_pSelf = NULL;
+Simulator* Simulator::m_pSelf = nullptr;
 
 Simulator::Simulator( QObject* parent )
          : QObject( parent )
@@ -331,7 +331,7 @@ void Simulator::setPsPerSec( uint64_t psPs )
 
 void Simulator::clearEventList()
 {
-    m_firstEvent = NULL;
+    m_firstEvent = nullptr;
 }
 void Simulator::addEvent( uint64_t time, CallBack* cb )
 {
@@ -358,8 +358,8 @@ void Simulator::addEvent( uint64_t time, CallBack* cb )
 {
     if( el->eventTime == 0 ) return;
     eElement* event = m_firstEvent;
-    eElement* last  = NULL;
-    eElement* next  = NULL;
+    eElement* last  = nullptr;
+    eElement* next  = nullptr;
     el->eventTime = 0;
 
     while( event ){
@@ -368,7 +368,7 @@ void Simulator::addEvent( uint64_t time, CallBack* cb )
         {
             if( last ) last->nextEvent = next;
             else       m_firstEvent = next;
-            event->nextEvent = NULL;
+            event->nextEvent = nullptr;
         }
         else last = event;
         event = next;

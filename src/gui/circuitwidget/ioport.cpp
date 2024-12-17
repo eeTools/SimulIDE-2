@@ -157,13 +157,13 @@ IoPin* IoPort::createPin( QString id, Component* comp )
 
 IoPin* IoPort::getPinN( uint8_t i )
 {
-    if( i >= m_pins.size() ) return NULL;
+    if( i >= m_pins.size() ) return nullptr;
     return m_pins[i];
 }
 
 IoPin* IoPort::getPin( QString pinName )
 {
-    IoPin* pin = NULL;
+    IoPin* pin = nullptr;
     if( pinName.startsWith( m_name ) || pinName.startsWith( m_shortName ) )
     {
         QString pinId = pinName.remove( m_name ).remove( m_shortName );

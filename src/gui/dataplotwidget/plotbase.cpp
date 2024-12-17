@@ -42,7 +42,7 @@ PlotBase::PlotBase( QString id )
     m_baSizeY = 135;
 
     //int r;
-    /*m_pauseFunc = NULL;
+    /*m_pauseFunc = nullptr;
     m_aEngine->RegisterObjectType("PlotBase",0, asOBJ_REF | asOBJ_NOCOUNT );
     m_aEngine->RegisterGlobalProperty("PlotBase pb", this );
     m_aEngine->RegisterObjectProperty("PlotBase", "bool m_pause", asOFFSET(PlotBase,m_pause)); //assert( r >= 0 );
@@ -236,7 +236,7 @@ QString PlotBase::tunnels()
 
 void PlotBase::updateConds( QString conds )
 {
-    ///m_pauseFunc = NULL;
+    ///m_pauseFunc = nullptr;
     m_pause = false;
     m_conditions = conds;
 

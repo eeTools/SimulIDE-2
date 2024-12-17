@@ -65,7 +65,7 @@ void LaChannel::setIsBus( bool b )
 {
     m_pin->removeWire();
     m_pin->writeWireFlag( wireBus, b );
-    m_pin->setDataChannel( b? this : NULL );
+    m_pin->setDataChannel( b? this : nullptr );
 }
 
 void LaChannel::registerEnode( int enode, int n )

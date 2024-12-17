@@ -84,7 +84,7 @@ void Wire::setPointList( QStringList plist )
     int p2x = plist.at(plist.size()-2).toInt();
     int p2y = plist.last().toInt();
 
-    WireLine* line1 = NULL;
+    WireLine* line1 = nullptr;
 
     for( int i=2; i<plist.size(); i+=2 )
     {
@@ -170,8 +170,8 @@ void Wire::disconnectLines( int index1, int index2 )
     if( index1 < 0 || index2 < 0 || index2 > m_wireLineList.length()-1 )
         return;
 
-    m_wireLineList.at( index1 )->setNextLine( NULL );
-    m_wireLineList.at( index2 )->setPrevLine( NULL );
+    m_wireLineList.at( index1 )->setNextLine( nullptr );
+    m_wireLineList.at( index2 )->setPrevLine( nullptr );
 }
 
 void Wire::updateConRoute( QPointF thisPoint )
@@ -194,7 +194,7 @@ void Wire::updateConRoute( PinBase* pin, QPointF thisPoint )
     bool diagonal = false;
     int length = m_wireLineList.length();
     WireLine* line;
-    WireLine* preline = NULL;
+    WireLine* preline = nullptr;
 
     if( pin == m_startPin )
     {

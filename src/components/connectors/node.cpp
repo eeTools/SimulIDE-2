@@ -130,12 +130,12 @@ void Node::joinConns( int c0, int c1 )
         wire->closeCon( pin1->conPin() );
         if( this->isSelected() ) wire->select( true );
     }
-    wire0->setStartPin( NULL );
-    wire0->setEndPin( NULL );
+    wire0->setStartPin( nullptr );
+    wire0->setEndPin( nullptr );
     Circuit::self()->removeWire( wire0 );
 
-    wire1->setStartPin( NULL );
-    wire1->setEndPin( NULL );
+    wire1->setStartPin( nullptr );
+    wire1->setEndPin( nullptr );
     Circuit::self()->removeWire( wire1 );
 
     m_blocked = false;

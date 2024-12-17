@@ -24,7 +24,7 @@
 #include "subcircuit.h"
 /// #include "mcu.h"
 
-ComponentList* ComponentList::m_pSelf = NULL;
+ComponentList* ComponentList::m_pSelf = nullptr;
 
 ComponentList::ComponentList( QWidget* parent )
              : QTreeWidget( parent )
@@ -201,7 +201,7 @@ void ComponentList::loadComps( QDir compSetDir )
         QString category = attribs.value("category").toString();
         QStringList catPath = category.split("/");
 
-        TreeItem* catItem = NULL;
+        TreeItem* catItem = nullptr;
         QString parent = "";
         category = "";
         while( !catPath.isEmpty() )
@@ -270,7 +270,7 @@ void ComponentList::loadXml( QString xmlFile )
             //catFull.replace( "IC 74", "Logic/IC 74");
             QStringList catPath = catFull.split("/");
 
-            TreeItem* catItem = NULL;
+            TreeItem* catItem = nullptr;
             QString parent   = "";
             QString category = "";
             while( !catPath.isEmpty() )
@@ -410,7 +410,7 @@ void ComponentList::addItem( QString caption, TreeItem* catItem, QIcon &icon, QS
 
 TreeItem* ComponentList::getCategory( QString category )
 {
-    TreeItem* catItem = NULL;
+    TreeItem* catItem = nullptr;
     if( m_categories.contains( category ) ) catItem = m_categories.value( category );
     else{
         category = m_catNames.value( category );
@@ -854,14 +854,14 @@ void ComponentList::LoadLibraryItems()
     //addItem( Lamp::libraryItem() );
 
     //addCategory( tr("Micro"),"Micro", "", "" );
-    ////addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", NULL ) );
-    ////addItem( new LibraryItem( "PIC" , "Micro", "ic2.png","PIC", NULL ) );
-    ////addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", NULL ) );
-    ////addItem( new LibraryItem("MCS65", "Micro", "ic2.png","MCS65", NULL ) );
-    ////addItem( new LibraryItem("Z80"  , "Micro", "ic2.png","Z80", NULL ) );
+    ////addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", nullptr ) );
+    ////addItem( new LibraryItem( "PIC" , "Micro", "ic2.png","PIC", nullptr ) );
+    ////addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", nullptr ) );
+    ////addItem( new LibraryItem("MCS65", "Micro", "ic2.png","MCS65", nullptr ) );
+    ////addItem( new LibraryItem("Z80"  , "Micro", "ic2.png","Z80", nullptr ) );
     ///// addItem( Mcu::libraryItem() );
-    ////addItem( new LibraryItem( QObject::tr("Arduino"), "Micro", "board.png","Arduino", NULL ) );
-    ////addItem( new LibraryItem( QObject::tr("Shields"), "Micro", "shield.png","Shields", NULL ) );
+    ////addItem( new LibraryItem( QObject::tr("Arduino"), "Micro", "board.png","Arduino", nullptr ) );
+    ////addItem( new LibraryItem( QObject::tr("Shields"), "Micro", "shield.png","Shields", nullptr ) );
 
     //addCategory( tr("Sensors"),"Sensors", "Micro", "1to2.png" );
     //addItem( SR04::libraryItem() );

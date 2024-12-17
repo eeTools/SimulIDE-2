@@ -29,8 +29,6 @@ class TextWidget : public PropWidget, private Ui::TextWidget
 
     private:
         void updatValue();
-
-        //Scripted* m_scriptComp;
 };
 
 #endif

@@ -38,7 +38,7 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     m_color[6] = QColor(  50, 255, 100 ); // Output int
     m_color[7] = QColor( 200, 100,  00 ); // Output doub
 
-    //setConnector( NULL );
+    //setConnector( nullptr );
 
     setFontSize( 11 );
     setAcceptHoverEvents( true );

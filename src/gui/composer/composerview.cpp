@@ -53,7 +53,7 @@ void ComposerView::clear()
 
     resetTransform();
     m_scale = 1;
-    m_enterItem = NULL;
+    m_enterItem = nullptr;
     centerOn( 0, 0 );
 }
 
@@ -138,7 +138,7 @@ void ComposerView::dragLeaveEvent( QDragLeaveEvent* event )
 
     Composer::self()->removeBlock( m_enterItem );
     //Circuit::self()->removeLastUndo();
-    m_enterItem = NULL;
+    m_enterItem = nullptr;
 }
 
 void ComposerView::overrideCursor( const QCursor &cursor )

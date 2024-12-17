@@ -93,7 +93,7 @@ class Circuit : public CanvasBase
 
         Route* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
 
-        bool isComp() { return m_creCompDialog != NULL; }
+        bool isComp() { return m_creCompDialog != nullptr; }
         QString category() { return m_category; }
         QString compName() { return m_compName; }
         QString compInfo() { return m_compInfo; }

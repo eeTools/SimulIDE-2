@@ -247,7 +247,7 @@ bool ComposerWidget::saveString( QString fileName, QString doc )
     if( !file.open( QFile::WriteOnly | QFile::Text ))
     {
         QApplication::restoreOverrideCursor();
-        QMessageBox::warning( NULL, "Circuit::saveString",
+        QMessageBox::warning( nullptr, "Circuit::saveString",
         tr("Cannot write file %1:\n%2.").arg(fileName).arg(file.errorString()));
         return false;
     }

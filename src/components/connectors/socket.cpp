@@ -61,9 +61,9 @@ void Socket::updateConnections( bool connect )
             else{
                 if( m_connPins[i] )
                 {
-                    m_sockPins[i]->setConPin( NULL );
-                    m_connPins[i]->setConPin( NULL );
-                    m_connPins[i] = NULL;
+                    m_sockPins[i]->setConPin( nullptr );
+                    m_connPins[i]->setConPin( nullptr );
+                    m_connPins[i] = nullptr;
                     CircuitWidget::self()->powerCircOff();
                 }
             }

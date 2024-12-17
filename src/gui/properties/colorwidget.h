@@ -9,7 +9,7 @@
 #include "ui_colorwidget.h"
 #include "propwidget.h"
 
-class Component;
+class CompBase;
 class PropDialog;
 
 class ColorWidget : public PropWidget, private Ui::ColorWidget
@@ -20,8 +20,8 @@ class ColorWidget : public PropWidget, private Ui::ColorWidget
         ColorWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
         ~ColorWidget();
 
-        virtual void setup( bool ) override;
-        virtual void updtValues() override;
+        void setup( bool ) override;
+        void updtValues() override;
 
     public slots:
         void on_valueBox_currentIndexChanged( int index );

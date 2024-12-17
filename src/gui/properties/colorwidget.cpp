@@ -25,7 +25,7 @@ void ColorWidget::setup( bool )
     QString cname = m_color.name();
     int index = 0;
 
-    valueBox->addItem( "Custom" );
+    valueBox->addItem("Custom");
 
     QStringList colorNames = QColor::colorNames();
     for( int i=0; i<colorNames.size(); ++i )

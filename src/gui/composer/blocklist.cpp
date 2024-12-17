@@ -9,7 +9,7 @@
 #include "blocklist.h"
 #include "mainwindow.h"
 
-BlockList* BlockList::m_pSelf = NULL;
+BlockList* BlockList::m_pSelf = nullptr;
 
 BlockList::BlockList( QWidget* parent )
          : QTreeWidget( parent )

@@ -29,8 +29,8 @@ EditorWindow::EditorWindow( QWidget* parent )
 {
     m_pSelf = this;
 
-    m_debugDoc = NULL;
-    m_debugger = NULL;
+    m_debugDoc = nullptr;
+    m_debugger = nullptr;
 
     m_state    = DBG_STOPPED;
     m_stepOver = false;
@@ -148,8 +148,8 @@ void EditorWindow::stop()
 
 void EditorWindow::initDebbuger()
 {
-    m_debugDoc = NULL;
-    m_debugger = NULL;
+    m_debugDoc = nullptr;
+    m_debugger = nullptr;
     m_state = DBG_STOPPED;
 
     bool ok = uploadFirmware( true );
@@ -227,12 +227,12 @@ void EditorWindow::stopDebbuger()
 
         Simulator::self()->remFromUpdateList( this );
     }
-    m_debugger = NULL;
+    m_debugger = nullptr;
 }
 
 BaseDebugger* EditorWindow::createDebugger( QString name, CodeEditor* ce, QString code )
 {
-    BaseDebugger* debugger = NULL;
+    BaseDebugger* debugger = nullptr;
     QString type = m_compilers.value( name ).type;
     QString file = m_compilers.value( name ).file;
     if( type.isEmpty() )

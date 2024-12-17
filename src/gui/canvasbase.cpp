@@ -182,7 +182,7 @@ PinBase* CanvasBase::findPin( int x, int y, QString id )
             if( pin && !pin->wire() ) return pin;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void CanvasBase::addNode( Node* node )
