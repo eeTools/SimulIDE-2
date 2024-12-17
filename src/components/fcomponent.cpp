@@ -23,6 +23,11 @@
 
 #define tr(str) simulideTr("fComponent",str)
 
+QStringList fComponent::m_shapes = {"None","Rectangle","Diamond","Ellipse","And","Or","Xor"};
+QString fComponent::getShapes() { return m_shapes.join(",")+";"
+                                 +tr("None")+","+tr("Rectangle")+","+tr("Diamond")+","+tr("Ellipse")+","
+                                 +tr("And")+","+tr("Or")+","+tr("Xor");}
+
 fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
           : Component( id )
           , Element( id )
@@ -32,7 +37,7 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
     m_width  = 4;
     m_height = 4;
     m_startHalf = false;
-    m_shape  = shapeRect;
+    setShapeStr("Rectangle");
 
     m_area = QRect(-m_width*8/2,-m_height*8/2, m_width*8, m_height*8 );
 }
@@ -191,18 +196,18 @@ void fComponent::addPort( PortBase* port )
 void fComponent::setWidth( int width )
 {
     if( width < 1 ) width = 1;
-    if( m_width == width ) return;
+    if( m_minWidth == width ) return;
 
-    m_width = width;
+    m_minWidth = width;
     upDateShape();
 }
 
 void fComponent::setHeight( int height )
 {
     if( height < 1 ) height = 1;
-    if( m_height == height ) return;
+    if( m_minHeight == height ) return;
 
-    m_height = height;
+    m_minHeight = height;
     upDateShape();
 }
 
@@ -245,8 +250,10 @@ void fComponent::upDateShape()
             }break;
         }
     }
-    m_height = rSize > lSize ? rSize : lSize;
-    m_width  = tSize > bSize ? tSize : bSize;
+    int pHeight = rSize > lSize ? rSize : lSize;
+    int pWidth  = tSize > bSize ? tSize : bSize;
+    m_height = pHeight > m_minHeight ? pHeight : m_minHeight;
+    m_width  = pWidth  > m_minWidth  ? pWidth  : m_minWidth;
 
     if( m_width  < 2 ) m_width  = 2;
     if( m_height < 2 ) m_height = 2;
@@ -286,7 +293,14 @@ void fComponent::upDateShape()
         pos += port->size();
     }
     m_canvas->update();
+}
 
+void fComponent::setShapeStr( QString shape )
+{
+    if( !m_shapes.contains(shape) ) shape = "Rectangle";
+    m_shapeStr = shape;
+    m_shape = (fShape_t)m_shapes.indexOf(shape);
+    update();
 }
 
 void fComponent::setBackground( QString bck )
@@ -324,16 +338,29 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
     Component::paint( p, o, w );
 
     int endY = m_area.height()/2;
-    int endX = m_area.width()/2+1;
+    int endX = m_area.width()/2;
 
     switch( m_shape )
     {
         case shapeNone: break;
         case shapeRect: p->drawRoundedRect( m_area, 1, 1); break;
-        case shapeDiam: break;
-        case shapeCirc: p->drawEllipse( m_area ); break;
+        case shapeDiam:
+        {
+            QPainterPath path;
+            QVector<QPointF> points;
+            points << QPointF(    0,-endY )
+                   << QPointF( endX, 0    )
+                   << QPointF(    0, endY )
+                   << QPointF(-endX, 0    );
+
+            path.addPolygon( QPolygonF(points) );
+            path.closeSubpath();
+            p->drawPath( path );
+        } break;
+        case shapeElli: p->drawEllipse( m_area ); break;
         case shapeAnd:
         {
+            endX += 1;
             QPainterPath path;
             path.moveTo( -9, -endY );
             path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0 ) );
@@ -343,15 +370,17 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
         } break;
         case shapeOr:
         {
+            endX += 1;
             QPainterPath path;
             path.moveTo(-10,-endY );
             path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0    ) );
             path.quadTo( QPoint( endX, endY ), QPoint( -10 , endY ) );
             path.quadTo( QPoint( -6  , 0    ), QPoint( -10 ,-endY ) );
             p->drawPath( path );
-        }  break;
+        } break;
         case shapeXor:
         {
+            endX += 1;
             QPainterPath path;
             path.moveTo(-7,-endY );
             path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0   ) );

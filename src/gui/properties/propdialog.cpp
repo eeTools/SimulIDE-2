@@ -34,7 +34,7 @@ PropDialog::PropDialog( QWidget* parent, QString help )
     helpText->setVisible( false );
 }
 
-void PropDialog::setComponent( CompBase* comp, bool isComp )
+void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
 {
     QFontMetrics fm( labelLabel->font() );
     m_scale = fm.width(" ")/2.0;
@@ -50,6 +50,11 @@ void PropDialog::setComponent( CompBase* comp, bool isComp )
         labelBox->setVisible( false );
         showButton->setVisible( false );
         labelShow->setVisible( false );
+    }
+    if( !showHelp )
+    {
+        helpButton->setVisible( false );
+        type->setVisible( false );
     }
     tabList->clear();
     m_component = comp;

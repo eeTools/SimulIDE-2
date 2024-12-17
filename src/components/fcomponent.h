@@ -17,7 +17,7 @@ enum fShape_t{
     shapeNone=0,
     shapeRect,
     shapeDiam,
-    shapeCirc,
+    shapeElli,
     shapeAnd,
     shapeOr,
     shapeXor
@@ -46,14 +46,16 @@ class fComponent : public Component, public Element
         bool startHalf() { return m_startHalf; }
         void setStartHalf( bool h ) { m_startHalf = h; upDateShape(); }
 
-        QString shapeStr() { return "";}
-        void setShapeStr( QString s ){;}
+        QString shapeStr() { return m_shapeStr;}
+        void setShapeStr( QString shape );
 
         void setBackground( QString bck ) override;
 
         void addPort( PortBase* port );
 
         void upDateShape();
+
+ static QString getShapes();
 
     protected:
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
@@ -62,10 +64,14 @@ class fComponent : public Component, public Element
 
         int m_width;
         int m_height;
+        int m_minHeight;
+        int m_minWidth;
 
         bool m_startHalf;
 
         fShape_t m_shape;
+        QString m_shapeStr;
+ static QStringList m_shapes;
 
         QMap<QString, Module*> m_modules;
         QList<Module*> m_activeMod;

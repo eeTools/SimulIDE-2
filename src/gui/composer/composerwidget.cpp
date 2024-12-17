@@ -80,15 +80,14 @@ void ComposerWidget::createPackage()
         new IntProp<fComponent>("height", tr("Height"), ""
                        , m_fComp, &fComponent::height, &fComponent::setHeight, 0 ),
 
-        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
-                       , m_fComp, &fComponent::startHalf, &fComponent::setStartHalf ),
+        new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
+                      , m_fComp, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
 
         new StrProp<fComponent>("background", tr("Background"), ""
                        , m_fComp, &fComponent::background, &fComponent::setBackground, 0 ),
 
-        new StrProp<fComponent>("shape", tr("Shape"), ""
-                       , m_fComp, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
-
+        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
+                       , m_fComp, &fComponent::startHalf, &fComponent::setStartHalf ),
     },0} );
 
     m_fComp->addPropGroup( { tr("List Item"),
@@ -105,7 +104,7 @@ void ComposerWidget::createPackage()
 
     if( m_pkgProps ) m_pkgProps->close();
     m_pkgProps = new PropDialog( this, "" );
-    m_pkgProps->setComponent( m_fComp, false );
+    m_pkgProps->setComponent( m_fComp, false, false );
     m_pkgProps->updtValues();
 
     m_panelSplitter->addWidget( m_pkgProps );
@@ -130,7 +129,7 @@ bool ComposerWidget::newCanvas()
     m_currentFile = "";
 
     MainWindow::self()->setFile( tr("New Component") );
-    MainWindow::self()->settings()->setValue( "Composer/lastFile", m_compFolder );
+    MainWindow::self()->settings()->setValue("Composer/lastFile", m_compFolder );
 
     return true;
 }

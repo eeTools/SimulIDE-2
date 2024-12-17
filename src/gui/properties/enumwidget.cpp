@@ -27,7 +27,7 @@ void EnumWidget::setup( bool isComp )
 
     QFontMetrics fm( valueBox->font() );
     float scale = fm.width(" ")/2;
-    valueBox->setFixedWidth( 170.0*scale );
+    valueBox->setFixedWidth( 100.0*scale );
 
     if( !isComp ) showVal->setVisible( false );
 

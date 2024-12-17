@@ -20,7 +20,7 @@ class PropDialog : public QDialog, private Ui::PropDialog
     public:
         PropDialog( QWidget* parent=0, QString help="" );
 
-        void setComponent( CompBase* comp, bool isComp=true );
+        void setComponent( CompBase* comp, bool isComp=true, bool showHelp=true );
         void showProp( QString name, bool show );
         void enableProp( QString name, bool en );
         void updtValues();
