@@ -237,9 +237,10 @@ void Simulator::startSim( bool paused )
     qDebug() <<"  Created      "<< Kcl::getNumGroups() << "\tCircuits";
     for( Element* e : m_elements ) e->stampCurrent();
 
-    bool ok = Kcl::solveSystem();
-    if( ok ) qDebug() << "\nCircuit Matrix looks good";
-    else     qDebug() << "\nCircuit Matrix ERROR";
+    //bool ok = Kcl::solveSystem();
+    //if( ok ) qDebug() << "\nCircuit Matrix looks good";
+    //else     qDebug() << "\nCircuit Matrix ERROR";
+    Kcl::solveSystem();
 
     double sps100 = 100*(double)m_psPerSec/1e12; // Speed %
 

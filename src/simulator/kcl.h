@@ -76,13 +76,14 @@ class Kcl
         void createCells();
         void initialize();
         void preCalculate();
-        bool solveSystem();
+        void solveSystem();
 
     private:
  static Kcl* m_pSelf;
 
         inline void factorMatrix( int group );
-        inline bool luSolve( int group );
+        inline void luSolve( int group );
+        inline Element* findCalbacks( std::vector<Element*> *list );
 
         int m_size;
 

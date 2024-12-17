@@ -95,7 +95,6 @@ void Kcl::initialize() // Split circuit in independent nets
         dv_matrix aFaMatrix( gSize, dv_vector( gSize, 0.0 ) ); // Factored matrix for this group
         m_aFaList.emplace_back( aFaMatrix );                   // Add group factored matrix to list
     }
-
 }
 
 void Kcl::preCalculate()
@@ -215,20 +214,22 @@ void Kcl::admitChanged( int x, int y, int group )
     if( group >= 0 ) m_admiChanged[group] = true; /// Check
 }
 
-bool Kcl::solveSystem()
+void Kcl::solveSystem()
 {
-    bool ok = true;
+    //bool ok = true;
     for( uint i=0; i<m_admiChanged.size(); ++i ) // Iterate through groups
     {
-        if( !m_currChanged[i] && !m_admiChanged[i] ) continue;
+        if( m_admiChanged[i] )
+        {
+            factorMatrix(i);
+            m_admiChanged[i] = false;
+        }
+        else if( !m_currChanged[i] ) continue;
 
-        if( m_admiChanged[i] ) factorMatrix(i);
-        if( !luSolve(i) ) ok = false;
-
+        luSolve(i);
         m_currChanged[i] = false;
-        m_admiChanged[i] = false;
     }
-    return ok;
+    //return ok;
 }
 
 void Kcl::factorMatrix( int group ) // Factor matrix into Lower/Upper triangular
@@ -237,6 +238,14 @@ void Kcl::factorMatrix( int group ) // Factor matrix into Lower/Upper triangular
     dv_matrix& av = m_aFaList[group];
 
     int n = av.size();
+
+    if( n == 1 ) // Single node
+    {
+        DataCell* ac = ap[0][0];
+        if( ac->changed ) ac->updateVal();  // Recalculate total admitance
+        av[0][0] = ac->total;
+        return;
+    }
 
     int row,col,k;
 
@@ -269,87 +278,86 @@ void Kcl::factorMatrix( int group ) // Factor matrix into Lower/Upper triangular
     }
 }
 
-bool Kcl::luSolve( int group ) // Solve the system to get voltages for each node
+void Kcl::luSolve( int group ) // Solve the system to get voltages for each node
 {
     dv_matrix& av = m_aFaList[group];
     cp_vector& bp = m_bList[group];
     dp_vector& vp = m_vList[group];
+
+    QList<int>* nodeGroup = &m_nodeGroups[group];
+    Element* firstCB  = nullptr;              // Callback list
+    Element* firstFcB = nullptr;              // fCallback list
 
     int n = av.size();
 
     dv_vector b;
     b.resize( n, 0 );
 
-    double tot;
-    int i;
-    for( i=0; i<n; ++i )
+    if( n == 1 ) // Single node
     {
-        DataCell* bc = bp[i];
+        double admit = av[0][0];
+
+        DataCell* bc = bp[0];
         if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
-        tot = bc->total;
-        if( tot != 0 ){ b[i] = tot; break; } // First nonzero b element
-    }
+        double current = bc->total;
 
-    int bi = i++;
-    for( ; i<n; ++i )
-    {
-        DataCell* bc = bp[i];
-        if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
-        tot = bc->total;
+        double volt = current/admit;
 
-        dv_vector& avRow = av.at(i);
-        for( int j=bi; j<i; ++j ) tot -= avRow[j]*b[j]; // Forward substitution from lower triangular matrix
-        b[i] = tot;
-    }
-    bool isOk = true;
+        if( volt == *vp[0] ) return;   // Voltage at this node didn't change
+        *vp[0] = volt;
 
-    QList<int>* nodeGroup = &m_nodeGroups[group];
-    Element* firstCB  = nullptr;              // Callback list
-    Element* firstFcB = nullptr;              // fCallback list
-    for( i=n-1; i>=0; --i )
-    {
-        dv_vector& avRow = av.at(i);
-        tot = b[i];
-        for( int j=i+1; j<n; ++j ) tot -= avRow[j]*b[j]; // Back substitution from upper triangular matrix
-
-        double div = avRow[i];
-        double volt = 0;
-        if( div != 0 ) volt = tot/div;
-        else volt = 0; //isOk = false;
-
-        b[i] = volt;
-
-        if( volt == *vp[i] ) continue;   // Voltage at this node didn't change
-        *vp[i] = volt;
-
-        int node = nodeGroup->at(i);
+        int node = nodeGroup->at(0);
         std::vector<Element*>* list = &m_callBacks[node];
-        for( Element* e : *list )                     // Find callbacks for this node and add it to list (avoids calling them several times)
-        {
-            Element* f = firstCB;
-            while( f )               // Add element to the list if not already there
-            {
-                if( e == f ) break;  // Calback Already in the list
-                f = f->next;
-            }
-            if( f ) continue;        // Callback was in the list
+        firstCB = findCalbacks( list );
 
-            e->next = firstCB;       // Add callback to the list
-            firstCB = e;
-        }
         std::vector<Element*>* fList = &m_fCallBacks[node];
-        for( Element* e : *fList )   // Same for fComponents
+        firstFcB = findCalbacks( fList );
+    }
+    else
+    {
+        double tot;
+        int i;
+        for( i=0; i<n; ++i )
         {
-            Element* f = firstFcB;
-            while( f )               // Add element to the list if not already there
-            {
-                if( e == f ) break;  // Calback Already in the list
-                f = f->next;
-            }
-            if( f ) continue;        // Callback was in the list
+            DataCell* bc = bp[i];
+            if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
+            tot = bc->total;
+            if( tot != 0 ){ b[i] = tot; break; } // First nonzero b element
+        }
 
-            e->next = firstFcB;       // Add callback to the list
-            firstFcB = e;
+        int bi = i++;
+        for( ; i<n; ++i )
+        {
+            DataCell* bc = bp[i];
+            if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
+            tot = bc->total;
+
+            dv_vector& avRow = av.at(i);
+            for( int j=bi; j<i; ++j ) tot -= avRow[j]*b[j]; // Forward substitution from lower triangular matrix
+            b[i] = tot;
+        }
+
+        for( i=n-1; i>=0; --i )
+        {
+            dv_vector& avRow = av.at(i);
+            tot = b[i];
+            for( int j=i+1; j<n; ++j ) tot -= avRow[j]*b[j]; // Back substitution from upper triangular matrix
+
+            double div = avRow[i];
+            double volt = 0;
+            if( div != 0 ) volt = tot/div;
+            //else volt = 0; //isOk = false;
+
+            b[i] = volt;
+
+            if( volt == *vp[i] ) continue;   // Voltage at this node didn't change
+            *vp[i] = volt;
+            int node = nodeGroup->at(i);
+            std::vector<Element*>* list = &m_callBacks[node];
+            firstCB = findCalbacks( list );
+
+            std::vector<Element*>* fList = &m_fCallBacks[node];
+            firstFcB = findCalbacks( fList );
         }
     }
 
@@ -363,5 +371,24 @@ bool Kcl::luSolve( int group ) // Solve the system to get voltages for each node
         firstFcB->voltChanged();
         firstFcB = firstFcB->next;
     }
-    return isOk;
+}
+
+Element* Kcl::findCalbacks( std::vector<Element*>* list )
+{
+    Element* firstCB = nullptr;
+
+    for( Element* e : *list )    // Find callbacks for this node and add it to list (avoids calling them several times)
+    {
+        Element* f = firstCB;
+        while( f )               // Add element to the list if not already there
+        {
+            if( e == f ) break;  // Calback Already in the list
+            f = f->next;
+        }
+        if( f ) continue;        // Callback was in the list
+
+        e->next = firstCB;       // Add callback to the list
+        firstCB = e;
+    }
+    return firstCB;
 }
