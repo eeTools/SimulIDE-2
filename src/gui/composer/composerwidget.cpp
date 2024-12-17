@@ -100,6 +100,9 @@ void ComposerWidget::createPackage()
 
         new StrProp<ListItem>("type", tr("Type"), ""
                        , &m_listItem, &ListItem::itemType, &ListItem::setItemType, 0 ),
+
+        new StrProp<ListItem>("icon", tr("Icon"), ""
+                       , &m_listItem, &ListItem::icon, &ListItem::setIcon, 0, "icon" ),
     },0} );
 
     if( m_pkgProps ) m_pkgProps->close();

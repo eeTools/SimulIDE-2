@@ -15,6 +15,7 @@
 #include "enumwidget.h"
 #include "boolwidget.h"
 #include "colorwidget.h"
+#include "iconwidget.h"
 #include "mainwindow.h"
 
 #include "comproperty.h"
@@ -25,7 +26,7 @@ PropDialog::PropDialog( QWidget* parent, QString help )
     setupUi( this );
     //this->setWindowFlags( Qt::Dialog | Qt::WindowTitleHint );
 
-    m_component = NULL;
+    m_component = nullptr;
 
     m_helpExpanded = false;
     mainLayout->removeWidget( helpText );
@@ -83,7 +84,9 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
 
             for( ComProperty* prop : propList )
             {
-                if( prop->flags() & propHidden ) continue; // Property hidden
+                if( prop->flags() & propHidden
+                 || prop->flags() & propSignal
+                 || prop->flags() & propSlot ) continue; // Property hidden
 
                 if( prop->name() == "" ) // Just a label
                 {
@@ -101,19 +104,7 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
                     }
                     continue;
                 }
-                QString type = prop->type();
-                PropWidget* mp = NULL;
-
-                if     ( type == "double"  ) mp = new NumWidget( this, comp, prop );
-                else if( type == "color"   ) mp = new ColorWidget( this, comp, prop );
-                else if( type == "uint"    ) mp = new NumWidget( this, comp, prop );
-                else if( type == "int"     ) mp = new NumWidget( this, comp, prop );
-                else if( type == "string"  ) mp = new StrWidget( this, comp, prop );
-                else if( type == "path"    ) mp = new PathWidget( this, comp, prop );
-                else if( type == "textEdit") mp = new TextWidget( this, comp, prop );
-                else if( type == "enum"    ) mp = new EnumWidget( this, comp, prop );
-                else if( type == "bool"    ) mp = new BoolWidget( this, comp, prop );
-
+                PropWidget* mp = prop->getWidget();
                 if( !mp ) continue;
 
                 mp->setup( isComp );

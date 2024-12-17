@@ -9,6 +9,7 @@
 #include "comproperty.h"
 #include "strwidget.h"
 #include "enumwidget.h"
+#include "iconwidget.h"
 
 template <class Comp>
 class StrProp : public ComProperty
@@ -26,7 +27,7 @@ class StrProp : public ComProperty
         ~StrProp(){;}
 
         virtual void setValStr( QString val ) override
-        { (m_comp->*m_setter)( val/*setStr( val )*/ ); } // Comp setter can change valLabel
+        { (m_comp->*m_setter)( val ); } // Comp setter can change valLabel
 
         virtual QString getValStr() override
         { return (m_comp->*m_getter)(); }
@@ -36,6 +37,7 @@ class StrProp : public ComProperty
         {
             if     ( m_type == "string"  ) m_widget = new StrWidget ( nullptr, m_comp, this );
             else if( m_type == "enum"    ) m_widget = new EnumWidget( nullptr, m_comp, this );
+            else if( m_type == "icon"    ) m_widget = new IconWidget( nullptr, m_comp, this );
         }
         Comp* m_comp;
         QString (Comp::*m_getter)();
