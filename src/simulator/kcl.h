@@ -54,7 +54,7 @@ class Kcl
  static Kcl* self() { return m_pSelf; }
 
         void addAdmitance( double* a, int x, int y=-1 ); // Add admitance betwen two nodes
-        bool* addCurrent( double* c, int n );          // Add current to node
+        bool* addCurrent( double* c, int n );            // Add current to node
 
         void addChangeCB( Element* c, int n );  // Add change callback: when Node voltage changes, Element function is called
         void remChangeCB( Element* c, int n );  // Remove change callback

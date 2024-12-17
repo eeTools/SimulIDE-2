@@ -41,17 +41,18 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/components/switches \
     $$PWD/src/gui \
     $$PWD/src/gui/appdialogs \
-    $$PWD/src/gui/circuitwidget \
+    $$PWD/src/gui/circuit \
     $$PWD/src/gui/componentlist \
     $$PWD/src/gui/composer \
-    $$PWD/src/gui/dataplotwidget \
-    $$PWD/src/gui/editorwidget \
-    $$PWD/src/gui/editorwidget/debuggers \
-    $$PWD/src/gui/editorwidget/dialogs \
+    $$PWD/src/gui/widgets \
+    $$PWD/src/gui/widgets/serial \
+    $$PWD/src/gui/widgets/memory \
+    $$PWD/src/gui/widgets/dataplotwidget \
+    $$PWD/src/gui/editor \
+    $$PWD/src/gui/editor/debuggers \
+    $$PWD/src/gui/editor/dialogs \
     $$PWD/src/gui/filebrowser \
-    $$PWD/src/gui/memory \
     $$PWD/src/gui/properties \
-    $$PWD/src/gui/serial \
     $$PWD/src/simulator \
     $$PWD/src/simulator/elements \
     $$PWD/src/simulator/elements/active \
