@@ -62,6 +62,7 @@ void mDial::setComponent( fComponent* c )
     Module::setComponent( c );
 
     m_proxy = m_component->addWidget( &m_dialW );
+    m_proxy->setTransformOriginPoint( QPoint( m_dialW.width()/2,m_dialW.height()/2 ) );
     m_slider = false;
 }
 
@@ -123,5 +124,6 @@ void mDial::dialChanged( int ) // Called when dial is rotated
 
 void mDial::updateProxy()
 {
-    m_proxy->setPos( m_position+QPoint(-m_dialW.width()/2,-m_dialW.height()-5) );
+    m_proxy->setTransformOriginPoint( QPoint( m_dialW.width()/2, m_dialW.height()/2 ) );
+    m_proxy->setPos( m_position/*+QPoint(-m_dialW.width()/2,-m_dialW.height()-5)*/ );
 }
