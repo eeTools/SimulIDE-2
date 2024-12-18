@@ -8,6 +8,7 @@
 
 #include "comproperty.h"
 #include "proputils.h"
+#include "strwidget.h"
 
 template <class Comp>
 class PointProp : public ComProperty
@@ -31,7 +32,7 @@ class PointProp : public ComProperty
         { return getStrPointF( (m_comp->*m_getter)() ); }
 
     private:
-        void createWidget() override {}
+        void createWidget() override { m_widget = new StrWidget( nullptr, m_comp, this ); }
 
         Comp* m_comp;
         QPointF (Comp::*m_getter)();
