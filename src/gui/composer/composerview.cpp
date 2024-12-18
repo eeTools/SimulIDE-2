@@ -101,13 +101,24 @@ void ComposerView::mouseReleaseEvent( QMouseEvent* event )
 
 void ComposerView::dragEnterEvent( QDragEnterEvent* event )
 {
-    event->accept();
     m_enterItem = nullptr;
 
-    QString type = event->mimeData()->html();
-    QString name = event->mimeData()->text();
-//qDebug() <<"ComposerView::dragEnterEvent" << type << name;
-    //if( type.isEmpty() || name.isEmpty() ) return;
+    QString text  = event->mimeData()->text();
+
+    if( text.startsWith( "file://" ) )
+    {
+        QGraphicsView::dragEnterEvent( event );
+        return;
+    }
+
+    QStringList data = text.split(",");
+    if( data.size() != 2 ) return;
+
+    QString type = data.last();
+    QString name = data.first();
+    if( type.isEmpty() || name.isEmpty() ) return;
+
+    event->accept();
 
     m_enterItem = Composer::self()->createBlock( nullptr, type );
     if( m_enterItem )
@@ -171,7 +182,6 @@ void ComposerView::zoomOne()
 
 void ComposerView::contextMenuEvent( QContextMenuEvent* event )
 {
-
     QGraphicsView::contextMenuEvent( event );
 
     if( m_scene.getNewWire() ) m_scene.deleteNewWire();

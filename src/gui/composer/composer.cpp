@@ -73,7 +73,7 @@ void Composer::loadComponent( QString path )
 
 void Composer::loadStrDoc( QString doc )
 {
-    m_fComp = ComposerWidget::self()->package();
+    fComponent* fComp = ComposerWidget::self()->package();
 
     Module* module = nullptr;
     QStringList docLines = doc.split("\n");
@@ -135,16 +135,14 @@ void Composer::loadStrDoc( QString doc )
         }
         else if( type == "Package" || type == "Component" )
         {
-            if( m_fComp ){
-                for( prop_t prop : properties )
-                    m_fComp->setPropStr( prop.name, prop.value );
-            }
+            for( prop_t prop : properties )
+                fComp->setPropStr( prop.name, prop.value );
         }
         else   // Create Module
         {
             module = (Module*)BlockList::self()->createItem( type, uid );
             if( module ){
-                module->setComponent( m_fComp );
+                module->setComponent( fComp );
                 for( prop_t prop : properties )
                     module->setPropStr( prop.name, prop.value );
             }
@@ -155,8 +153,9 @@ void Composer::loadStrDoc( QString doc )
 
 FuncBlock* Composer::createBlock( Module* module, QString type, QString id )
 {
+    fComponent* fComp = ComposerWidget::self()->package();
     if( id.isEmpty() ) id = newSceneId();
-    FuncBlock* fb = new FuncBlock( m_fComp, module, type, id );
+    FuncBlock* fb = new FuncBlock( fComp, module, type, id );
     QGraphicsScene::addItem( fb );
     m_blockList.insert( fb );
     return fb;

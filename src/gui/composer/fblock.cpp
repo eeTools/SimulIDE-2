@@ -42,7 +42,7 @@ FuncBlock::FuncBlock( fComponent* fComp, Module* module, QString type, QString i
         m_type = type;
         m_module = (Module*)BlockList::self()->createItem( type, m_id );
     }
-    m_color  = QColor( 105, 105, 100 );
+    m_color  = QColor( 85, 85, 90 );
     m_hColor = QColor( 240, 240, 215 );
 
     m_font.setFamily("Ubuntu Mono");

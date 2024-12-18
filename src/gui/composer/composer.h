@@ -44,8 +44,6 @@ class Composer : public CanvasBase
 
         Hook* getHook( QString id );
 
-        fComponent* m_fComp;
-
         QSet<FuncBlock*> m_blockList;
 };
 #endif

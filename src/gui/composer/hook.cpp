@@ -33,10 +33,10 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     m_color[1] = QColor( 250, 240, 240 ); // Property
     m_color[2] = QColor(  50, 150, 255 ); // Input bit
     m_color[3] = QColor(  50, 255, 100 ); // Input int
-    m_color[4] = QColor( 255, 120,   0 ); // Input doub
-    m_color[5] = QColor( 100, 120, 200 ); // Output bit
+    m_color[4] = QColor( 255, 200,  30 ); // Input doub
+    m_color[5] = QColor(  50, 150, 255 ); // Output bit
     m_color[6] = QColor(  50, 255, 100 ); // Output int
-    m_color[7] = QColor( 200, 100,  00 ); // Output doub
+    m_color[7] = QColor( 255, 200,  30 ); // Output doub
 
     //setConnector( nullptr );
 
