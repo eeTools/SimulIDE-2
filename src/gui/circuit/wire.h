@@ -6,11 +6,11 @@
 #ifndef WIRE_H
 #define WIRE_H
 
-#include "route.h"
+#include "wirebase.h"
 
 class WireLine;
 
-class Wire : public Route
+class Wire : public WireBase
 {
     friend class WireLine;
 

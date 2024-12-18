@@ -282,7 +282,7 @@ void SubPackage::boardModeSlot()
 
 void SubPackage::setBoardMode( bool mode )
 {
-    for( Route* con : *Circuit::self()->wireList() )
+    for( WireBase* con : *Circuit::self()->wireList() )
     {
         if( con ) con->setVisib( !mode );
     }

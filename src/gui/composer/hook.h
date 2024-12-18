@@ -27,7 +27,7 @@ class Hook : public PinBase
 
         QColor getColor() override { return m_color[m_hookType]; }
 
-        Route* wire() override { return nullptr; } // We can have more than 1 wire.
+        WireBase* wire() override { return nullptr; } // We can have more than 1 wire.
         void removeWire() override;
 
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;

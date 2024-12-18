@@ -14,7 +14,7 @@
 #include "utils.h"
 
 Wire::Wire( QString id, PinBase* startpin, PinBase* endpin )
-    : Route( id, startpin )
+    : WireBase( id, startpin )
 {
     m_type = "Wire";
     m_freeLine = false;

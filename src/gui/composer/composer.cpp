@@ -19,7 +19,7 @@
 #include "fblock.h"
 #include "module.h"
 #include "hook.h"
-#include "linkage.h"
+#include "funcwire.h"
 #include "utils.h"
 
 Composer* Composer::m_pSelf = nullptr;
@@ -55,7 +55,7 @@ QString Composer::toString()
     QString component;
 
     for( FuncBlock* block : m_blockList ) component += block->toString();
-    for( Route* conn  : m_wireList  ) component += conn->toString();
+    for( WireBase* conn  : m_wireList  ) component += conn->toString();
     component += "\n";
 
     return component;
@@ -103,7 +103,7 @@ void Composer::loadStrDoc( QString doc )
 
         if( type == "Wire" )
         {
-            Route* wire = createWire( properties, newUid );
+            WireBase* wire = createWire( properties, newUid );
             if( wire ) m_wireList.append( wire );
             /*Hook* hook0 = nullptr;
             Hook* hook1 = nullptr;
@@ -176,7 +176,7 @@ Hook* Composer::getHook( QString id )
     return nullptr;
 }
 
-Route* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
+WireBase* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
 {
-    return new Linkage( id, startPin, endPin );
+    return new FuncWire( id, startPin, endPin );
 }

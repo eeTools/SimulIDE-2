@@ -191,7 +191,7 @@ void WireLine::mousePressEvent( QGraphicsSceneMouseEvent* event )
             else if( evPoint==p2() ) m_moveP2 = true;
         }
         else{                                         // Connecting a wire here
-            Route* wire = Circuit::self()->getNewWire();
+            WireBase* wire = Circuit::self()->getNewWire();
             if( wire )     // Wire started at Pin is connecting here
             {
 

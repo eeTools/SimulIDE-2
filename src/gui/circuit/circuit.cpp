@@ -117,7 +117,7 @@ void Circuit::loadStrDoc( QString &doc )
 
     QList<Linker*>    linkList;   // Linked  Component list
     QList<Component*> compList;   // Pasting Component list
-    QList<Route*>     connList;   // Pasting Connector list
+    QList<WireBase*>     connList;   // Pasting Connector list
     QList<Node*>      nodeList;   // Pasting node list
 
     m_circRev = 0;
@@ -298,7 +298,7 @@ void Circuit::loadStrDoc( QString &doc )
 
         for( Component* comp : compList ){ comp->setSelected( true ); comp->move( m_deltaMove ); }
         for( Node*      node : nodeList ){ node->setSelected( true ); node->move( m_deltaMove ); }
-        for( Route*     conn : connList ){ conn->select( true )     ; conn->move( m_deltaMove ); }
+        for( WireBase*  wire : connList ){ wire->select( true )     ; wire->move( m_deltaMove ); }
     }
     else for( Component* comp : compList ) { comp->moveSignal(); }
 
@@ -354,7 +354,7 @@ QString Circuit::circuitToString()
     QString circuit = circuitHeader();
     for( Component* comp : m_compList ) circuit += comp->toString();
     for( Node*      node : m_nodeList ) circuit += node->toString();
-    for( Route*     wire : m_wireList ) circuit += wire->toString();
+    for( WireBase*  wire : m_wireList ) circuit += wire->toString();
     circuit += "\n";
 
     if( m_board && m_board->m_boardMode ) m_board->setBoardMode( true );
@@ -528,7 +528,7 @@ void Circuit::beginUndoStep() // Save current state
     m_compStrMap.clear();      /// TODO: optimize this, we are saving the whole circuit every time
 
     //save all comps
-    for( Route*     wire : m_oldWires ) m_compStrMap.insert( wire, wire->toString() );
+    for( WireBase*  wire : m_oldWires ) m_compStrMap.insert( wire, wire->toString() );
     for( Node*      node : m_oldNodes ) m_compStrMap.insert( node, node->toString() );
     for( Component* comp : m_oldComps ) m_compStrMap.insert( comp, comp->toString() );
 }
@@ -536,22 +536,22 @@ void Circuit::beginUndoStep() // Save current state
 void Circuit::calculateChanges()   // Calculates created/removed
 {
     // Items Removed /// qDebug() << "Circuit::calcCicuitChanges Removed:";
-    QList<Route*>     removedConns = substract( m_oldWires, m_wireList );
+    QList<WireBase*>  removedConns = substract( m_oldWires, m_wireList );
     QList<Node*>      removedNodes = substract( m_oldNodes, m_nodeList );
     QList<Component*> removedComps = substract( m_oldComps, m_compList );
 
-    for( Route*     wire : removedConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, m_compStrMap.value(wire) );
+    for( WireBase*  wire : removedConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, m_compStrMap.value(wire) );
     for( Node*      node : removedNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, m_compStrMap.value(node) );
     for( Component* comp : removedComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, m_compStrMap.value(comp) );
 
     // Items Created /// qDebug() << "Circuit::calcCicuitChanges Created:";
-    QList<Route*>     createdConns = substract( m_wireList, m_oldWires );
+    QList<WireBase*>  createdConns = substract( m_wireList, m_oldWires );
     QList<Node*>      createdNodes = substract( m_nodeList, m_oldNodes );
     QList<Component*> createdComps = substract( m_compList, m_oldComps );
 
     for( Component* comp : createdComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, "" );
     for( Node*      node : createdNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, "" );
-    for( Route*     wire : createdConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, "" );
+    for( WireBase*  wire : createdConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, "" );
 }
 
 void Circuit::restoreState()
@@ -594,7 +594,7 @@ void Circuit::restoreState()
     }
     m_busy = false;
     deleteRemoved();                      // Delete Removed Components;
-    for( Route* con : m_wireList ) {
+    for( WireBase* con : m_wireList ) {
         if( m_board && m_board->m_boardMode ) con->setVisib( false );
         else{
             con->startPin()->isMoved();
@@ -655,7 +655,7 @@ void Circuit::mousePressEvent( QGraphicsSceneMouseEvent* event )
     else if( event->button() == Qt::RightButton )
     {
         if( m_newWire ) event->accept();
-        else               QGraphicsScene::mousePressEvent( event );
+        else            QGraphicsScene::mousePressEvent( event );
     }
     else if( event->button() == Qt::MidButton )
         QGraphicsScene::mousePressEvent( event );
@@ -760,7 +760,7 @@ void Circuit::keyPressEvent( QKeyEvent* event )
         {
             for( Component* com : m_compList ) com->setSelected( true );
             for( Node*      nod : m_nodeList ) nod->setSelected( true );
-            for( Route*     con : m_wireList ) con->select( true );
+            for( WireBase*     con : m_wireList ) con->select( true );
         }
         else if( key == Qt::Key_R )
         {
@@ -840,7 +840,7 @@ void Circuit::dropEvent( QGraphicsSceneDragDropEvent* event )
     else CircuitWidget::self()->loadCirc( id );
 }
 
-Route* Circuit::newWire( QString id, PinBase* startPin, PinBase* endPin )
+WireBase* Circuit::newWire( QString id, PinBase* startPin, PinBase* endPin )
 {
     Wire* wire = new Wire( id, startPin, endPin );
     QPoint p1 = startPin->scenePos().toPoint();

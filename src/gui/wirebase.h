@@ -3,8 +3,8 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef ROUTE_H
-#define ROUTE_H
+#ifndef WIREBASE_H
+#define WIREBASE_H
 
 #include "compbase.h"
 
@@ -15,11 +15,11 @@ enum wireFlags_t{
 
 class PinBase;
 
-class Route : public CompBase
+class WireBase : public CompBase
 {
     public:
-        Route( QString id, PinBase* startpin );
-        ~Route();
+        WireBase( QString id, PinBase* startpin );
+        ~WireBase();
 
         void dummySetter( QString ) {;}
 

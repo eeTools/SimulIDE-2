@@ -20,7 +20,7 @@ class ModSignal
         ModSignal( QString name, hookType_t type/*, bool* changed*/ );
         ~ModSignal();
 
-        QString name() { return m_name; }
+        QString    name() { return m_name; }
         hookType_t type() { return m_type; }
 
         void connect( ModSlot* slot, bool* modChanged, bool* fCompChanged );
@@ -29,6 +29,7 @@ class ModSignal
         void changed();
 
         void setIntData( int* intData ) { m_intData = intData; }
+        void setDblData( double* dblData ) { m_dblData = dblData; }
 
         //void changed( bool chg ) { m_changed = chg; }
         //void send( double val ); // Calls all connected slots.

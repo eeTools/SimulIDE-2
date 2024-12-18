@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-#include "linkage.h"
+#include "funcwire.h"
 #include "circuitwidget.h"
 #include "simulator.h"
 #include "composer.h"
@@ -13,13 +13,13 @@
 #include "pin.h"
 #include "utils.h"
 
-#define tr(str) simulideTr("Linkage",str)
+#define tr(str) simulideTr("FuncWire",str)
 
-Linkage::Linkage( QString id, PinBase* startpin, PinBase* endpin )
-       : Route( id, startpin )
+FuncWire::FuncWire( QString id, PinBase* startpin, PinBase* endpin )
+       : WireBase( id, startpin )
        , QGraphicsItem()
 {
-    m_type = "Linkage";
+    m_type = "FuncWire";
 
     m_moving = false;
 
@@ -35,22 +35,22 @@ Linkage::Linkage( QString id, PinBase* startpin, PinBase* endpin )
     Composer::self()->compMap()->insert( id, this );
     Composer::self()->addItem( this );
 }
-Linkage::~Linkage()
+FuncWire::~FuncWire()
 {
     Composer::self()->compMap()->remove( m_id );
 }
 
-QRectF Linkage::boundingRect() const
+QRectF FuncWire::boundingRect() const
 {
     return m_path.controlPointRect() + QMarginsF( 2, 2, 2, 2 );
 }
 
-void Linkage::setPointListStr( QString pl )
+void FuncWire::setPointListStr( QString pl )
 {
     setPointList( pl.split(",") );
 }
 
-void Linkage::setPointList( QStringList plist )
+void FuncWire::setPointList( QStringList plist )
 {
     m_pointList = plist;
 
@@ -63,13 +63,13 @@ void Linkage::setPointList( QStringList plist )
     m_lastPoint = m_pList.takeLast();
 }
 
-void Linkage::setPointVector( QList<QPoint> pv)
+void FuncWire::setPointVector( QList<QPoint> pv)
 {
     m_pList = pv;
     m_lastPoint = m_pList.takeLast();
 }
 
-void Linkage::refreshPointList()
+void FuncWire::refreshPointList()
 {
     m_pointList.clear();
     for( QPoint point : m_pList )
@@ -81,7 +81,7 @@ void Linkage::refreshPointList()
     m_pointList.append( QString::number( m_lastPoint.y() ) );
 }
 
-void Linkage::updateConRoute( QPointF thisPoint )
+void FuncWire::updateConRoute( QPointF thisPoint )
 {
     QPoint p0 = m_pList.last();
     QPoint newPoint = toGrid( thisPoint ).toPoint();
@@ -148,7 +148,7 @@ void Linkage::updateConRoute( QPointF thisPoint )
     Composer::self()->update();
 }
 
-void Linkage::updateConRoute( PinBase* pin )
+void FuncWire::updateConRoute( PinBase* pin )
 {
     if( pin == m_startPin ) // Convert startPin in endPin
     {
@@ -165,7 +165,7 @@ void Linkage::updateConRoute( PinBase* pin )
     updateConRoute( pin->scenePos() );
 }
 
-void Linkage::move( QPointF delta )
+void FuncWire::move( QPointF delta )
 {
     if( !Composer::self()->pasting() ) return;
 
@@ -174,7 +174,7 @@ void Linkage::move( QPointF delta )
     //m_endPin->isMoved();
 }
 
-void Linkage::remove()
+void FuncWire::remove()
 {
     if( Simulator::self()->isRunning() )  CircuitWidget::self()->powerCircOff();
 
@@ -184,7 +184,7 @@ void Linkage::remove()
     Composer::self()->removeItem( this );
 }
 
-void Linkage::closeCon( PinBase* endpin )
+void FuncWire::closeCon( PinBase* endpin )
 {
     m_endPin = endpin;
     m_startPin->setWire( this );
@@ -199,13 +199,13 @@ void Linkage::closeCon( PinBase* endpin )
     setCursor( Qt::CrossCursor );
 }
 
-void Linkage::splitCon( int index, Node* node )
+void FuncWire::splitCon( int index, Node* node )
 {
     if( !m_endPin ) return;
 
     QPoint cutPoint = node->scenePos().toPoint();
 
-    Linkage* wire0 = new Linkage( Composer::self()->newWireId(), m_startPin );
+    FuncWire* wire0 = new FuncWire( Composer::self()->newWireId(), m_startPin );
     Composer::self()->wireList()->append( wire0 );
 
     QList<QPoint> poinVector;
@@ -220,7 +220,7 @@ void Linkage::splitCon( int index, Node* node )
     closeCon( m_endPin );
 }
 
-int Linkage::eventPointIndex( QPoint cutPoint )
+int FuncWire::eventPointIndex( QPoint cutPoint )
 {
     QPoint point0;
     QPoint point1;
@@ -247,25 +247,25 @@ int Linkage::eventPointIndex( QPoint cutPoint )
     return i;
 }
 
-bool Linkage::connectToWire( QPoint cutPoint )
+bool FuncWire::connectToWire( QPoint cutPoint )
 {
     int index = eventPointIndex( cutPoint )+1;
 
     if( Simulator::self()->isRunning() )  CircuitWidget::self()->powerCircOff();
 
-    if( !Composer::self()->getNewWire() ) Composer::self()->beginUndoStep(); // A new Linkage started here
+    if( !Composer::self()->getNewWire() ) Composer::self()->beginUndoStep(); // A new FuncWire started here
 
     Node* node = new Node( Composer::self()->newSceneId() );     // Now add the Node
     node->setPos( cutPoint );
     Composer::self()->addNode( node );
 
     PinBase* pin1 = node->getPin(1);
-    if( Composer::self()->getNewWire() )   // A Linkage wants to connect here (ends in a node)
+    if( Composer::self()->getNewWire() )   // A FuncWire wants to connect here (ends in a node)
     {
         splitCon( index, node );
         Composer::self()->closeWire( pin1, true );
     }
-    else                                     // A new Linkage created here (starts in a node)
+    else                                     // A new FuncWire created here (starts in a node)
     {
         pin1->setWireFlags( m_wireFlags );
         Composer::self()->startWire( pin1, false );
@@ -274,7 +274,7 @@ bool Linkage::connectToWire( QPoint cutPoint )
     return true;
 }
 
-void Linkage::mousePressEvent( QGraphicsSceneMouseEvent* event )
+void FuncWire::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
     if( event->button() == Qt::MidButton )    // Move Line
     {
@@ -300,10 +300,10 @@ void Linkage::mousePressEvent( QGraphicsSceneMouseEvent* event )
         }
         else                                          // Connecting a wire here
         {
-            Route* route = Composer::self()->getNewWire();
-            if( Composer::self()->getNewWire() )     // Linkage started at Pin is connecting here
+            WireBase* route = Composer::self()->getNewWire();
+            if( Composer::self()->getNewWire() )     // FuncWire started at Pin is connecting here
             {
-                Linkage* wire = static_cast<Linkage*>(route);
+                FuncWire* wire = static_cast<FuncWire*>(route);
                 if( wire == this ) return;
                 if( wire->wireFlags() != m_wireFlags ) { event->ignore(); return; } // Avoid connect Bus with no-Bus
             }
@@ -313,7 +313,7 @@ void Linkage::mousePressEvent( QGraphicsSceneMouseEvent* event )
             else                          event->ignore();
 }   }   }
 
-void Linkage::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
+void FuncWire::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 {
     event->accept();
 
@@ -347,7 +347,7 @@ void Linkage::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     }
 }
 
-void Linkage::moveLine( QPoint delta )
+void FuncWire::moveLine( QPoint delta )
 {
     QPoint point0 = m_pList.at( m_lastIndex );
     QPoint point1 = m_pList.at( m_lastIndex+1 );
@@ -362,13 +362,13 @@ void Linkage::moveLine( QPoint delta )
     Composer::self()->update();
 }
 
-void Linkage::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
+void FuncWire::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
     event->accept();
     m_moving = false;
 }
 
-void Linkage::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
+void FuncWire::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 {
     if( !m_endPin
      || Composer::self()->getNewWire() ) return;
@@ -380,12 +380,12 @@ void Linkage::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
    QObject::connect( removeAction, &QAction::triggered
                    , [=](){ Composer::self()->removeWire( this ); } );
 
-   /// TODO: set Linkage color
+   /// TODO: set FuncWire color
 
    menu.exec( event->screenPos() );
 }
 
-QPainterPath Linkage::shape() const
+QPainterPath FuncWire::shape() const
 {
     QPainterPath path;
 
@@ -396,7 +396,7 @@ QPainterPath Linkage::shape() const
     return qp.createStroke( m_path );
 }
 
-void Linkage::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
+void FuncWire::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {
     if( m_pList.isEmpty() ) return;
     m_path.clear();

@@ -12,7 +12,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "hook.h"
-#include "linkage.h"
+#include "funcwire.h"
 #include "composer.h"
 
 Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGraphicsItem* parent )

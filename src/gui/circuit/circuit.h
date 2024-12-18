@@ -91,7 +91,7 @@ class Circuit : public CanvasBase
         QString circuitToString();
         //QString circuitToComp( QString category, QString iconData, QString compType );
 
-        Route* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
+        WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
 
         bool isComp() { return m_creCompDialog != nullptr; }
         QString category() { return m_category; }

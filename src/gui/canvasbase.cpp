@@ -66,9 +66,9 @@ void CanvasBase::clearCanvas()
     m_deleting = false;
 }
 
-Route* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
+WireBase* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
 {
-    Route* wire = nullptr;
+    WireBase* wire = nullptr;
     PinBase* startpin = nullptr;
     PinBase* endpin   = nullptr;
     QString startpinid, endpinid;
@@ -217,7 +217,7 @@ void CanvasBase::deleteNewWire()
     update();
 }
 
-void CanvasBase::removeWire( Route* wire )
+void CanvasBase::removeWire( WireBase* wire )
 {
     if( !m_wireList.contains(wire) ) return;
     wire->remove();
@@ -351,7 +351,7 @@ void CanvasBase::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     {
         event->accept();
         ///if( event->modifiers() & Qt::ShiftModifier) m_newWire->m_freeLine = true;
-        ///m_newWire->updateConRoute( event->scenePos() );
+        ///m_newWire->updateConWireBase( event->scenePos() );
     }
     QGraphicsScene::mouseMoveEvent( event );
 }

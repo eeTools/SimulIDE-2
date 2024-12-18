@@ -260,7 +260,7 @@ void MainWindow::createWidgets()
 
     m_sidePanel = new QTabWidget( this );
     m_sidePanel->setTabPosition( QTabWidget::North );
-    QString fontSize = QString::number( int(12*m_fontScale) );
+    QString fontSize = QString::number( int(11*m_fontScale) );
     m_sidePanel->tabBar()->setStyleSheet("QTabBar { font-size:"+fontSize+"px; }");
     m_sidePanel->addTab( m_listWidget, tr("Components") );
     m_sidePanel->addTab( m_blockList, tr("Functions") );

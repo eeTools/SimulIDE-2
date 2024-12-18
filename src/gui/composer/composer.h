@@ -27,7 +27,7 @@ class Composer : public CanvasBase
         FuncBlock* createBlock( Module* module, QString type="", QString id="" );
         void       removeBlock( FuncBlock* fb );
 
-        Route* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
+        WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
 
         void loadComponent( QString path );
 

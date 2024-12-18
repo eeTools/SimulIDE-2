@@ -16,7 +16,7 @@ QString BitOp::m_moduleType = "BitOp";
 
 moduleItem_t BitOp::registerItem(){
     return {
-        "Bit Op",
+        "Unary Operation",
         m_moduleType,
         "",
         "gate.png",

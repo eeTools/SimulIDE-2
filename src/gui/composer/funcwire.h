@@ -8,17 +8,17 @@
 
 #include <QGraphicsItem>
 
-#include "route.h"
+#include "wirebase.h"
 
 class Node;
 
-class Linkage : public Route, public QGraphicsItem
+class FuncWire : public WireBase, public QGraphicsItem
 {
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        Linkage( QString id, PinBase* startpin, PinBase* endpin=nullptr );
-        ~Linkage();
+        FuncWire( QString id, PinBase* startpin, PinBase* endpin=nullptr );
+        ~FuncWire();
 
         int type() const override { return UserType + 2; } // QGraphicsItem type
 

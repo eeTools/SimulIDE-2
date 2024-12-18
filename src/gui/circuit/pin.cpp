@@ -158,7 +158,7 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
     {
         if( m_wire ) event->ignore();
         else{
-            Route* wire = Circuit::self()->getNewWire();
+            WireBase* wire = Circuit::self()->getNewWire();
             if( wire )
             {
 

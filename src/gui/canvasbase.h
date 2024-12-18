@@ -9,13 +9,13 @@
 #include <QGraphicsScene>
 #include <QSet>
 
-#include "route.h"
+#include "wirebase.h"
 
 #define COMP_STATE_NEW "__COMP_STATE_NEW__"
 
 class QGraphicsView;
 class Node;
-class Route;
+class WireBase;
 
 class CanvasBase : public QGraphicsScene
 {
@@ -42,13 +42,13 @@ class CanvasBase : public QGraphicsScene
 
         void startWire( PinBase* startpin, bool save=true );
         void closeWire( PinBase* endpin, bool save=false );
-        void removeWire( Route* wire );
+        void removeWire( WireBase* wire );
         void deleteNewWire();
-        Route* getNewWire() { return m_newWire; }
-        Route* createWire( QList<prop_t> properties, QString newUid );
-        virtual Route* newWire( QString id, PinBase* startPin, PinBase* endPin )=0;
+        WireBase* getNewWire() { return m_newWire; }
+        WireBase* createWire( QList<prop_t> properties, QString newUid );
+        virtual WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin )=0;
 
-        QList<Route*>* wireList()  { return &m_wireList; }
+        QList<WireBase*>* wireList()  { return &m_wireList; }
 
         PinBase* findPin( int x, int y, QString id );
         void addPin( PinBase* pin, QString pinId ) { m_pinMap[ pinId ] = pin; m_LdPinMap[ pinId ] = pin; }
@@ -114,13 +114,13 @@ class CanvasBase : public QGraphicsScene
         QPointF m_eventpoint;
         QPointF m_deltaMove;
 
-        Route* m_newWire;
+        WireBase* m_newWire;
 
         QMap<QString, PinBase*> m_pinMap;   // Pin Id to PinBase*
         QMap<QString, PinBase*> m_LdPinMap; // Pin Id to PinBase* while loading/pasting/importing
         QMap<QString, QString>  m_idMap;    // Component seqNumber to new seqNumber (pasting)
 
-        QList<Route*> m_wireList;  // Wire list
+        QList<WireBase*> m_wireList;  // Wire list
         QList<Node*>  m_nodeList;  // Node list
 
         //--- Undo/Redo ----------------------------------
@@ -153,7 +153,7 @@ class CanvasBase : public QGraphicsScene
         QHash<QString, CompBase*> m_compMap;  // Component Id to Component*, used in UNDO/REDO
 
         QList<CompBase*>  m_removedComps; // removed component list;
-        QList<Route*>     m_oldWires;
+        QList<WireBase*>  m_oldWires;
         QList<Node*>      m_oldNodes;
         QMap<CompBase*, QString> m_compStrMap;
 };

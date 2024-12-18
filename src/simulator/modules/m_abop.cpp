@@ -16,7 +16,7 @@ QString AbOp::m_moduleType = "AbOp";
 
 moduleItem_t AbOp::registerItem(){
     return {
-        "A B Op",
+        "Binary Operation",
         m_moduleType,
         "",
         "gate.png",

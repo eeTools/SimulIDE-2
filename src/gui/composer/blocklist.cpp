@@ -87,6 +87,7 @@ void BlockList::slotItemClicked( QTreeWidgetItem* item, int )
 #include "m_ioport.h"
 #include "m_iohook.h"
 #include "m_delay.h"
+#include "m_wavegen.h"
 #include "m_property.h"
 
 void BlockList::registerItems()
@@ -98,5 +99,6 @@ void BlockList::registerItems()
     addItem( BitOp::registerItem() );
     addItem( AbOp::registerItem() );
     addItem( Delay::registerItem() );
+    addItem( WaveGen::registerItem() );
     addItem( PropertyM::registerItem() );
 }
