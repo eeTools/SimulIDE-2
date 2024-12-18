@@ -22,13 +22,13 @@
 
 #define tr(str) simulideTr("LAnalizer",str)
 
-listItem_t LAnalizer::libraryItem(){
+listItem_t LAnalizer::registerItem(){
     return {
         tr( "Logic Analyzer" ),
         "Meters",
         "lanalizer.png",
         "LAnalizer",
-        [](QString id){ return (Component*)new LAnalizer( id ); } };
+        [](QString id){ return (CompBase*)new LAnalizer( id ); } };
 }
 
 LAnalizer::LAnalizer( QString id )

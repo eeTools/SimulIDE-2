@@ -15,7 +15,7 @@ class Resistor : public Component, public Resistance
         Resistor( QString id );
         ~Resistor();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void initialize() override;
 

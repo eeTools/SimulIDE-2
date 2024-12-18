@@ -17,8 +17,8 @@ class SubCircuit : public Chip
         SubCircuit( QString id );
         ~SubCircuit();
 
- static Component* construct( QString id );
- static listItem_t libraryItem();
+ static CompBase* construct( QString id );
+ static listItem_t registerItem();
 
         virtual void remove() override;
 

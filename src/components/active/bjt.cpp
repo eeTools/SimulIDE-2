@@ -16,13 +16,13 @@
 
 #define tr(str) simulideTr("BJT",str)
 
-listItem_t BJT::libraryItem(){
+listItem_t BJT::registerItem(){
     return {
         tr("BJT"),
         "Transistors",
         "bjt.png",
         "BJT",
-        [](QString id){ return (Component*)new BJT( id ); } };
+        [](QString id){ return (CompBase*)new BJT( id ); } };
 }
 
 BJT::BJT( QString id )

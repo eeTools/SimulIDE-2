@@ -16,7 +16,7 @@ class Delay : public Module
         Delay( QString name );
         ~Delay();
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
         double delayNanoS() { return m_delay/1e12; }
         void setDelayNanoS( double t ) {

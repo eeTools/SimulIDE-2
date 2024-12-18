@@ -28,7 +28,7 @@ class BitOp : public Clocked
             BTD     // BCD to DEC (Decoder)
         };
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
         virtual void initModule() override;
         virtual void runStep() override;

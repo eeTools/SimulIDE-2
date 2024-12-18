@@ -16,7 +16,7 @@ class Tunnel : public Component
         Tunnel( QString id );
         ~Tunnel();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         QRectF boundingRect() const override;
 

@@ -23,7 +23,7 @@ class LAnalizer : public PlotBase
         LAnalizer( QString id );
         ~LAnalizer();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void updateStep() override;
 

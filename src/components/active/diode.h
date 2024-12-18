@@ -15,7 +15,7 @@ class Diode : public Component, public PN
         Diode( QString id, bool zener=false );
         ~Diode();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 

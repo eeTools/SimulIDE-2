@@ -21,13 +21,13 @@
 
 #define tr(str) simulideTr("Oscope",str)
 
-listItem_t Oscope::libraryItem(){
+listItem_t Oscope::registerItem(){
     return {
         tr( "Oscope" ),
         "Meters",
         "oscope.png",
         "Oscope",
-        [](QString id){ return (Component*)new Oscope( id ); } };
+        [](QString id){ return (CompBase*)new Oscope( id ); } };
 }
 
 Oscope::Oscope( QString id )

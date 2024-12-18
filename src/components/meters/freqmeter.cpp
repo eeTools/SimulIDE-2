@@ -15,13 +15,13 @@
 
 #define tr(str) simulideTr("FreqMeter",str)
 
-listItem_t FreqMeter::libraryItem(){
+listItem_t FreqMeter::registerItem(){
     return {
         tr("Frequency Meter"),
         "Meters",
         "frequencimeter.png",
         "FreqMeter",
-        [](QString id){ return (Component*)new FreqMeter( id ); } };
+        [](QString id){ return (CompBase*)new FreqMeter( id ); } };
 }
 
 FreqMeter::FreqMeter( QString id )

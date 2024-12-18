@@ -27,40 +27,26 @@
 ComponentList* ComponentList::m_pSelf = nullptr;
 
 ComponentList::ComponentList( QWidget* parent )
-             : QTreeWidget( parent )
+             : ListBase( parent )
              , m_mcDialog( this )
 {
     m_pSelf = this;
 
-    m_searchFilter = "";
 
     m_mcDialog.setVisible( false );
 
-    setSelectionMode( QAbstractItemView::SingleSelection );
-    setDragEnabled( true );
-    viewport()->setAcceptDrops( true );
-    setDropIndicatorShown( true );
-
-    setIndentation( 12 );
-    setRootIsDecorated( true );
-    setCursor( Qt::OpenHandCursor );
-    headerItem()->setHidden( true );
-
-    float scale = MainWindow::self()->fontScale();
-    setIconSize( QSize( 30*scale, 24*scale ));
-
-    m_listFile  = MainWindow::self()->getConfigPath("compList.xml");
-    m_restoreList = false; ///QFile::exists( m_listFile ); // Restore last List
-    m_oldConfig = !m_restoreList; // xml file doesn't exist: read old config
-
-    m_customComp = false;
-    LoadLibraryItems();
-    m_customComp = true;
+    ///m_listFile  = MainWindow::self()->getConfigPath("compList.xml");
+    ///m_restoreList = false; ///QFile::exists( m_listFile ); // Restore last List
+    ///m_oldConfig = !m_restoreList; // xml file doesn't exist: read old config
 
     QString userDir = MainWindow::self()->userPath();
     if( !userDir.isEmpty() && QDir( userDir ).exists() ) LoadCompSetAt( userDir );
 
-    if( !m_oldConfig ) readConfig(); // Read new xml config file
+    ///if( !m_oldConfig ) readConfig(); // Read new xml config file
+
+    m_customComp = false;
+    registerItems();
+    m_customComp = true;
 
     /*for( TreeItem* it : m_categories ) // Remove empty categories
     {
@@ -73,9 +59,6 @@ ComponentList::ComponentList( QWidget* parent )
 
     connect( this, &ComponentList::customContextMenuRequested,
              this, &ComponentList::slotContextMenu );
-
-    connect( this, &ComponentList::itemPressed,
-             this, &ComponentList::slotItemClicked );
 }
 ComponentList::~ComponentList(){}
 
@@ -322,143 +305,6 @@ void ComponentList::loadXml( QString xmlFile )
     qDebug() << tr("        Loaded Component set:           ") << compSetName;
 }
 
-QString ComponentList::getIcon( QString folder, QString name )
-{
-    QString icon = folder+"/"+name+"/"+name+"_icon.png";
-    if( m_compSetDir.exists( icon ) ) icon = m_compSetDir.absoluteFilePath( icon );
-    else                              icon = "";
-    return icon;
-}
-
-Component* ComponentList::createComponent( QString type, QString id )
-{
-    if( !m_componentFactory.contains( type ) ) return nullptr;
-
-    listItem_t item = m_componentFactory.value( type );
-    Component* comp = item.construct( id );
-    comp->setItemType( item.type );
-    return comp;
-}
-
-void ComponentList::addItem( listItem_t item )
-{
-    QString type = item.type;
-    m_componentFactory[type] = item;
-
-    QString icon = item.icon;
-    QString iconFile = MainWindow::self()->getDataFilePath("images/"+icon );
-    if( !QFile::exists( iconFile ) ) iconFile = ":/"+icon; // Image not in simulide data folder, use hardcoded image
-
-    TreeItem* catItem = getCategory( item.category );
-    if( catItem ) addItem( item.label, catItem, iconFile, type );
-}
-
-void ComponentList::addItem( QString caption, TreeItem* catItem, QString icon, QString type )
-{
-    QPixmap ic( icon );
-    QIcon ico( ic );
-    addItem( caption, catItem, ico, type );
-}
-
-void ComponentList::addItem( QString caption, TreeItem* catItem, QIcon &icon, QString type )
-{
-    if( !catItem ) return;
-
-    QStringList nameFull = caption.split( "???" );
-    QString       nameTr = nameFull.first();
-    QString info = "";
-    if( nameFull.size() > 1 ) info = "   "+nameFull.last();
-
-    QString name = ( type == "Subcircuit" || type == "MCU" ) ? nameTr : type;
-
-    /*if( type == "MCU" )
-    {
-        listItem_t libItem = Mcu::libraryItem();
-
-        type = name;
-        libItem.type = name;
-        m_componentFactory[name] = libItem;
-    }*/
-    //else
-    if( type == "Subcircuit" )
-    {
-        listItem_t libItem = SubCircuit::libraryItem();
-
-        type = name;
-        libItem.type = name;
-        m_componentFactory[name] = libItem;
-    }
-
-    TreeItem* item = new TreeItem( catItem, name, nameTr, type, component, icon, m_customComp );
-
-    item->setText( 0, nameTr+info );
-
-    m_components.insert( name, item );
-
-    if( !m_restoreList ) catItem->addChild( item );
-
-    if( m_oldConfig )
-    {
-        bool hidden = MainWindow::self()->compSettings()->value( name+"/hidden" ).toBool();
-        item->setItemHidden( hidden );
-
-        QString shortCut = MainWindow::self()->compSettings()->value( name+"/shortcut" ).toString();
-        item->setShortCut( shortCut );
-        if( !shortCut.isEmpty() ) m_shortCuts[name] = shortCut;
-    }
-}
-
-TreeItem* ComponentList::getCategory( QString category )
-{
-    TreeItem* catItem = nullptr;
-    if( m_categories.contains( category ) ) catItem = m_categories.value( category );
-    else{
-        category = m_catNames.value( category );
-        if( !category.isEmpty() && m_categories.contains( category ) )
-            catItem = m_categories.value( category );
-    }
-    return catItem;
-}
-
-TreeItem* ComponentList::addCategory( QString nameTr, QString name, QString parent, QString icon )
-{
-    TreeItem* catItem = nullptr;
-    TreeItem* catParent = nullptr;
-
-    bool expanded = false;
-    bool hidden   = false;
-
-    if( parent.isEmpty() )                              // Is Main Category
-    {
-        catItem = new TreeItem( nullptr, name, nameTr, "", categ_MAIN, QIcon( QPixmap( icon ) )/*QIcon(":/null-0.png")*/, m_customComp );
-        expanded = true;
-    }else{
-        if( m_categories.contains( parent ) ) catParent = m_categories.value( parent );
-        catItem = new TreeItem( catParent, name, nameTr, "", categ_CHILD, QIcon( QPixmap( icon ) ), m_customComp );
-    }
-
-    if( !m_restoreList )
-    {
-        if( parent.isEmpty() ) addTopLevelItem( catItem ); // Is root category or root category doesn't exist
-        else if( catParent )   catParent->addChild( catItem );
-    }
-    if( m_oldConfig )
-    {
-        if( MainWindow::self()->compSettings()->contains(name+"/collapsed") )
-            expanded = !MainWindow::self()->compSettings()->value( name+"/collapsed" ).toBool();
-
-        if( MainWindow::self()->compSettings()->contains(name+"/hidden") )
-            hidden = MainWindow::self()->compSettings()->value( name+"/hidden" ).toBool();
-    }
-    catItem->setText( 0, nameTr );
-    catItem->setItemHidden( hidden );
-    catItem->setItemExpanded( expanded );
-    m_categories.insert( name, catItem );
-    m_catNames.insert( nameTr, name );
-
-    return catItem;
-}
-
 void ComponentList::mousePressEvent( QMouseEvent* event )
 {
     if( event->modifiers() & Qt::ControlModifier ) setDragDropMode( QAbstractItemView::InternalMove );
@@ -468,19 +314,6 @@ void ComponentList::mousePressEvent( QMouseEvent* event )
     QTreeWidget::mousePressEvent( event );
 }
 
-void ComponentList::slotItemClicked( QTreeWidgetItem* item, int  )
-{
-    if( !item ) return;
-    if( dragDropMode() == QAbstractItemView::InternalMove ) return; // Moving items in the list
-
-    TreeItem* treeItem = (TreeItem*)item;
-    QMimeData* mimeData = new QMimeData;
-    mimeData->setText( treeItem->name()+","+treeItem->compType() );
-
-    QDrag* drag = new QDrag( this );
-    drag->setMimeData( mimeData );
-    drag->exec( Qt::MoveAction, Qt::MoveAction );
-}
 
 void ComponentList::dropEvent( QDropEvent* event )
 {
@@ -508,38 +341,6 @@ void ComponentList::slotManageComponents()
 {
     m_mcDialog.initialize();
     m_mcDialog.setVisible( true );
-}
-
-void ComponentList::search( QString filter )
-{
-    QList<QTreeWidgetItem*>    cList = findItems( filter, Qt::MatchContains|Qt::MatchRecursive, 0 );
-    QList<QTreeWidgetItem*> allItems = findItems( "", Qt::MatchContains|Qt::MatchRecursive, 0 );
-
-    for( QTreeWidgetItem* item : allItems )
-    {
-        TreeItem* treeItem = (TreeItem*)item;
-        treeItem->setHidden( true );
-
-        if( treeItem->childCount() > 0  )
-        {
-            if( m_searchFilter.isEmpty() )                            // First search, update actual expanded state
-                treeItem->setItemExpanded( treeItem->isExpanded() );
-            else treeItem->setExpanded( treeItem->isItemExpanded() ); // Don't setItemExpanded (keeps the original state)
-            continue;
-        }
-        if( !cList.contains( item ) ) continue;
-
-        bool hidden = treeItem->isItemHidden();
-        while( treeItem ){
-            if( hidden )
-                treeItem->setHidden( hidden );
-            treeItem->setHidden( hidden );
-            if( treeItem->childCount() > 0 && !hidden /*&& !filter.isEmpty()*/ )
-                treeItem->setExpanded( treeItem->isItemExpanded() );
-            treeItem = treeItem->parentItem();
-        }
-    }
-    m_searchFilter = filter;
 }
 
 void ComponentList::readConfig()
@@ -633,7 +434,9 @@ void ComponentList::writeSettings()
     Circuit::self()->saveString( m_listFile, treeStr );
 }
 
-//BEGIN Item includes
+// --------------------------------------------
+// BEGIN Item includes
+
 #include "ampmeter.h"
 #include "bjt.h"
 #include "capacitor.h"
@@ -761,97 +564,97 @@ void ComponentList::writeSettings()
 #include "ws2812.h"
 #include "zener.h"*/
 
-void ComponentList::LoadLibraryItems()
+void ComponentList::registerItems()
 {
     addCategory( tr("Meters"),"Meters", "", "" );
-    addItem( Probe::libraryItem() );
-    addItem( VoltMeter::libraryItem() );
-    addItem( AmpMeter::libraryItem() );
-    addItem( FreqMeter::libraryItem() );
-    addItem( Oscope::libraryItem() );
-    addItem( LAnalizer::libraryItem() );
+    addItem( Probe::registerItem() );
+    addItem( VoltMeter::registerItem() );
+    addItem( AmpMeter::registerItem() );
+    addItem( FreqMeter::registerItem() );
+    addItem( Oscope::registerItem() );
+    addItem( LAnalizer::registerItem() );
 
     addCategory( tr("Sources"),"Sources", "", "" );
-    //addItem( FixedVolt::libraryItem() );
-    //addItem( Clock::libraryItem() );
-    //addItem( WaveGen::libraryItem() );
-    //addItem( VoltSource::libraryItem() );
-    //addItem( CurrSource::libraryItem() );
-    //addItem( Csource::libraryItem() );
-    //addItem( Battery::libraryItem() );
-    addItem( Rail::libraryItem() );
-    addItem( Ground::libraryItem() );
+    //addItem( FixedVolt::registerItem() );
+    //addItem( Clock::registerItem() );
+    //addItem( WaveGen::registerItem() );
+    //addItem( VoltSource::registerItem() );
+    //addItem( CurrSource::registerItem() );
+    //addItem( Csource::registerItem() );
+    //addItem( Battery::registerItem() );
+    addItem( Rail::registerItem() );
+    addItem( Ground::registerItem() );
 
     addCategory( tr("Switches"),"Switches", "", "" );
-    //addItem( Push::libraryItem() );
-    //addItem( Switch::libraryItem() );
-    //addItem( SwitchDip::libraryItem() );
-    //addItem( Relay::libraryItem() );
-    //addItem( KeyPad::libraryItem() );
+    //addItem( Push::registerItem() );
+    //addItem( Switch::registerItem() );
+    //addItem( SwitchDip::registerItem() );
+    //addItem( Relay::registerItem() );
+    //addItem( KeyPad::registerItem() );
 
     addCategory( tr("Passive"),"Passive", "", "" );
     addCategory( tr("Resistors"),"Resistors", "Passive", "resistors.png" );
-    addItem( Resistor::libraryItem() );
-    //addItem( ResistorDip::libraryItem() );
-    //addItem( Potentiometer::libraryItem() );
-    //addItem( VarResistor::libraryItem() );
+    addItem( Resistor::registerItem() );
+    //addItem( ResistorDip::registerItem() );
+    //addItem( Potentiometer::registerItem() );
+    //addItem( VarResistor::registerItem() );
 
     //addCategory( tr("Resistive Sensors"),"Resistive Sensors", "Passive", "resistorsensors.png" );
-    //addItem( Ldr::libraryItem() );
-    //addItem( Thermistor::libraryItem() );
-    //addItem( RTD::libraryItem() );
-    //addItem( Strain::libraryItem() );
+    //addItem( Ldr::registerItem() );
+    //addItem( Thermistor::registerItem() );
+    //addItem( RTD::registerItem() );
+    //addItem( Strain::registerItem() );
 
     addCategory( tr("Reactive"),"Reactive", "Passive", "reactive.png" );
-    addItem( Capacitor::libraryItem() );
-    //addItem( elCapacitor::libraryItem() );
-    addItem( Inductor::libraryItem() );
-    //addItem( Transformer::libraryItem() );
+    addItem( Capacitor::registerItem() );
+    //addItem( elCapacitor::registerItem() );
+    addItem( Inductor::registerItem() );
+    //addItem( Transformer::registerItem() );
 
     addCategory( tr("Active"),"Active", "", "" );
     addCategory( tr("Rectifiers"),"Rectifiers", "Active", "" );
-    addItem( Diode::libraryItem() );
-    //addItem( Zener::libraryItem() );
-    //addItem( SCR::libraryItem() );
-    //addItem( Diac::libraryItem() );
-    //addItem( Triac::libraryItem() );
+    addItem( Diode::registerItem() );
+    //addItem( Zener::registerItem() );
+    //addItem( SCR::registerItem() );
+    //addItem( Diac::registerItem() );
+    //addItem( Triac::registerItem() );
 
     addCategory( tr("Transistors"),"Transistors", "Active", "" );
-    addItem( BJT::libraryItem() );
-    addItem( Mosfet::libraryItem() );
+    addItem( BJT::registerItem() );
+    addItem( Mosfet::registerItem() );
 
     addCategory( tr("Other Active"),"Other Active", "Active", "" );
-    //addItem( OpAmp::libraryItem() );
-    //addItem( Comparator::libraryItem() );
-    //addItem( VoltReg::libraryItem() );
-    //addItem( MuxAnalog::libraryItem() );
+    //addItem( OpAmp::registerItem() );
+    //addItem( Comparator::registerItem() );
+    //addItem( VoltReg::registerItem() );
+    //addItem( MuxAnalog::registerItem() );
 
     //addCategory( tr("Outputs"),"Outputs", "", "" );
     //addCategory( tr("Leds"),"Leds", "Outputs", "" );
-    //addItem( Led::libraryItem() );
-    //addItem( LedRgb::libraryItem() );
-    //addItem( LedBar::libraryItem() );
-    //addItem( SevenSegment::libraryItem() );
-    //addItem( LedMatrix::libraryItem() );
-    //addItem( Max72xx_matrix::libraryItem() );
-    //addItem( WS2812::libraryItem() );
+    //addItem( Led::registerItem() );
+    //addItem( LedRgb::registerItem() );
+    //addItem( LedBar::registerItem() );
+    //addItem( SevenSegment::registerItem() );
+    //addItem( LedMatrix::registerItem() );
+    //addItem( Max72xx_matrix::registerItem() );
+    //addItem( WS2812::registerItem() );
 
     //addCategory( tr("Displays"),"Displays", "Outputs", "" );
-    //addItem( Hd44780::libraryItem() );
-    //addItem( Aip31068_i2c::libraryItem() );
-    //addItem( Pcd8544::libraryItem() );
-    //addItem( Ks0108::libraryItem() );
-    //addItem( Ssd1306::libraryItem() );
-    //addItem( Ili9341::libraryItem() );
+    //addItem( Hd44780::registerItem() );
+    //addItem( Aip31068_i2c::registerItem() );
+    //addItem( Pcd8544::registerItem() );
+    //addItem( Ks0108::registerItem() );
+    //addItem( Ssd1306::registerItem() );
+    //addItem( Ili9341::registerItem() );
 
     //addCategory( tr("Motors"),"Motors", "Outputs", "" );
-    //addItem( DcMotor::libraryItem() );
-    //addItem( Stepper::libraryItem() );
-    //addItem( Servo::libraryItem() );
+    //addItem( DcMotor::registerItem() );
+    //addItem( Stepper::registerItem() );
+    //addItem( Servo::registerItem() );
 
     //addCategory( tr("Other Outputs"),"Other Outputs", "Outputs", "" );
-    //addItem( AudioOut::libraryItem() );
-    //addItem( Lamp::libraryItem() );
+    //addItem( AudioOut::registerItem() );
+    //addItem( Lamp::registerItem() );
 
     //addCategory( tr("Micro"),"Micro", "", "" );
     ////addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", nullptr ) );
@@ -859,80 +662,80 @@ void ComponentList::LoadLibraryItems()
     ////addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", nullptr ) );
     ////addItem( new LibraryItem("MCS65", "Micro", "ic2.png","MCS65", nullptr ) );
     ////addItem( new LibraryItem("Z80"  , "Micro", "ic2.png","Z80", nullptr ) );
-    ///// addItem( Mcu::libraryItem() );
+    ///// addItem( Mcu::registerItem() );
     ////addItem( new LibraryItem( QObject::tr("Arduino"), "Micro", "board.png","Arduino", nullptr ) );
     ////addItem( new LibraryItem( QObject::tr("Shields"), "Micro", "shield.png","Shields", nullptr ) );
 
     //addCategory( tr("Sensors"),"Sensors", "Micro", "1to2.png" );
-    //addItem( SR04::libraryItem() );
-    //addItem( Dht22::libraryItem() );
-    //addItem( DS1621::libraryItem() );
-    //addItem( Ds18b20::libraryItem() );
+    //addItem( SR04::registerItem() );
+    //addItem( Dht22::registerItem() );
+    //addItem( DS1621::registerItem() );
+    //addItem( Ds18b20::registerItem() );
 
     //addCategory( tr("Peripherals"),"Peripherals", "Micro", "perif.png" );
-    //addItem( SerialPort::libraryItem() );
-    //addItem( SerialTerm::libraryItem() );
-    //addItem( TouchPad::libraryItem() );
-    //addItem( KY023::libraryItem() );
-    //addItem( KY040::libraryItem() );
-    //addItem( DS1307::libraryItem() );
-    //addItem( Esp01::libraryItem() );
+    //addItem( SerialPort::registerItem() );
+    //addItem( SerialTerm::registerItem() );
+    //addItem( TouchPad::registerItem() );
+    //addItem( KY023::registerItem() );
+    //addItem( KY040::registerItem() );
+    //addItem( DS1307::registerItem() );
+    //addItem( Esp01::registerItem() );
 
     //addCategory( tr("Logic"),"Logic", "", "" );
     //addCategory( tr("Gates"),"Gates", "Logic", "gates.png" );
-    //addItem( Buffer::libraryItem() );
-    //addItem( AndGate::libraryItem() );
-    //addItem( OrGate::libraryItem() );
-    //addItem( XorGate::libraryItem() );
+    //addItem( Buffer::registerItem() );
+    //addItem( AndGate::registerItem() );
+    //addItem( OrGate::registerItem() );
+    //addItem( XorGate::registerItem() );
 
     //addCategory( tr("Arithmetic"),"Arithmetic", "Logic", "2to2.png" );
-    //addItem( BinCounter::libraryItem() );
-    //addItem( FullAdder::libraryItem() );
-    //addItem( MagnitudeComp::libraryItem() );
-    //addItem( ShiftReg::libraryItem() );
-    //addItem( Function::libraryItem() );
+    //addItem( BinCounter::registerItem() );
+    //addItem( FullAdder::registerItem() );
+    //addItem( MagnitudeComp::registerItem() );
+    //addItem( ShiftReg::registerItem() );
+    //addItem( Function::registerItem() );
 
     //addCategory( tr("Memory"),"Memory", "Logic", "subc.png" );
-    //addItem( FlipFlopD::libraryItem() );
-    //addItem( FlipFlopT::libraryItem() );
-    //addItem( FlipFlopRS::libraryItem() );
-    //addItem( FlipFlopJK::libraryItem() );
-    //addItem( LatchD::libraryItem() );
-    //addItem( SRAM::libraryItem() );
-    //addItem( DRAM::libraryItem() );
-    //addItem( I2CRam::libraryItem() );
+    //addItem( FlipFlopD::registerItem() );
+    //addItem( FlipFlopT::registerItem() );
+    //addItem( FlipFlopRS::registerItem() );
+    //addItem( FlipFlopJK::registerItem() );
+    //addItem( LatchD::registerItem() );
+    //addItem( SRAM::registerItem() );
+    //addItem( DRAM::registerItem() );
+    //addItem( I2CRam::registerItem() );
 
     //addCategory( tr("Converters"),"Converters", "Logic", "1to2.png" );
-    //addItem( Mux::libraryItem() );
-    //addItem( Demux::libraryItem() );
-    //addItem( BcdToDec::libraryItem() );
-    //addItem( DecToBcd::libraryItem() );
-    //addItem( BcdTo7S::libraryItem() );
-    //addItem( I2CToParallel::libraryItem() );
+    //addItem( Mux::registerItem() );
+    //addItem( Demux::registerItem() );
+    //addItem( BcdToDec::registerItem() );
+    //addItem( DecToBcd::registerItem() );
+    //addItem( BcdTo7S::registerItem() );
+    //addItem( I2CToParallel::registerItem() );
 
     //addCategory( tr("Other Logic"),"Other Logic", "Logic", "2to3.png" );
-    //addItem( ADC::libraryItem() );
-    //addItem( DAC::libraryItem() );
-    //addItem( SevenSegmentBCD::libraryItem() );
-    //addItem( Lm555::libraryItem() );
+    //addItem( ADC::registerItem() );
+    //addItem( DAC::registerItem() );
+    //addItem( SevenSegmentBCD::registerItem() );
+    //addItem( Lm555::registerItem() );
 
-    ///// addItem( SubCircuit::libraryItem() );
+    ///// addItem( SubCircuit::registerItem() );
     //// Connectors
     addCategory( tr("Connectors"),"Connectors", "", "" );
-    //addItem( Bus::libraryItem() );
-    addItem( Tunnel::libraryItem() );
-    addItem( Socket::libraryItem() );
-    addItem( Header::libraryItem() );
+    //addItem( Bus::registerItem() );
+    addItem( Tunnel::registerItem() );
+    addItem( Socket::registerItem() );
+    addItem( Header::registerItem() );
 
     //addCategory( tr("Graphical"),"Graphical", "", "" );
-    //addItem( Image::libraryItem() );
-    //addItem( TextComponent::libraryItem() );
-    //addItem( Rectangle::libraryItem() );
-    //addItem( Ellipse::libraryItem() );
-    //addItem( Line::libraryItem() );
+    //addItem( Image::registerItem() );
+    //addItem( TextComponent::registerItem() );
+    //addItem( Rectangle::registerItem() );
+    //addItem( Ellipse::registerItem() );
+    //addItem( Line::registerItem() );
 
     addCategory( tr("Other"),"Other", "", "" );
-    addItem( SubPackage::libraryItem() );
-    //addItem( TestUnit::libraryItem() );
-    //addItem( Dial::libraryItem() );
+    addItem( SubPackage::registerItem() );
+    //addItem( TestUnit::registerItem() );
+    //addItem( Dial::registerItem() );
 }

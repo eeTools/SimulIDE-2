@@ -17,7 +17,7 @@ class Probe : public Component, public Element
         Probe( QString id );
         ~Probe();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void updateStep() override;
 

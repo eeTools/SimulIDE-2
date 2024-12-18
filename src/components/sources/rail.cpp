@@ -13,13 +13,13 @@
 
 #define tr(str) simulideTr("Rail",str)
 
-listItem_t Rail::libraryItem(){
+listItem_t Rail::registerItem(){
     return {
         tr("Rail"),
         "Sources",
         "rail.png",
         "Rail",
-        [](QString id){ return (Component*)new Rail( id ); } };
+        [](QString id){ return (CompBase*)new Rail( id ); } };
 };
 
 Rail::Rail( QString id )

@@ -18,7 +18,7 @@ class Oscope : public PlotBase
         Oscope( QString id );
         ~Oscope();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         double filter() { return m_filter; }
         void setFilter( double filter );

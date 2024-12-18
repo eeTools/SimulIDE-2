@@ -15,7 +15,7 @@ class IntToBit : public Module
         IntToBit( QString name );
         ~IntToBit();
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
         virtual void initModule() override;
         virtual void runStep() override;

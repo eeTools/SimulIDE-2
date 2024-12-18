@@ -15,13 +15,13 @@
 
 #define tr(str) simulideTr("Mosfet",str)
 
-listItem_t Mosfet::libraryItem(){
+listItem_t Mosfet::registerItem(){
     return {
         tr("Mosfet"),
         "Transistors",
         "mosfet.png",
         "Mosfet",
-        [](QString id){ return (Component*)new Mosfet( id ); } };
+        [](QString id){ return (CompBase*)new Mosfet( id ); } };
 }
 
 Mosfet::Mosfet( QString id )

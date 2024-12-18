@@ -19,13 +19,13 @@
 
 #define tr(str) simulideTr("Probe",str)
 
-listItem_t Probe::libraryItem(){
+listItem_t Probe::registerItem(){
     return {
         tr("Probe"),
         "Meters",
         "probe.png",
         "Probe",
-        [](QString id){ return (Component*)new Probe( id ); } };
+        [](QString id){ return (CompBase*)new Probe( id ); } };
 }
 
 Probe::Probe( QString id )

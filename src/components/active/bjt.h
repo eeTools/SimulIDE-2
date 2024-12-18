@@ -15,7 +15,7 @@ class BJT : public Component, public Bjt
         BJT( QString id );
         ~BJT();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void updateStep() override;
 

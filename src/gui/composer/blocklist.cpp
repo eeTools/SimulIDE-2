@@ -12,73 +12,18 @@
 BlockList* BlockList::m_pSelf = nullptr;
 
 BlockList::BlockList( QWidget* parent )
-         : QTreeWidget( parent )
+         : ListBase( parent )
 {
     m_pSelf = this;
 
-    setDragEnabled(true);
-    setDragDropMode( QAbstractItemView::DragOnly );
-    //setAlternatingRowColors(true);
-    setIndentation( 12 );
-    setRootIsDecorated( true );
-    setCursor( Qt::OpenHandCursor );
-    headerItem()->setHidden( true );
-
-    float scale = MainWindow::self()->fontScale();
-    setIconSize( QSize( 30*scale, 24*scale ));
-
-    connect( this, &BlockList::itemPressed,
-             this, &BlockList::slotItemClicked, Qt::UniqueConnection );
-
+    m_customComp = false;
     registerItems();
+    m_customComp = true;
 }
 BlockList::~BlockList(){}
 
-Module* BlockList::createModule( QString type, QString id ) // Static
-{
-    if( !m_moduleFactory.contains( type ) ) return nullptr;
-
-    Module* module = m_moduleFactory.value( type )(id);
-    return module;
-}
-
-void BlockList::addItem( moduleItem_t moduleItem )
-{
-    m_moduleFactory[moduleItem.type] = moduleItem.construct;
-
-    QTreeWidgetItem* item = new QTreeWidgetItem(0);
-    float scale = MainWindow::self()->fontScale();
-    QFont font;
-    font.setFamily( MainWindow::self()->defaultFontName() );
-    font.setBold( true );
-    font.setPixelSize( 11*scale );
-
-    item->setFlags( QFlag(32) );
-    item->setFont( 0, font );
-    item->setIcon( 0, QIcon( QPixmap( moduleItem.icon ) ) );
-    item->setText( 0, moduleItem.label );
-    item->setData( 0, Qt::UserRole, moduleItem.type );
-
-    addTopLevelItem( item );
-}
-
-void BlockList::slotItemClicked( QTreeWidgetItem* item, int )
-{
-    if( !item ) return;
-
-    QString type = item->data( 0, Qt::UserRole ).toString();
-    if( type == "" ) return;
-
-    QString name = item->data( 0, Qt::WhatsThisRole ).toString(); //item->text(0);
-    QMimeData* mimeData = new QMimeData;
-    mimeData->setText( name );
-    mimeData->setHtml( type );              // Find a better solution
-
-    QDrag* drag = new QDrag( this );
-    drag->setMimeData( mimeData );
-    drag->exec( Qt::CopyAction | Qt::MoveAction, Qt::CopyAction );
-}
-
+// --------------------------------------------
+// BEGIN Item includes
 
 #include "m_bitop.h"
 #include "m_abop.h"
@@ -88,17 +33,24 @@ void BlockList::slotItemClicked( QTreeWidgetItem* item, int )
 #include "m_iohook.h"
 #include "m_delay.h"
 #include "m_wavegen.h"
+#include "m_dial.h"
 #include "m_property.h"
 
 void BlockList::registerItems()
 {
+    addCategory( tr("Ports"),"Ports","", "" );
     addItem( mIoPort::registerItem() );
     addItem( IoHook::registerItem() );
-    addItem( BitToInt::registerItem() );
-    addItem( IntToBit::registerItem() );
+    addCategory( tr("Operations"),"Operations","","" );
     addItem( BitOp::registerItem() );
     addItem( AbOp::registerItem() );
-    addItem( Delay::registerItem() );
+    addCategory( tr("Converters"),"Converters","","" );
+    addItem( BitToInt::registerItem() );
+    addItem( IntToBit::registerItem() );
+    addCategory( tr("Controls"),"Controls","","" );
+    addItem( mDial::registerItem() );
+    addCategory( tr("Other"),"Other","","" );
     addItem( WaveGen::registerItem() );
+    addItem( Delay::registerItem() );
     addItem( PropertyM::registerItem() );
 }

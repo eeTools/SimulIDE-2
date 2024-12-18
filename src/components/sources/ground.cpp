@@ -11,13 +11,13 @@
 
 #define tr(str) simulideTr("Ground",str)
 
-listItem_t Ground::libraryItem(){
+listItem_t Ground::registerItem(){
     return {
         tr("Ground (0 V)"),
         "Sources",
         "ground.png",
         "Ground",
-        [](QString id){ return (Component*)new Ground( id ); } };
+        [](QString id){ return (CompBase*)new Ground( id ); } };
 };
 
 Ground::Ground( QString id )

@@ -14,13 +14,13 @@
 
 QString IoHook::m_moduleType = "IoHook";
 
-moduleItem_t IoHook::registerItem(){
+listItem_t IoHook::registerItem(){
     return {
         "IO Hook",
-        m_moduleType,
-        "",
+        "Ports",
         "delay.png",
-        [](QString id){ return (Module*)new IoHook( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new IoHook( id ); } };
 }
 
 IoHook::IoHook( QString name )

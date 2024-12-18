@@ -14,13 +14,13 @@
 
 #define tr(str) simulideTr("Inductor",str)
 
-listItem_t Inductor::libraryItem(){
+listItem_t Inductor::registerItem(){
     return {
         tr("Inductor"),
         "Reactive",
         "inductor.png",
         "Inductor",
-        [](QString id){ return (Component*)new Inductor( id ); } };
+        [](QString id){ return (CompBase*)new Inductor( id ); } };
 }
 
 Inductor::Inductor( QString id )

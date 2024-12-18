@@ -14,13 +14,13 @@
 
 QString AbOp::m_moduleType = "AbOp";
 
-moduleItem_t AbOp::registerItem(){
+listItem_t AbOp::registerItem(){
     return {
         "Binary Operation",
-        m_moduleType,
-        "",
+        "Operations",
         "gate.png",
-        [](QString id){ return (Module*)new AbOp( id ); } };
+        "AbOp",
+        [](QString id){ return (CompBase*)new AbOp( id ); } };
 }
 
 AbOp::AbOp( QString name )

@@ -14,13 +14,13 @@
 
 #define tr(str) simulideTr("Diode",str)
 
-listItem_t Diode::libraryItem(){
+listItem_t Diode::registerItem(){
     return {
         tr("Diode"),
         "Rectifiers",
         "diode.png",
         "Diode",
-        [](QString id){ return (Component*)new Diode( id ); } };
+        [](QString id){ return (CompBase*)new Diode( id ); } };
 }
 
 Diode::Diode( QString id, bool )

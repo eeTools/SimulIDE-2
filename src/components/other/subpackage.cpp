@@ -36,13 +36,13 @@
 
 QString SubPackage::m_lastPkg = "";
 
-listItem_t SubPackage::libraryItem(){
+listItem_t SubPackage::registerItem(){
     return {
         tr("Package"),
         "Other",
         "resistordip.png",
         "Package",
-        [](QString id){ return (Component*)new SubPackage( id ); } };
+        [](QString id){ return (CompBase*)new SubPackage( id ); } };
 }
 
 SubPackage::SubPackage( QString id )

@@ -40,7 +40,7 @@ FuncBlock::FuncBlock( fComponent* fComp, Module* module, QString type, QString i
     else              // Created from Composer list
     {
         m_type = type;
-        m_module = BlockList::self()->createModule( type, m_id );
+        m_module = (Module*)BlockList::self()->createItem( type, m_id );
     }
     m_color  = QColor( 105, 105, 100 );
     m_hColor = QColor( 240, 240, 215 );

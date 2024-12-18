@@ -17,7 +17,7 @@ class mIoPort : public PortBase
         mIoPort( QString name );
         virtual ~mIoPort();
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
         virtual void setup() override;
 

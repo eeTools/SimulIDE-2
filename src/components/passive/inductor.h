@@ -15,7 +15,7 @@ class Inductor : public Component, public Inductance
         Inductor( QString id );
         ~Inductor();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 

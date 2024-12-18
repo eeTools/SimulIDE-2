@@ -31,7 +31,7 @@ class PropertyM : public Module
 
         void addCallBack( CallBack* c );
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
     private:
 

@@ -424,12 +424,12 @@ void Circuit::importCircuit()
 
 Component* Circuit::createItem( QString type, QString id, bool map )
 {
-    Component* comp = ComponentList::self()->createComponent( type, id );
+    CompBase* comp = ComponentList::self()->createItem( type, id );
 
     /// if( !comp ) comp = new fComponent( type, id );
 
     if( comp && map ) m_compMap[id] = comp;
-    return comp;
+    return (Component*)comp;
 }
 
 void Circuit::removeItems()                     // Remove Selected items

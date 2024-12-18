@@ -21,13 +21,13 @@
 
 QHash<QString, QList<Tunnel*>*> Tunnel::m_tunnels;
 
-listItem_t Tunnel::libraryItem(){
+listItem_t Tunnel::registerItem(){
     return {
         tr("Tunnel."),
         "Connectors",
         "tunnel.png",
         "Tunnel",
-        [](QString id){ return (Component*)new Tunnel( id ); } };
+        [](QString id){ return (CompBase*)new Tunnel( id ); } };
 }
 
 Tunnel::Tunnel( QString id )

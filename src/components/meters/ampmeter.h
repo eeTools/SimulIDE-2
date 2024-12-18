@@ -14,7 +14,7 @@ class AmpMeter : public Meter
         AmpMeter( QString id );
         ~AmpMeter();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void updateStep() override;
 };

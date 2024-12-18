@@ -27,7 +27,7 @@
 QString SubCircuit::m_subcDir = "";
 QStringList SubCircuit::s_graphProps;
 
-Component* SubCircuit::construct( QString id )
+CompBase* SubCircuit::construct( QString id )
 {
     m_error = 0;
     m_subcDir = "";
@@ -150,7 +150,7 @@ Component* SubCircuit::construct( QString id )
     return subcircuit;
 }
 
-listItem_t SubCircuit::libraryItem(){
+listItem_t SubCircuit::registerItem(){
     return {
         tr("Subcircuit"),
         "",         // Category Not dispalyed

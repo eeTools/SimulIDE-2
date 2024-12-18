@@ -14,7 +14,7 @@ class Header : public ConnBase
         Header( QString id );
         ~Header();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         bool pointDown() { return m_pointDown; }
         void setPointDown( bool down );

@@ -15,7 +15,7 @@ class FreqMeter : public Component, public Element
         FreqMeter( QString id );
         ~FreqMeter();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void initialize() override;
         ///void stamp() override;

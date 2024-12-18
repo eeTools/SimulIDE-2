@@ -13,13 +13,13 @@
 
 QString Delay::m_moduleType = "Delay";
 
-moduleItem_t Delay::registerItem(){
+listItem_t Delay::registerItem(){
     return {
         "Delay",
-        m_moduleType,
-        "",
+        "Other",
         "delay.png",
-        [](QString id){ return (Module*)new Delay( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new Delay( id ); } };
 }
 
 Delay::Delay( QString name )

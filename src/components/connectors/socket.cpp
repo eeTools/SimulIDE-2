@@ -10,13 +10,13 @@
 
 #define tr(str) simulideTr("Socket",str)
 
-listItem_t Socket::libraryItem(){
+listItem_t Socket::registerItem(){
     return {
         tr("Socket"),
         "Connectors",
         "socket.png",
         "Socket",
-        [](QString id){ return (Component*)new Socket( id ); } };
+        [](QString id){ return (CompBase*)new Socket( id ); } };
 }
 
 Socket::Socket( QString id )

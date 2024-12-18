@@ -20,7 +20,7 @@ class SubPackage : public Chip, public Linker
         SubPackage( QString id );
         ~SubPackage();
         
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         int width() { return m_width; }
         void setWidth( int width );

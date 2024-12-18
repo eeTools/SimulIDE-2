@@ -15,7 +15,7 @@ class Ground : public Component
         Ground( QString id );
         ~Ground();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void initialize() override;
 

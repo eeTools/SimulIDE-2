@@ -14,13 +14,13 @@
 
 QString BitOp::m_moduleType = "BitOp";
 
-moduleItem_t BitOp::registerItem(){
+listItem_t BitOp::registerItem(){
     return {
         "Unary Operation",
-        m_moduleType,
-        "",
+        "Operations",
         "gate.png",
-        [](QString id){ return (Module*)new BitOp( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new BitOp( id ); } };
 }
 
 BitOp::BitOp( QString name )

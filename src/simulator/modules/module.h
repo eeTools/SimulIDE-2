@@ -16,6 +16,15 @@ class ModSignal;
 class ModProp;
 class fComponent;
 class FuncBlock;
+class Module;
+
+/*struct listItem_t{
+    QString label;
+    QString type;
+    QString category;
+    QString icon;
+    Module* (*construct)(QString);
+};*/
 
 class Module : public CompBase
 {
@@ -55,12 +64,4 @@ class Module : public CompBase
         std::vector<ModSlot*>   m_slots;
 };
 
-
-struct moduleItem_t{
-    QString label;
-    QString type;
-    QString category;
-    QString icon;
-    Module* (*construct)(QString);
-};
 #endif

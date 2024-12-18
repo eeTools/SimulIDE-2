@@ -16,6 +16,7 @@
 #define simulideTr(comp_name,str) QCoreApplication::translate(comp_name,str)
 
 class ComProperty;
+class CompBase;
 
 enum groupFlags{
     groupHidden = 1,
@@ -26,6 +27,14 @@ struct propGroup{
     QString name;
     QList<ComProperty*> propList;
     int flags;
+};
+
+struct listItem_t{
+    QString label;
+    QString category;
+    QString icon;
+    QString type;
+    CompBase* (*construct)(QString);
 };
 
 class PropDialog;

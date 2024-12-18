@@ -12,13 +12,13 @@
 
 #define tr(str) simulideTr("Resistor",str)
 
-listItem_t Resistor::libraryItem(){
+listItem_t Resistor::registerItem(){
     return {
         tr("Resistor"),
         "Resistors",
         "resistor.png",
         "Resistor",
-        [](QString id){ return (Component*)new Resistor( id ); } };
+        [](QString id){ return (CompBase*)new Resistor( id ); } };
 }
 
 Resistor::Resistor( QString id )

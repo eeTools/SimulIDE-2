@@ -142,7 +142,7 @@ void Composer::loadStrDoc( QString doc )
         }
         else   // Create Module
         {
-            module = BlockList::self()->createModule( type, uid );
+            module = (Module*)BlockList::self()->createItem( type, uid );
             if( module ){
                 module->setComponent( m_fComp );
                 for( prop_t prop : properties )

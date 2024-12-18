@@ -8,9 +8,9 @@
 
 #include <QTreeWidget>
 
-#include "module.h"
+#include "listbase.h"
 
-class BlockList : public QTreeWidget
+class BlockList : public ListBase
 {
     public:
         BlockList( QWidget* parent );
@@ -18,17 +18,17 @@ class BlockList : public QTreeWidget
 
  static BlockList* self() { return m_pSelf; }
 
-        Module* createModule( QString type, QString id );
+        ///CompBase* createItem( QString type, QString id );
 
-        void addItem( moduleItem_t item );
+        /// void addItem( listItem_t item );
 
     private slots:
-        void slotItemClicked( QTreeWidgetItem* item, int );
+        //void slotItemClicked( QTreeWidgetItem* item, int );
 
     private:
-        void registerItems();
+        void registerItems() override;
 
-    QMap<QString, Module* (*)(QString)> m_moduleFactory;
+    ////QMap<QString, Module* (*)(QString)> m_moduleFactory;
 
  static BlockList* m_pSelf;
 };

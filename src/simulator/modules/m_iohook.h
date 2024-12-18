@@ -15,7 +15,7 @@ class IoHook : public PortBase
         IoHook( QString name );
         ~IoHook();
 
- static moduleItem_t registerItem();
+ static listItem_t registerItem();
 
         virtual void runStep() override;
 

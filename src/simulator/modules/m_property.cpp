@@ -11,13 +11,13 @@
 
 QString PropertyM::m_moduleType = "Property";
 
-moduleItem_t PropertyM::registerItem(){
+listItem_t PropertyM::registerItem(){
     return {
         "Property",
-        m_moduleType,
-        "",
+        "Other",
         "property.png",
-        [](QString id){ return (Module*)new PropertyM( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new PropertyM( id ); } };
 }
 
 PropertyM::PropertyM( QString name )

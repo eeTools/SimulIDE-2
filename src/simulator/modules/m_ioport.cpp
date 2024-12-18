@@ -15,13 +15,13 @@
 
 QString mIoPort::m_moduleType = "IoPort";
 
-moduleItem_t mIoPort::registerItem(){
+listItem_t mIoPort::registerItem(){
     return {
         "IO Port",
-        m_moduleType,
-        "",
+        "Ports",
         "ioport.png",
-        [](QString id){ return (Module*)new mIoPort( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new mIoPort( id ); } };
 }
 
 mIoPort::mIoPort( QString name )

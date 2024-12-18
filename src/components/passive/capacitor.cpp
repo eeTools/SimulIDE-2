@@ -12,13 +12,13 @@
 
 #define tr(str) simulideTr("Capacitor",str)
 
-listItem_t Capacitor::libraryItem(){
+listItem_t Capacitor::registerItem(){
     return {
         tr("Capacitor"),
         "Reactive",
         "capacitor.png",
         "Capacitor",
-        [](QString id){ return (Component*)new Capacitor( id ); } };
+        [](QString id){ return (CompBase*)new Capacitor( id ); } };
 
 };
 

@@ -17,7 +17,7 @@ class Csource : public Component, public Resistance
         Csource( QString id );
         ~Csource();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void initialize() override;
         void voltChanged() override;

@@ -16,13 +16,13 @@
 
 #define tr(str) simulideTr("Csource",str)
 
-listItem_t Csource::libraryItem(){
+listItem_t Csource::registerItem(){
     return {
         tr("Controlled Source"),
         "Sources",
         "csource.png",
         "Csource",
-        [](QString id){ return (Component*)new Csource( id ); } };
+        [](QString id){ return (CompBase*)new Csource( id ); } };
 }
 
 Csource::Csource( QString id )

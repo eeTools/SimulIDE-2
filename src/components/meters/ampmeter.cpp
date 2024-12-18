@@ -7,13 +7,13 @@
 
 #define tr(str) simulideTr("Ampmeter",str)
 
-listItem_t AmpMeter::libraryItem(){
+listItem_t AmpMeter::registerItem(){
     return {
         tr("Ampmeter"),
         "Meters",
         "ampmeter.png",
         "AmpMeter",
-        [](QString id){ return (Component*)new AmpMeter( id ); } };
+        [](QString id){ return (CompBase*)new AmpMeter( id ); } };
 }
 
 AmpMeter::AmpMeter( QString id )

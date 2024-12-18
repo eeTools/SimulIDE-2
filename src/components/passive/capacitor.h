@@ -15,7 +15,7 @@ class Capacitor : public Component, public Capacitance
         Capacitor( QString id );
         ~Capacitor();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         void initialize() override;
 

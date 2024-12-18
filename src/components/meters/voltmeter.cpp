@@ -8,13 +8,13 @@
 
 #define tr(str) simulideTr("VoltMeter",str)
 
-listItem_t VoltMeter::libraryItem(){
+listItem_t VoltMeter::registerItem(){
     return {
         tr("Voltmeter"),
         "Meters",
         "voltmeter.png",
         "VoltMeter",
-        [](QString id){ return (Component*)new VoltMeter( id ); } };
+        [](QString id){ return (CompBase*)new VoltMeter( id ); } };
 }
 
 VoltMeter::VoltMeter( QString id )

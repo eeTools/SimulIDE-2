@@ -7,13 +7,13 @@
 
 QString WaveGen::m_moduleType = "WaveGen";
 
-moduleItem_t WaveGen::registerItem(){
+listItem_t WaveGen::registerItem(){
     return {
         "Wave Generator",
-        m_moduleType,
-        "",
+        "Other",
         "wavegen.png",
-        [](QString id){ return (Module*)new WaveGen( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new WaveGen( id ); } };
 }
 
 WaveGen::WaveGen( QString name )

@@ -14,7 +14,7 @@ class VoltMeter : public Meter
         VoltMeter( QString id );
         ~VoltMeter();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void updateStep() override;
 };

@@ -9,13 +9,13 @@
 
 #define tr(str) simulideTr("Header",str)
 
-listItem_t Header::libraryItem(){
+listItem_t Header::registerItem(){
     return {
         tr("Header"),
         "Connectors",
         "header.png",
         "Header",
-        [](QString id){ return (Component*)new Header( id ); } };
+        [](QString id){ return (CompBase*)new Header( id ); } };
 }
 
 Header::Header( QString id )

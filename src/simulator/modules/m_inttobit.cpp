@@ -13,13 +13,13 @@
 
 QString IntToBit::m_moduleType = "IntToBit";
 
-moduleItem_t IntToBit::registerItem(){
+listItem_t IntToBit::registerItem(){
     return {
         "Int to Bit",
-        m_moduleType,
-        "",
+        "Converters",
         "gate.png",
-        [](QString id){ return (Module*)new IntToBit( id ); } };
+        m_moduleType,
+        [](QString id){ return (CompBase*)new IntToBit( id ); } };
 }
 
 IntToBit::IntToBit( QString name )

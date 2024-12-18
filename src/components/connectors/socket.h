@@ -14,7 +14,7 @@ class Socket : public ConnBase
         Socket( QString id );
         ~Socket();
 
- static listItem_t libraryItem();
+ static listItem_t registerItem();
 
         virtual void updateStep() override;
 
