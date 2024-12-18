@@ -12,6 +12,7 @@
 class Module;
 class PortBase;
 class CanvasBase;
+class QGraphicsProxyWidget;
 
 enum fShape_t{
     shapeNone=0,
@@ -52,6 +53,7 @@ class fComponent : public Component, public Element
         void setBackground( QString bck ) override;
 
         void addPort( PortBase* port );
+        QGraphicsProxyWidget* addWidget( QWidget* widget );
 
         void upDateShape();
 

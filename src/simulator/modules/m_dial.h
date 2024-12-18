@@ -8,6 +8,7 @@
 
 #include "module.h"
 #include "modsignal.h"
+#include "dialwidget.h"
 
 class mDial : public Module
 {
@@ -17,13 +18,41 @@ class mDial : public Module
 
  static listItem_t registerItem();
 
-        virtual void initModule() override;
-        virtual void runStep() override;
+        void setComponent( fComponent* c ) override;
+        void initModule() override;
+        void runStep() override;
+
+        double angle() { return m_angle; }
+        void setAngle( double a );
+
+        QPointF position() { return m_position; }
+        void setPosition( QPointF p);
+
+        bool slider() { return m_slider; }
+        void setSlider( bool s );
+
+        double scale() { return m_dialW.scale(); }
+        void setScale( double s );
+
+    public slots:
+        void dialChanged( int );
 
     private:
+        void updateProxy();
 
         int m_output;
 
         ModSignal m_outSignal;
+
+        // Dial ---------------------------
+
+        double m_angle;
+        QPoint m_position;
+
+        bool m_needUpdate;
+        bool m_slider;
+
+        DialWidget m_dialW;
+        QGraphicsProxyWidget* m_proxy;
 };
 #endif

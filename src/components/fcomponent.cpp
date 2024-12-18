@@ -5,6 +5,7 @@
 
 // Component made of interconnected Functional Blocks
 
+#include <QGraphicsProxyWidget>
 #include <QDebug>
 #include <QPainter>
 #include <QFile>
@@ -191,6 +192,14 @@ void fComponent::addPort( PortBase* port )
 {
     if( !m_ports.contains( port ) ) m_ports.append( port );
     upDateShape();
+}
+
+QGraphicsProxyWidget* fComponent::addWidget( QWidget* widget )
+{
+    QGraphicsProxyWidget* proxy = m_canvas->addWidget( widget );
+    proxy->setParentItem( this );
+    proxy->setPos( QPoint(-widget->width()/2, 7) );
+    return proxy;
 }
 
 void fComponent::setWidth( int width )
