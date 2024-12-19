@@ -41,7 +41,7 @@ class CanvasBase : public QGraphicsScene
         QList<Node*>* nodeList() { return &m_nodeList; }
 
         void startWire( PinBase* startpin, bool save=true );
-        void closeWire( PinBase* endpin, bool save=false );
+        void closeWire( PinBase* endpin  , bool save=false );
         void removeWire( WireBase* wire );
         void deleteNewWire();
         WireBase* getNewWire() { return m_newWire; }
@@ -63,6 +63,7 @@ class CanvasBase : public QGraphicsScene
         virtual QString toString(){ return "";}
 
         //--- Undo/Redo ----------------------------------
+        bool undoRedo() { return m_undo || m_redo; }
         void setChanged();
         void saveChanges();
         void removeLastUndo();
@@ -74,7 +75,6 @@ class CanvasBase : public QGraphicsScene
         void endUndoStep();                  // Does create/remove
         virtual void beginUndoStep(){;}      // Record current state
         virtual void calculateChanges(){;}   // Calculate total changes
-        bool undoRedo() { return m_undo || m_redo; }
         //------------------------------------------------
 
     public slots:

@@ -33,7 +33,6 @@ class ComposerView : public QGraphicsView
  static ComposerView* self() { return m_pSelf; }
 
     public slots:
-        //void saveImage();
         //void slotPaste();
         void importCirc();
         void zoomToFit();

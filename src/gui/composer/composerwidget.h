@@ -17,7 +17,7 @@
 class PropDialog;
 class fComponent;
 
-class ListItem : public CompBase
+class ListItem : public CompBase // Used for item list properties
 {
     public:
         ListItem() : CompBase("item") {;}

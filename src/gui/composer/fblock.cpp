@@ -76,7 +76,6 @@ void FuncBlock::setup()
     //qDebug() << "FuncBlock::setup"<< m_fComp;
     m_module->setFuncBlock( this );
     m_module->setComponent( m_fComp );
-    //m_module->setup();
 
     m_propSize= 0;
     int p = 0;
@@ -126,16 +125,6 @@ void FuncBlock::setup()
 
     updateSlots();
     updateSignals();
-
-    /*if( m_type == "IoPin")
-    {
-        ComProperty* p = m_module->getProperty("Output");
-        if( p ){
-            /// ModSlot* cb = new SetIntSlot<FuncBlock>( "name", this, &FuncBlock::ioPinDir );
-            /// p->addCallBack( cb );
-            ioPinDir( p->getValStr() == "1" );
-        }
-    }*/
     updateSize();
 
     /// TODO: Add secondary property groups as dropdowns
@@ -231,14 +220,6 @@ void FuncBlock::updateSize()
 
     Composer::self()->update();
 }
-
-/*void FuncBlock::ioPinDir( int isOut )
-{
-    Hook* inHook = getHook("input@"+m_id );
-    if( inHook ) inHook->setVisible( isOut==1 );
-    Hook* outHook = getHook("output@"+m_id );
-    if( outHook ) outHook->setVisible( isOut==0 );
-}*/
 
 QString FuncBlock::toString()
 {

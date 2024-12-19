@@ -28,9 +28,6 @@ ListBase::ListBase( QWidget* parent )
     float scale = MainWindow::self()->fontScale();
     setIconSize( QSize( 30*scale, 24*scale ));
 
-
-
-
     connect( this, &ListBase::itemPressed,
              this, &ListBase::slotItemClicked );
 }
@@ -117,16 +114,6 @@ void ListBase::addItem( QString caption, TreeItem* catItem, QIcon &icon, QString
 
     //if( !m_restoreList )
         catItem->addChild( item );
-
-    /*if( m_oldConfig )
-    {
-        bool hidden = MainWindow::self()->compSettings()->value( name+"/hidden" ).toBool();
-        item->setItemHidden( hidden );
-
-        QString shortCut = MainWindow::self()->compSettings()->value( name+"/shortcut" ).toString();
-        item->setShortCut( shortCut );
-        if( !shortCut.isEmpty() ) m_shortCuts[name] = shortCut;
-    }*/
 }
 
 TreeItem* ListBase::addCategory( QString nameTr, QString name, QString parent, QString icon )
@@ -151,14 +138,6 @@ TreeItem* ListBase::addCategory( QString nameTr, QString name, QString parent, Q
         if( parent.isEmpty() ) addTopLevelItem( catItem ); // Is root category or root category doesn't exist
         else if( catParent )   catParent->addChild( catItem );
     }
-    /*if( m_oldConfig )
-    {
-        if( MainWindow::self()->compSettings()->contains(name+"/collapsed") )
-            expanded = !MainWindow::self()->compSettings()->value( name+"/collapsed" ).toBool();
-
-        if( MainWindow::self()->compSettings()->contains(name+"/hidden") )
-            hidden = MainWindow::self()->compSettings()->value( name+"/hidden" ).toBool();
-    }*/
     catItem->setText( 0, nameTr );
     catItem->setItemHidden( hidden );
     catItem->setItemExpanded( expanded );

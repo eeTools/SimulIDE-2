@@ -35,7 +35,6 @@ class FuncBlock : public QGraphicsItem
         void updateSignals();
         void updateSlots();
         void updateSize();
-        //void ioPinDir( int isOut );
 
         QString toString();
 

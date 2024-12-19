@@ -18,17 +18,8 @@ class BlockList : public ListBase
 
  static BlockList* self() { return m_pSelf; }
 
-        ///CompBase* createItem( QString type, QString id );
-
-        /// void addItem( listItem_t item );
-
-    private slots:
-        //void slotItemClicked( QTreeWidgetItem* item, int );
-
     private:
         void registerItems() override;
-
-    ////QMap<QString, Module* (*)(QString)> m_moduleFactory;
 
  static BlockList* m_pSelf;
 };

@@ -105,20 +105,6 @@ void Composer::loadStrDoc( QString doc )
         {
             WireBase* wire = createWire( properties, newUid );
             if( wire ) m_wireList.append( wire );
-            /*Hook* hook0 = nullptr;
-            Hook* hook1 = nullptr;
-            for( prop_t prop : properties ){
-                if     ( prop.name == "hook0" ) hook0 = getHook( prop.value );
-                else if( prop.name == "hook1" ) hook1 = getHook( prop.value );
-            }
-            if( !hook0 || !hook1 )
-            {
-                qDebug() << "Error: Missing Hook creating Wire " << uid;
-            }else{
-                /// FIXME
-                /// newWire( hook0, uid );
-                /// closeWire( hook1 );
-            }*/
         }
         else if( type == "Fblock" )
         {
