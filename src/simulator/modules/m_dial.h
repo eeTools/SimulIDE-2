@@ -22,6 +22,18 @@ class mDial : public Module
         void initModule() override;
         void runStep() override;
 
+        int maxVal()  { return m_maxVal; }
+        virtual void setMaxVal( int max );
+
+        int minVal() { return m_minVal; }
+        virtual void setMinVal( int min );
+
+        int value();
+        void setValue( int v );
+
+        int steps() { return m_steps; }
+        void setSteps( int s );
+
         double angle() { return m_angle; }
         void setAngle( double a );
 
@@ -31,7 +43,7 @@ class mDial : public Module
         bool slider() { return m_slider; }
         void setSlider( bool s );
 
-        double scale() { return m_dialW.scale(); }
+        double scale() { return m_dialW->scale(); }
         void setScale( double s );
 
     public slots:
@@ -46,13 +58,16 @@ class mDial : public Module
 
         // Dial ---------------------------
 
+        int m_minVal;
+        int m_maxVal;
+        int m_steps;
+
         double m_angle;
         QPoint m_position;
 
-        bool m_needUpdate;
         bool m_slider;
 
-        DialWidget m_dialW;
+        DialWidget* m_dialW;
         QGraphicsProxyWidget* m_proxy;
 };
 #endif

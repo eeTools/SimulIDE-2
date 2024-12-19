@@ -66,8 +66,8 @@ class fComponent : public Component, public Element
 
         int m_width;
         int m_height;
-        int m_minHeight;
         int m_minWidth;
+        int m_minHeight;
 
         bool m_startHalf;
 

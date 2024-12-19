@@ -37,6 +37,8 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
     m_type   = type;
     m_width  = 4;
     m_height = 4;
+    m_minWidth = 4;
+    m_minHeight = 4;
     m_startHalf = false;
     setShapeStr("Rectangle");
 
@@ -198,7 +200,6 @@ QGraphicsProxyWidget* fComponent::addWidget( QWidget* widget )
 {
     QGraphicsProxyWidget* proxy = m_canvas->addWidget( widget );
     proxy->setParentItem( this );
-    proxy->setPos( QPoint(-widget->width()/2, 7) );
     return proxy;
 }
 
