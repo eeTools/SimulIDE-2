@@ -29,8 +29,9 @@ void IconWidget::setup( bool )
              <<":/2to3.png"<<":/2to3g.png"<<":/3to1.png"<<":/3to2.png"<<":/3to2g.png"
              <<":/demux.png"<<":/mux.png"<<":/script_ico.png"<<":/shield.png"<<":/7segbcd.png";
 
+    m_blocked = true;
     for( QString icon : iconList ) addIconFile( icon ); // iconBox->addItem( QIcon( icon ), "");
-
+    m_blocked = false;
     iconBox->setCurrentIndex( 0 );
 
     this->adjustSize();
@@ -38,6 +39,8 @@ void IconWidget::setup( bool )
 
 void IconWidget::on_iconBox_currentIndexChanged( QString val )
 {
+    if( m_blocked ) return;
+
     int index = iconBox->currentIndex();
     QString iconData;
     if( index > 0 ) iconData = m_itemList.at( index ).iconData;

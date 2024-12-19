@@ -48,7 +48,7 @@ class Pin : public PinBase, public ePin
         void setPinId( QString id ) override { m_id = id; }
 
         void removeWire() override;
-        void wireRemoved() override;
+        void wireRemoved( WireBase* w ) override;
 
         void registerEnode( int enode, int n=-1 ) override;
         void registerPinsW( int enode, int n=-1 ) override;

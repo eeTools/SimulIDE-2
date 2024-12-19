@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include "componentlist.h"
 #include "blocklist.h"
+#include "propdialog.h"
 #include "utils.h"
 
 #include "intfprop.h"
@@ -49,6 +50,9 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
 
     addPropGroup( { tr("Package"),
     {
+        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
+                       , this, &fComponent::startHalf, &fComponent::setStartHalf ),
+
         new IntProp<fComponent>("width", tr("Width"), ""
                        , this, &fComponent::width, &fComponent::setWidth, 0 ),
 
@@ -56,13 +60,10 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
                        , this, &fComponent::height, &fComponent::setHeight, 0 ),
 
         new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
-                      , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
+                       , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
 
         new StrProp<fComponent>("background", tr("Background"), ""
                        , this, &fComponent::background, &fComponent::setBackground, 0 ),
-
-        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
-                       , this, &fComponent::startHalf, &fComponent::setStartHalf ),
     },0} );
 }
 fComponent::~fComponent()
@@ -393,37 +394,37 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
         {
             endX += 1;
             QPainterPath path;
-            path.moveTo( -9, -endY );
+            path.moveTo(-endX,-endY );
             path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0 ) );
-            path.quadTo( QPoint( endX, endY ), QPoint( -9, endY ) );
-            path.lineTo( -9, -endY );
+            path.quadTo( QPoint( endX, endY ), QPoint(-endX, endY ) );
+            path.lineTo( -endX, -endY );
             p->drawPath( path );
         } break;
         case shapeOr:
         {
             endX += 1;
             QPainterPath path;
-            path.moveTo(-10,-endY );
-            path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0    ) );
-            path.quadTo( QPoint( endX, endY ), QPoint( -10 , endY ) );
-            path.quadTo( QPoint( -6  , 0    ), QPoint( -10 ,-endY ) );
+            path.moveTo(-endX-1,-endY );
+            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX, 0    ) );
+            path.quadTo( QPoint( endX-2, endY ), QPoint(-endX-1 , endY ) );
+            path.quadTo( QPoint(-endX+3  , 0  ), QPoint(-endX-1 ,-endY ) );
             p->drawPath( path );
         } break;
         case shapeXor:
         {
             endX += 1;
             QPainterPath path;
-            path.moveTo(-7,-endY );
-            path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0   ) );
-            path.quadTo( QPoint( endX, endY ), QPoint( -7 , endY ) );
-            path.quadTo( QPoint( -3  , 0    ), QPoint( -7 ,-endY ) );
+            path.moveTo(-endX+2,-endY );
+            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX, 0   ) );
+            path.quadTo( QPoint( endX-2, endY ), QPoint(-endX+2 , endY ) );
+            path.quadTo( QPoint(-endX+6, 0    ), QPoint(-endX+2 ,-endY ) );
             p->drawPath( path );
 
             p->setBrush( Qt::NoBrush );
 
             QPainterPath curve;
-            curve.moveTo(-10, endY );
-            curve.quadTo( QPointF(-5.5, 0 ), QPoint(-10,-endY ) );
+            curve.moveTo(-endX-1, endY );
+            curve.quadTo( QPointF(-(double)endX+4.5, 0 ), QPoint(-endX-1,-endY ) );
             p->drawPath( curve );
         } break;
     }

@@ -83,6 +83,8 @@ void EnumWidget::updtValues()
 {
     if( m_blocked ) return;
     m_blocked = true;
+    QString valStr = m_property->getValStr();
+    valueBox->setCurrentIndex( m_enums.indexOf( valStr) );
     showVal->setChecked( m_component->getPropStr("ShowProp") == m_propId );
     m_blocked = false;
 }

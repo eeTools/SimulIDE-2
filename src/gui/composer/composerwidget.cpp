@@ -179,6 +179,7 @@ void ComposerWidget::load( QString path )
         createPackage();
 
         Composer::self()->loadComponent( path );
+        m_pkgProps->updtValues();
 
         CanvasView::self()->zoomToFit();
         ComposerView::self()->zoomToFit();
@@ -210,13 +211,15 @@ void ComposerWidget::save( QString file )
 
     QString compStr= "Component";
     //component += "; uid=0";
+    compStr += "; uid=0";
+    compStr += "; starthalf="+ QString::number( m_fComp->startHalf() );
     compStr += "; width="   + QString::number( m_fComp->width() );
     compStr += "; height="  + QString::number( m_fComp->height() );
     compStr += "; shape="   + m_fComp->shapeStr();
     compStr += "; type="    + m_fComp->itemType();
-    compStr += "; caption=" + m_listItem.label();
+    compStr += "; label="   + m_listItem.label();
     compStr += "; category="+ m_listItem.category();
-    compStr += "; Icon="    + m_listItem.icon();
+    compStr += "; icon="    + m_listItem.icon();
     compStr += "; version=" + QString( APP_VERSION );
     compStr += "; rev="     + QString( REVNO );
     compStr += "\n";

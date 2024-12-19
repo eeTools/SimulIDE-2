@@ -49,8 +49,9 @@ class PinBase : public QGraphicsItem, public Updatable
         int  wireFlags() { return m_wireFlags; }
 
         virtual WireBase* wire() { return m_wire; }
-        void setWire( WireBase* c );
-        virtual void removeWire();
+        virtual void setWire( WireBase* c );
+        virtual void removeWire(){;}
+        virtual void wireRemoved( WireBase* w ){;}
 
         void setConPin( PinBase* pin ) { m_conPin = pin; }
         PinBase* conPin(){ return m_conPin; }
@@ -74,8 +75,6 @@ class PinBase : public QGraphicsItem, public Updatable
         virtual QColor getColor(){ return m_color[0]; }
 
         void moveBy( int dx, int dy );
-
-        virtual void wireRemoved();
 
         void setPinType( pinType_t ty ) { m_pinType = ty; }
         pinType_t pinType() { return m_pinType; }

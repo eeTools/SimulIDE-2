@@ -58,11 +58,6 @@ void PinBase::writeWireFlag( int flag, bool val )
     else      m_wireFlags &= !(~flag);
 }
 
-void PinBase::wireRemoved()
-{
-    setWire( nullptr );
-}
-
 void PinBase::setUnused( bool unused )
 {
     m_unused = unused;
@@ -78,11 +73,6 @@ void  PinBase::setWire( WireBase* wire )
 
     if( m_wire ) setCursor( Qt::ArrowCursor );
     else         setCursor( Qt::CrossCursor );
-}
-
-void PinBase::removeWire()
-{
-    setWire( nullptr );
 }
 
 void PinBase::flip( int h, int v )

@@ -319,8 +319,8 @@ void Wire::remove()
 {
     if( Simulator::self()->isRunning() )  CircuitWidget::self()->powerCircOff();
 
-    if( m_startPin ) m_startPin->wireRemoved();
-    if( m_endPin )   m_endPin->wireRemoved();
+    if( m_startPin ) m_startPin->wireRemoved( this );
+    if( m_endPin )   m_endPin->wireRemoved( this );
     remLines();
 }
 

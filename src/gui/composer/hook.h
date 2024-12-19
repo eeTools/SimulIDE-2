@@ -28,10 +28,12 @@ class Hook : public PinBase
         QColor getColor() override { return m_color[m_hookType]; }
 
         WireBase* wire() override { return nullptr; } // We can have more than 1 wire.
-        void removeWire() override;
+        void setWire( WireBase* c ) override;
+        void wireRemoved( WireBase* w ) override;
+
+        void isMoved() override;
 
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
-
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
@@ -41,6 +43,8 @@ class Hook : public PinBase
         hookType_t m_hookType;
 
         bool m_output;
+
+        QList<WireBase*> m_wireList;
 };
 
 #endif

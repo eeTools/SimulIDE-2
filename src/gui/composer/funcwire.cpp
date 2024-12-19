@@ -37,7 +37,7 @@ FuncWire::FuncWire( QString id, PinBase* startpin, PinBase* endpin )
 }
 FuncWire::~FuncWire()
 {
-    Composer::self()->compMap()->remove( m_id );
+    /// Composer::self()->compMap()->remove( m_id );
 }
 
 QRectF FuncWire::boundingRect() const
@@ -178,8 +178,8 @@ void FuncWire::remove()
 {
     if( Simulator::self()->isRunning() )  CircuitWidget::self()->powerCircOff();
 
-    if( m_startPin ) m_startPin->wireRemoved();
-    if( m_endPin )   m_endPin->wireRemoved();
+    if( m_startPin ) m_startPin->wireRemoved( this );
+    if( m_endPin )   m_endPin->wireRemoved( this );
 
     Composer::self()->removeItem( this );
 }

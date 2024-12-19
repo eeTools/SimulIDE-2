@@ -64,7 +64,7 @@ void Pin::removeWire()
     PinBase::removeWire();
 }
 
-void Pin::wireRemoved()
+void Pin::wireRemoved( WireBase* w )
 {
     setWire( nullptr );
     if( !Circuit::self()->undoRedo() ) m_component->pinMessage( 1 ); // Used by node to remove

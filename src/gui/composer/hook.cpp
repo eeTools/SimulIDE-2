@@ -53,15 +53,25 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
 Hook::~Hook()
 {
     //Circuit::self()->remHook( m_id );
-    if( m_wire ) Hook::removeWire();
+    /// if( m_wire ) Hook::removeWire();
 }
 
-
-void Hook::removeWire()
+void Hook::setWire( WireBase* w )
 {
-    /// FIXME
-    if( m_wire ) Composer::self()->removeWire( m_wire );
-    setWire( nullptr );
+    if( m_wireList.contains(w) ) return;
+
+    m_wireList.append( w );
+}
+
+void Hook::wireRemoved( WireBase* w )
+{
+    if( m_wireList.contains(w) ) m_wireList.removeOne( w );
+}
+
+void Hook::isMoved()
+{
+    for( WireBase* wire : m_wireList ) wire->updateConRoute( this );
+    setLabelPos();
 }
 
 void Hook::mousePressEvent( QGraphicsSceneMouseEvent* event )
@@ -76,7 +86,6 @@ void Hook::mousePressEvent( QGraphicsSceneMouseEvent* event )
         else if( m_output ) Composer::self()->startWire( this );
     }
 }
-
 
 void Hook::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {
