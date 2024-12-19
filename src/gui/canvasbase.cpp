@@ -37,7 +37,7 @@ CanvasBase::CanvasBase( qreal w, qreal h, QGraphicsView* parent )
 
     m_undoIndex = -1;
     m_maxUndoSteps = 100;
-    m_cicuitBatch = 0;
+    m_changeBatch = 0;
 
     m_seqNumber = 0;
     m_conNumber = 0;
@@ -386,12 +386,12 @@ void CanvasBase::setChanged()
 
 void CanvasBase::saveChanges()
 {
-    if( m_newWire || m_circChange.size() == 0 ) return;
+    if( m_newWire || m_canvasChange.size() == 0 ) return;
     setChanged();
 
     while( m_undoStack.size() > (m_undoIndex+1) ) m_undoStack.removeLast();
 
-    m_undoStack.append( m_circChange );
+    m_undoStack.append( m_canvasChange );
     if( m_undoStack.size() > m_maxUndoSteps )
     {
         m_undoStack.takeFirst();
@@ -400,24 +400,24 @@ void CanvasBase::saveChanges()
     m_undoIndex++;
 
     clearCircChanges();
-    m_cicuitBatch = 0;  // Ends all CicuitChanges
+    m_changeBatch = 0;  // Ends all CicuitChanges
     deleteRemoved();    // Delete Removed Components;
 
     /// qDebug() << "Circuit::saveChanges ---------------------------"<<m_undoIndex<<m_undoStack.size()<<endl;
 }
 
-void CanvasBase::saveCompChange( QString component, QString property, QString undoVal )
+void CanvasBase::saveItemChange( QString component, QString property, QString undoVal )
 {
     clearCircChanges();
-    addCompChange( component, property, undoVal );
+    addItemChange( component, property, undoVal );
     saveChanges();
 }
 
-void CanvasBase::addCompChange( QString component, QString property, QString undoVal )
+void CanvasBase::addItemChange( QString component, QString property, QString undoVal )
 {
     if( m_loading || m_deleting ) return;                      /// qDebug() << "Circuit::addCompChange      " << component << property;// << value;
-    compChange cChange{ component, property, undoVal, "" };
-    m_circChange.compChanges.append( cChange );
+    itemChange cChange{ component, property, undoVal, "" };
+    m_canvasChange.itemChanges.append( cChange );
 }
 
 void CanvasBase::removeLastUndo()
@@ -433,38 +433,38 @@ void CanvasBase::deleteRemoved()
     m_removedComps.clear();
 }
 
-void CanvasBase::beginCircuitBatch() // Don't create/remove
+void CanvasBase::beginChangeBatch() // Don't create/remove
 {
-    /// qDebug() << "Circuit::beginCircuitBatch";
-    if( !m_cicuitBatch ) clearCircChanges();
-    m_cicuitBatch++;
+    /// qDebug() << "Circuit::beginChangeBatch";
+    if( !m_changeBatch ) clearCircChanges();
+    m_changeBatch++;
 }
 
-void CanvasBase::endCircuitBatch() // Don't create/remove
+void CanvasBase::endChangeBatch() // Don't create/remove
 {
-    /// qDebug() << "Circuit::endCircuitBatch";
-    if( m_cicuitBatch > 0 ){
-        m_cicuitBatch--;
-        if( m_cicuitBatch == 0 ) saveChanges();
+    /// qDebug() << "Circuit::endChangeBatch";
+    if( m_changeBatch > 0 ){
+        m_changeBatch--;
+        if( m_changeBatch == 0 ) saveChanges();
     }
 }
 
 void CanvasBase::endUndoStep()   //
 {
     calculateChanges();
-    endCircuitBatch();
+    endChangeBatch();
 }
 
 void CanvasBase::cancelUndoStep()
 {
     calculateChanges();
-    if( m_circChange.size() )
+    if( m_canvasChange.size() )
     {
-        endCircuitBatch();
+        endChangeBatch();
         undo();
         m_undoStack.takeLast();
     }
-    else m_cicuitBatch = 0;
+    else m_changeBatch = 0;
     /// qDebug() << "Circuit::cancelUndoStep--------------------------------"<<endl;
 }
 

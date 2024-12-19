@@ -319,7 +319,7 @@ void FuncWire::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 
     if( !m_moving && !Composer::self()->getNewWire() )
     {
-        Composer::self()->saveCompChange( getUid(), "pointList", pListStr() );
+        Composer::self()->saveItemChange( getUid(), "pointList", pListStr() );
         m_moving = true;
     }
     if( !m_moving ) return;

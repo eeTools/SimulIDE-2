@@ -293,16 +293,17 @@ void FuncBlock::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 
     if( !m_moving )         // Get lists of elements to move and save Undo state
     {
-        //Composer::self()->beginComposerBatch();
+        /// TODO: for Undo/Redo FuncBlock should be CompBase ???
+        //Composer::self()->beginCircuitBatch();
 
         m_blockMoveList.clear();
 
         for( QGraphicsItem* item : itemlist )
         {
-            if( item->type() == UserType+10 )     // Component selected
+            if( item->type() == UserType+10 )     // Functional Block selected
             {
                 FuncBlock* block =  qgraphicsitem_cast<FuncBlock*>( item );
-                //Composer::self()->addCompChange( comp->getUid(), "Pos", comp->getPropStr("Pos") );
+                //Composer::self()->addCompChange( block->getUid(), "Pos", block->getPropStr("Pos") );
                 m_blockMoveList.append( block );
         }   }
 
@@ -327,7 +328,6 @@ void FuncBlock::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 
 void FuncBlock::mouseDoubleClickEvent( QGraphicsSceneMouseEvent* event )
 {
-
     if( event->button() == Qt::LeftButton ) slotProperties();
 }
 

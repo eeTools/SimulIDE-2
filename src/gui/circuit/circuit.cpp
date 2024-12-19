@@ -520,7 +520,7 @@ void Circuit::setChanged()
 
 void Circuit::beginUndoStep() // Save current state
 {
-    beginCircuitBatch();
+    beginChangeBatch();
 
     m_oldWires = m_wireList;
     m_oldComps = m_compList;
@@ -540,18 +540,18 @@ void Circuit::calculateChanges()   // Calculates created/removed
     QList<Node*>      removedNodes = substract( m_oldNodes, m_nodeList );
     QList<Component*> removedComps = substract( m_oldComps, m_compList );
 
-    for( WireBase*  wire : removedConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, m_compStrMap.value(wire) );
-    for( Node*      node : removedNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, m_compStrMap.value(node) );
-    for( Component* comp : removedComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, m_compStrMap.value(comp) );
+    for( WireBase*  wire : removedConns ) addItemChange( wire->getUid(), COMP_STATE_NEW, m_compStrMap.value(wire) );
+    for( Node*      node : removedNodes ) addItemChange( node->getUid(), COMP_STATE_NEW, m_compStrMap.value(node) );
+    for( Component* comp : removedComps ) addItemChange( comp->getUid(), COMP_STATE_NEW, m_compStrMap.value(comp) );
 
     // Items Created /// qDebug() << "Circuit::calcCicuitChanges Created:";
     QList<WireBase*>  createdConns = substract( m_wireList, m_oldWires );
     QList<Node*>      createdNodes = substract( m_nodeList, m_oldNodes );
     QList<Component*> createdComps = substract( m_compList, m_oldComps );
 
-    for( Component* comp : createdComps ) addCompChange( comp->getUid(), COMP_STATE_NEW, "" );
-    for( Node*      node : createdNodes ) addCompChange( node->getUid(), COMP_STATE_NEW, "" );
-    for( WireBase*  wire : createdConns ) addCompChange( wire->getUid(), COMP_STATE_NEW, "" );
+    for( Component* comp : createdComps ) addItemChange( comp->getUid(), COMP_STATE_NEW, "" );
+    for( Node*      node : createdNodes ) addItemChange( node->getUid(), COMP_STATE_NEW, "" );
+    for( WireBase*  wire : createdConns ) addItemChange( wire->getUid(), COMP_STATE_NEW, "" );
 }
 
 void Circuit::restoreState()
@@ -559,15 +559,15 @@ void Circuit::restoreState()
     if( m_simulator->isRunning() ) CircuitWidget::self()->powerCircOff();
     m_busy = true;
 
-    circChange& step = m_undoStack[ m_undoIndex ];
+    canvasChange& step = m_undoStack[ m_undoIndex ];
 
     int iStep, i;
-    if( m_undo ) { iStep = -1; i = step.compChanges.size()-1; }
+    if( m_undo ) { iStep = -1; i = step.itemChanges.size()-1; }
     else         { iStep =  1; i = 0; }
 
-    while( i>=0 && i < step.compChanges.size() )
+    while( i>=0 && i < step.itemChanges.size() )
     {
-        compChange* cChange = &step.compChanges[i];
+        itemChange* cChange = &step.itemChanges[i];
         i += iStep;
         QString propName = cChange->property;
         QString propVal  = m_undo ? cChange->undoValue : cChange->redoValue;
@@ -721,7 +721,7 @@ void Circuit::keyPressEvent( QKeyEvent* event )
                 QPoint cPos = QCursor::pos()-CircuitView::self()->mapToGlobal( QPoint(0,0));
                 enterItem->setPos( toGrid( CircuitView::self()->mapToScene( cPos ) ) );
                 addComponent( enterItem );
-                saveCompChange( enterItem->getUid(), COMP_STATE_NEW, "" );
+                saveItemChange( enterItem->getUid(), COMP_STATE_NEW, "" );
             }
         }
     }
@@ -835,7 +835,7 @@ void Circuit::dropEvent( QGraphicsSceneDragDropEvent* event )
             enterItem->setPos( CircuitView::self()->mapToScene( cPos ) );
             enterItem->setBackground( file );
             addComponent( enterItem );
-            saveCompChange( enterItem->getUid(), COMP_STATE_NEW, "" );
+            saveItemChange( enterItem->getUid(), COMP_STATE_NEW, "" );
     }   }
     else CircuitWidget::self()->loadCirc( id );
 }

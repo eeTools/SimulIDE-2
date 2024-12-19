@@ -265,7 +265,7 @@ void WireLine::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 
     if( !m_moving && !Circuit::self()->getNewWire() )
     {
-        Circuit::self()->saveCompChange( m_wire->getUid(), "pointList", m_wire->pListStr() );
+        Circuit::self()->saveItemChange( m_wire->getUid(), "pointList", m_wire->pListStr() );
         m_moving = true;
     }
 

@@ -592,7 +592,7 @@ void SubPackage::loadPackage()
 
     if( fileName.isEmpty() ) return; // User cancels loading
 
-    Circuit::self()->saveCompChange( m_id, "Package_File", fileName );
+    Circuit::self()->saveItemChange( m_id, "Package_File", fileName );
 
     QDir pdir = QFileInfo( Circuit::self()->getFilePath() ).absoluteDir();
     QString pkgeFile = pdir.relativeFilePath( fileName );

@@ -66,10 +66,10 @@ class CanvasBase : public QGraphicsScene
         void setChanged();
         void saveChanges();
         void removeLastUndo();
-        void addCompChange(  QString component, QString property, QString undoVal );
-        void saveCompChange( QString component, QString property, QString undoVal );
-        void beginCircuitBatch();
-        void endCircuitBatch();
+        void addItemChange(  QString item, QString property, QString undoVal );
+        void saveItemChange( QString item, QString property, QString undoVal );
+        void beginChangeBatch();
+        void endChangeBatch();
         void cancelUndoStep();               // Revert changes done
         void endUndoStep();                  // Does create/remove
         virtual void beginUndoStep(){;}      // Record current state
@@ -124,31 +124,31 @@ class CanvasBase : public QGraphicsScene
         QList<Node*>  m_nodeList;  // Node list
 
         //--- Undo/Redo ----------------------------------
-        struct compChange{      // Component Change to be performed by Undo/Redo to complete a Circuit change
+        struct itemChange{      // Component Change to be performed by Undo/Redo to complete a Circuit change
             QString component;  // Component name
             QString property;   // Property name
             QString undoValue;  // Property value for Undo step
             QString redoValue;  // Property value for Redo step
         };
-        struct circChange{       // Circuit Change to be performed by Undo/Redo to restore circuit state
-            QList<compChange> compChanges;
-            int size() { return compChanges.size(); }
-            void clear() { compChanges.clear(); }
+        struct canvasChange{       // Circuit Change to be performed by Undo/Redo to restore circuit state
+            QList<itemChange> itemChanges;
+            int size() { return itemChanges.size(); }
+            void clear() { itemChanges.clear(); }
         };
 
-        inline void clearCircChanges() { m_circChange.clear(); }
+        inline void clearCircChanges() { m_canvasChange.clear(); }
         void deleteRemoved();
         virtual void restoreState(){;}
 
         int m_maxUndoSteps;
         int m_undoIndex;
-        int m_cicuitBatch;
+        int m_changeBatch;
 
         bool m_undo;
         bool m_redo;
 
-        circChange m_circChange;
-        QList<circChange> m_undoStack;
+        canvasChange m_canvasChange;
+        QList<canvasChange> m_undoStack;
 
         QHash<QString, CompBase*> m_compMap;  // Component Id to Component*, used in UNDO/REDO
 

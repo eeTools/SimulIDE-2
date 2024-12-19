@@ -195,7 +195,7 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     QPointF delta( 0, 0 );
     if( m_boardMode && event->modifiers() == Qt::ControlModifier )
          delta = event->scenePos() - event->lastScenePos();
-    else delta = toGrid( event->scenePos()) - toGrid(event->lastScenePos() );
+    else delta = toGrid( event->scenePos() ) - toGrid( event->lastScenePos() );
 
     if( !(fabs( delta.x() )> 0) && !(fabs( delta.y() )> 0) ) return;
 
@@ -203,7 +203,7 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 
     if( !m_moving )         // Get lists of elements to move and save Undo state
     {
-        Circuit::self()->beginCircuitBatch();
+        Circuit::self()->beginChangeBatch();
 
         m_wireMoveList.clear();
         m_compMoveList.clear();
@@ -217,13 +217,13 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
                 if( !m_wireMoveList.contains( wire ) )  // Connectors selected
                 {
                     m_wireMoveList.append( wire );
-                    Circuit::self()->addCompChange( wire->getUid(), "pointList", wire->pListStr() );
+                    Circuit::self()->addItemChange( wire->getUid(), "pointList", wire->pListStr() );
                 }
             }
             else if( item->type() == UserType+1 )     // Component selected
             {
                 Component* comp =  qgraphicsitem_cast<Component*>( item );
-                Circuit::self()->addCompChange( comp->getUid(), "Pos", comp->getPropStr("Pos") );
+                Circuit::self()->addItemChange( comp->getUid(), "Pos", comp->getPropStr("Pos") );
                 m_compMoveList.append( comp );
                 std::vector<Pin*> pins = comp->getPins();
                 for( Pin* pin : pins )
@@ -232,7 +232,7 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
                     Wire* wire =  static_cast<Wire*>(pin->wire());
                     if( wire && !m_wireMoveList.contains( wire ) ){
                         m_wireMoveList.append( wire );
-                        Circuit::self()->addCompChange( wire->getUid(), "pointList", wire->pListStr() );
+                        Circuit::self()->addItemChange( wire->getUid(), "pointList", wire->pListStr() );
         }   }   }   }
 
         m_moving = true;
@@ -409,14 +409,14 @@ void Component::slotProperties()
 
 void Component::slotH_flip()
 {
-    if( !m_hidden ) Circuit::self()->saveCompChange( m_id, "hflip", getPropStr("hflip") );
+    if( !m_hidden ) Circuit::self()->saveItemChange( m_id, "hflip", getPropStr("hflip") );
     m_Hflip = -m_Hflip;
     setflip();
 }
 
 void Component::slotV_flip()
 {
-    if( !m_hidden ) Circuit::self()->saveCompChange( m_id, "vflip", getPropStr("vflip") );
+    if( !m_hidden ) Circuit::self()->saveItemChange( m_id, "vflip", getPropStr("vflip") );
     m_Vflip = -m_Vflip;
     setflip();
 }
@@ -453,7 +453,7 @@ void Component::rotateHalf() { rotateAngle(-180); }
 
 void Component::rotateAngle( double a )
 {
-    if( !m_hidden ) Circuit::self()->saveCompChange( m_id, "rotation", getPropStr("rotation") );
+    if( !m_hidden ) Circuit::self()->saveItemChange( m_id, "rotation", getPropStr("rotation") );
     Component::setRotation( rotation() + a*m_Hflip*m_Vflip );
     if( !m_hidden ) moveSignal();
 }

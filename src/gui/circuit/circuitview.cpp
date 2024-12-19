@@ -112,7 +112,7 @@ void CircuitView::dragEnterEvent( QDragEnterEvent* event )
     {
         m_circuit->clearSelection();
         m_circuit->addComponent( m_enterItem );
-        m_circuit->saveCompChange( m_enterItem->getUid(), COMP_STATE_NEW, "" );
+        m_circuit->saveItemChange( m_enterItem->getUid(), COMP_STATE_NEW, "" );
 
         m_enterItem->setPos( mapToScene( event->pos() ) );
         m_enterItem->setSelected( true );
@@ -182,7 +182,7 @@ void CircuitView::mouseMoveEvent( QMouseEvent* event )
          && !m_circuit->selectedItems().isEmpty() )     // Start Copy by drag
         {
             event->accept();
-            m_circuit->beginCircuitBatch();     // Do this to force paste() to not save changes
+            m_circuit->beginChangeBatch();     // Do this to force paste() to not save changes
             m_circuit->copy( m_mousePressPos ); // Component move after paste() will save changes
             m_circuit->paste( event->pos() );   // paste() will call beginUndoStep()
         }

@@ -20,14 +20,6 @@ class Wire;
 class Linker;
 class Component;
 
-/*struct listItem_t{
-    QString label;
-    QString category;
-    QString icon;
-    QString type;
-    Component* (*construct)(QString);
-};*/
-
 class Component : public CompBase, public QGraphicsItem, public Updatable
 {
     Q_INTERFACES( QGraphicsItem )
