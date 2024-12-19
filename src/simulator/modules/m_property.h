@@ -7,7 +7,6 @@
 #define PROPERTYM_H
 
 #include "module.h"
-//#include "modsignal.h"
 
 class CallBack;
 
@@ -44,7 +43,5 @@ class PropertyM : public Module
         CallBack* m_outCallback;
 
         ComProperty* m_valueProp;
-
- static QString m_moduleType;
 };
 #endif

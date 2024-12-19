@@ -12,8 +12,6 @@
 #include "intprop.h"
 #include "stringprop.h"
 
-QString AbOp::m_moduleType = "AbOp";
-
 listItem_t AbOp::registerItem(){
     return {
         "Binary Operation",
@@ -29,7 +27,6 @@ AbOp::AbOp( QString name )
     , m_inSlotB("input B", hookInputInt )
     , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
     m_abOpType = AND;
 
     m_outSignal.setIntData( &m_output );

@@ -13,10 +13,10 @@ template <class Comp>
 class ScriptProp : public ComProperty
 {
     public:
-        ScriptProp( QString name, QString caption, QString unit, Comp* comp
+        ScriptProp( QString id, QString label, QString unit, Comp* comp
                   , QString (Comp::*getter)(ComProperty*), void (Comp::*setter)(ComProperty*, QString)
                   , QString type="string", uint8_t flags=0 )
-        : ComProperty( name, caption, unit, type, flags )
+        : ComProperty( id, label, unit, type, flags )
         {
             m_comp = comp;
             m_getter = getter;

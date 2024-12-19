@@ -11,7 +11,7 @@
 class NumProp : public ComProperty
 {
     public:
-        NumProp( QString name, QString caption, QString unit, QString type, uint8_t flags );
+        NumProp( QString id, QString label, QString unit, QString type, uint8_t flags );
         virtual ~NumProp(){;}
 
         virtual QString getValStr() override;

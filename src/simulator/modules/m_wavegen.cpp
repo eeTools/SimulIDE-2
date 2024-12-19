@@ -5,14 +5,12 @@
 
 #include "m_wavegen.h"
 
-QString WaveGen::m_moduleType = "WaveGen";
-
 listItem_t WaveGen::registerItem(){
     return {
         "Wave Generator",
         "Other",
         "wavegen.png",
-        m_moduleType,
+        "WaveGen",
         [](QString id){ return (CompBase*)new WaveGen( id ); } };
 }
 
@@ -20,7 +18,6 @@ WaveGen::WaveGen( QString name )
        : Module( name )
        , m_outSignal("output", hookOutputDoub )
 {
-    m_type = m_moduleType;
     m_waveType = SINE;
 
     m_outSignal.setDblData( &m_output );

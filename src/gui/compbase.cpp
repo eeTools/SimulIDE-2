@@ -45,7 +45,7 @@ void CompBase::remPropGroup( QString name )
     {
         if( m_propGroups.at(i).name == name )
         {
-            for( ComProperty* p : m_propGroups.at(i).propList ) m_propMap.remove( p->name() );
+            for( ComProperty* p : m_propGroups.at(i).propList ) m_propMap.remove( p->id() );
             m_propGroups.removeAt(i);
             break;
 }   }   }
@@ -55,7 +55,7 @@ void CompBase::addPropGroup( propGroup pg, bool list )
     m_propGroups.append( pg );
 
     if( list )
-        for( ComProperty* p : pg.propList ) m_propMap[p->name()] = p;
+        for( ComProperty* p : pg.propList ) m_propMap[p->id()] = p;
 }
 
 void CompBase::addProperty( QString group, ComProperty* p )
@@ -67,7 +67,7 @@ void CompBase::addProperty( QString group, ComProperty* p )
 
         pg.propList.append( p );
         m_propGroups.replace( i, pg );
-        m_propMap[p->name()] = p;
+        m_propMap[p->id()] = p;
         return;
 }   }
 
@@ -78,7 +78,7 @@ void CompBase::remProperty( QString prop )
         propGroup pg = m_propGroups.at(i);
         for( ComProperty* p : pg.propList )
         {
-            if( p->name() != prop ) continue;
+            if( p->id() != prop ) continue;
             pg.propList.removeAll( p );
             m_propGroups.replace( i, pg );
             m_propMap.remove( prop );
@@ -86,9 +86,9 @@ void CompBase::remProperty( QString prop )
             return;
 }   }   }
 
-ComProperty* CompBase::getProperty( QString name )
+ComProperty* CompBase::getProperty( QString id )
 {
-    return m_propMap.value( name );
+    return m_propMap.value( id );
 }
 
 bool CompBase::setPropStr( QString prop, QString val )
@@ -122,7 +122,7 @@ QString CompBase::toString() // Used to save circuit
         {
             QString val = prop->toString();
             if( val.isEmpty() ) continue;
-            item += "; "+prop->name()+"="+val;
+            item += "; "+prop->id()+"="+val;
     }   }
     item += "\n";
 

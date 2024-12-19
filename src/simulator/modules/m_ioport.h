@@ -19,10 +19,10 @@ class mIoPort : public PortBase
 
  static listItem_t registerItem();
 
-        virtual void setup() override;
+        void setup() override;
 
-        virtual void initModule() override;
-        virtual void runStep() override;
+        void initModule() override;
+        void runStep() override;
 
     protected:
         PinBase* addPin( QString id ) override;
@@ -31,7 +31,5 @@ class mIoPort : public PortBase
 
         ModSlot   m_inputSlot;
         ModSignal m_outSignal;
-
- static QString m_moduleType;
 };
 #endif

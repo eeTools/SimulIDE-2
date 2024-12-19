@@ -15,10 +15,10 @@ template <class Comp>
 class StrProp : public ComProperty
 {
     public:
-        StrProp( QString name, QString caption, QString unit, Comp* comp
+        StrProp( QString id, QString label, QString unit, Comp* comp
                , QString (Comp::*getter)(), void (Comp::*setter)(QString)
                , uint8_t flags=0, QString type="string" )
-        : ComProperty( name, caption, unit, type, flags )
+        : ComProperty( id, label, unit, type, flags )
         {
             m_comp = comp;
             m_getter = getter;

@@ -12,14 +12,12 @@
 
 #include "intprop.h"
 
-QString IoHook::m_moduleType = "IoHook";
-
 listItem_t IoHook::registerItem(){
     return {
         "IO Hook",
         "Ports",
         "delay.png",
-        m_moduleType,
+        "IoHook",
         [](QString id){ return (CompBase*)new IoHook( id ); } };
 }
 
@@ -28,8 +26,6 @@ IoHook::IoHook( QString name )
       , m_inputSlot("input" , hookInputInt )
       , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
-
     m_outSignal.setIntData( &m_outState );
 
     m_slots.emplace_back( &m_inputSlot );

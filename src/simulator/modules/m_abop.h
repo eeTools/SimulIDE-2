@@ -56,7 +56,5 @@ class AbOp : public Module
         ModSlot   m_inSlotA;
         ModSlot   m_inSlotB;
         ModSignal m_outSignal;
-
- static QString m_moduleType;
 };
 #endif

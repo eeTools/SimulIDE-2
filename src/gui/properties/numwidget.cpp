@@ -37,7 +37,7 @@ NumWidget::~NumWidget() {}
 
 void NumWidget::setup( bool isComp )
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
     m_blocked = true;
 
     if( !isComp )
@@ -53,7 +53,7 @@ void NumWidget::setup( bool isComp )
 
 void NumWidget::updateName()
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
 }
 
 void NumWidget::on_showVal_toggled( bool checked )

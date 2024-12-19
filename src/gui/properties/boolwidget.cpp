@@ -17,7 +17,7 @@ BoolWidget::~BoolWidget() {;}
 
 void BoolWidget::setup( bool )
 {
-    trueVal->setText( m_property->name() );
+    trueVal->setText( m_property->label() );
     m_blocked = true;
 
     bool checked = (m_property->getValStr() == "1");

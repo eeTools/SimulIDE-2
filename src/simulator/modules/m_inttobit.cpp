@@ -11,14 +11,12 @@
 
 #include "intprop.h"
 
-QString IntToBit::m_moduleType = "IntToBit";
-
 listItem_t IntToBit::registerItem(){
     return {
         "Int to Bit",
         "Converters",
         "gate.png",
-        m_moduleType,
+        "IntToBit",
         [](QString id){ return (CompBase*)new IntToBit( id ); } };
 }
 
@@ -26,8 +24,6 @@ IntToBit::IntToBit( QString name )
         : Module( name )
         , m_inputSlot("input", hookInputInt )
 {
-    m_type = m_moduleType;
-
     m_slots.emplace_back( &m_inputSlot );
 
     m_bits = 0;

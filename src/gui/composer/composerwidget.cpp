@@ -72,7 +72,7 @@ void ComposerWidget::createPackage()
 
     Canvas::self()->addItem( m_fComp );
 
-    m_fComp->addPropGroup( { tr("Package"),
+    /*m_fComp->addPropGroup( { tr("Package"),
     {
         new IntProp<fComponent>("width", tr("Width"), ""
                        , m_fComp, &fComponent::width, &fComponent::setWidth, 0 ),
@@ -88,7 +88,7 @@ void ComposerWidget::createPackage()
 
         new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
                        , m_fComp, &fComponent::startHalf, &fComponent::setStartHalf ),
-    },0} );
+    },0} );*/
 
     m_fComp->addPropGroup( { tr("List Item"),
     {
@@ -212,7 +212,7 @@ void ComposerWidget::save( QString file )
     //component += "; uid=0";
     compStr += "; width="   + QString::number( m_fComp->width() );
     compStr += "; height="  + QString::number( m_fComp->height() );
-
+    compStr += "; shape="   + m_fComp->shapeStr();
     compStr += "; type="    + m_fComp->itemType();
     compStr += "; caption=" + m_listItem.label();
     compStr += "; category="+ m_listItem.category();

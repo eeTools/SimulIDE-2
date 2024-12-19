@@ -26,7 +26,7 @@ void PathWidget::setup( bool )
     //value->setFont( font );
     //setPathButton->setFont( font );
 
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
     updtValues();
     this->adjustSize();
 }

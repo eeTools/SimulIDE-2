@@ -13,10 +13,10 @@ template <class Comp>
 class BoolProp : public ComProperty
 {
     public:
-        BoolProp( QString name, QString caption, QString unit, Comp* comp
+        BoolProp( QString id, QString label, QString unit, Comp* comp
                 , bool (Comp::*getter)(), void (Comp::*setter)(bool)
                 , uint8_t flags=0, QString type="bool" )
-        : ComProperty( name, caption, unit, type, flags )
+        : ComProperty( id, label, unit, type, flags )
         {
             m_comp = comp;
             m_getter = getter;

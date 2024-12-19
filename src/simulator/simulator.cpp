@@ -27,6 +27,7 @@ Simulator::Simulator( QObject* parent )
 {
     m_pSelf = this;
 
+    m_state = SIM_STOPPED;
     m_fps = 20;
     m_timerId   = 0;
     m_timerTick_ms = 50;   // 50 ms default
@@ -54,11 +55,6 @@ Simulator::Simulator( QObject* parent )
 Simulator::~Simulator()
 {
     m_CircuitFuture.waitForFinished();
-}
-
-inline void Simulator::solveMatrix()
-{
- // m_matrix sets the eNode voltages
 }
 
 void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (50 ms, 20 Hz max)

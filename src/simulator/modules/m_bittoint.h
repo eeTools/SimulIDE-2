@@ -30,7 +30,5 @@ class BitToInt : public Module
 
         //std::vector<ModSlot*> m_bitSlots;
         ModSignal m_outSignal;
-
- static QString m_moduleType;
 };
 #endif

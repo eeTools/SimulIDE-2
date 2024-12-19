@@ -21,11 +21,11 @@ class PropWidget;
 class ComProperty
 {
     public:
-        ComProperty( QString id, QString name, QString unit, QString type, uint8_t flags );
+        ComProperty( QString id, QString label, QString unit, QString type, uint8_t flags );
         virtual ~ComProperty(){;}
 
         QString id();
-        QString name();
+        QString label();
         QString type();
         QString unit();
         uint8_t flags();
@@ -50,7 +50,7 @@ class ComProperty
         PropWidget* m_widget;
 
         QString m_id;
-        QString m_name;
+        QString m_label;
         QString m_type;
         QString m_unit;
         uint8_t m_flags;

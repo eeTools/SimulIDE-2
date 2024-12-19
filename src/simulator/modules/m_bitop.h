@@ -58,7 +58,5 @@ class BitOp : public Clocked
 
         ModSlot   m_inputSlot;
         ModSignal m_outSignal;
-
- static QString m_moduleType;
 };
 #endif

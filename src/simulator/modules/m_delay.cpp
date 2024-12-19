@@ -11,14 +11,12 @@
 
 #include "doubleprop.h"
 
-QString Delay::m_moduleType = "Delay";
-
 listItem_t Delay::registerItem(){
     return {
         "Delay",
         "Other",
         "delay.png",
-        m_moduleType,
+        "Delay",
         [](QString id){ return (CompBase*)new Delay( id ); } };
 }
 
@@ -27,8 +25,6 @@ Delay::Delay( QString name )
      , m_inputSlot("input", hookInputInt/*, &m_changed*/ )
      , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
-
     m_delay = 10000;         // 10 ns
 
     m_outSignal.setIntData( &m_outState );

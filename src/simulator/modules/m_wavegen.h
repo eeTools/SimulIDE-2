@@ -37,8 +37,5 @@ class WaveGen : public Module
 
         waveType m_waveType;
         QStringList m_waveList;
-
- static QString m_moduleType;
-
 };
 #endif

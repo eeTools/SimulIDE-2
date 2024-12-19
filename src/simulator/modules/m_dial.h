@@ -23,10 +23,10 @@ class mDial : public Module
         void runStep() override;
 
         int maxVal()  { return m_maxVal; }
-        virtual void setMaxVal( int max );
+        void setMaxVal( int max );
 
         int minVal() { return m_minVal; }
-        virtual void setMinVal( int min );
+        void setMinVal( int min );
 
         int value();
         void setValue( int v );

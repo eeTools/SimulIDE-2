@@ -11,14 +11,12 @@
 
 #include "intprop.h"
 
-QString BitToInt::m_moduleType = "BitToInt";
-
 listItem_t BitToInt::registerItem(){
     return {
         "Bit to Int",
         "Converters",
         "gate.png",
-        m_moduleType,
+        "BitToInt",
         [](QString id){ return (CompBase*)new BitToInt( id ); } };
 }
 
@@ -26,8 +24,6 @@ BitToInt::BitToInt( QString name )
         : Module( name )
         , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
-
     m_outSignal.setIntData( &m_output );
     m_signals.emplace_back( &m_outSignal );
 

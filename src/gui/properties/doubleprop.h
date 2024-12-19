@@ -13,10 +13,10 @@ template <class Comp>
 class DoubProp : public NumProp
 {
     public:
-        DoubProp( QString name, QString caption, QString unit, Comp* comp
+        DoubProp( QString id, QString label, QString unit, Comp* comp
                 , double (Comp::*getter)(), void (Comp::*setter)(double)
                 , uint8_t flags=0, QString type="double" )
-        : NumProp( name, caption, unit, type, flags )
+        : NumProp( id, label, unit, type, flags )
         {
             m_comp = comp;
             m_getter = getter;

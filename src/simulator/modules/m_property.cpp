@@ -9,24 +9,18 @@
 #include "intprop.h"
 #include "stringprop.h"
 
-QString PropertyM::m_moduleType = "Property";
-
 listItem_t PropertyM::registerItem(){
     return {
         "Property",
         "Other",
         "property.png",
-        m_moduleType,
+        "Property",
         [](QString id){ return (CompBase*)new PropertyM( id ); } };
 }
 
 PropertyM::PropertyM( QString name )
          : Module( name )
-         //, m_inputSlot("input", hookInputInt/*, &m_changed*/ )
-         //, m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
-
     m_outCallback = nullptr;
     m_propName = "Value";
     m_value = 0;

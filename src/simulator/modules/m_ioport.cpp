@@ -6,21 +6,19 @@
 #include <QDebug>
 
 #include "m_ioport.h"
-#include "fblock.h"
+//#include "fblock.h"
 #include "fcomponent.h"
 #include "iopin.h"
 
 #include "intprop.h"
 #include "stringprop.h"
 
-QString mIoPort::m_moduleType = "IoPort";
-
 listItem_t mIoPort::registerItem(){
     return {
         "IO Port",
         "Ports",
         "ioport.png",
-        m_moduleType,
+        "IoPort",
         [](QString id){ return (CompBase*)new mIoPort( id ); } };
 }
 
@@ -29,8 +27,6 @@ mIoPort::mIoPort( QString name )
        , m_inputSlot("input" , hookInputInt )
        , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
-
     m_outSignal.setIntData( &m_state );
     m_slots.emplace_back( &m_inputSlot );
     m_signals.emplace_back( &m_outSignal );

@@ -496,7 +496,7 @@ QString SubCircuit::toString()
                 {
                     QString val = prop->toString();
                     if( val.isEmpty() ) continue;
-                    item += prop->name() + "=\""+val+"\" ";
+                    item += prop->id() + "=\""+val+"\" ";
             }   }
             item += "/>\n";
         }
@@ -510,7 +510,7 @@ void SubCircuit::loadGraphProps()
     for( propGroup pg : m_propGroups ) // Create list of "Graphical" poperties (We don't need them)
     {
         if( (pg.name != "CompGraphic") ) continue;
-        for( ComProperty* prop : pg.propList ) s_graphProps.append( prop->name() );
+        for( ComProperty* prop : pg.propList ) s_graphProps.append( prop->id() );
         break;
     }
 }

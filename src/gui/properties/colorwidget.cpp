@@ -19,7 +19,7 @@ ColorWidget::~ColorWidget(){}
 
 void ColorWidget::setup( bool )
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
 
     m_color = m_property->getValStr(); /// FIXME // comp->property( m_propId.toUtf8() ).value<QColor>();
     QString cname = m_color.name();

@@ -55,7 +55,7 @@ QString Composer::toString()
     QString component;
 
     for( FuncBlock* block : m_blockList ) component += block->toString();
-    for( WireBase* conn  : m_wireList  ) component += conn->toString();
+    for( WireBase*  wire  : m_wireList  ) component += wire->toString();
     component += "\n";
 
     return component;
@@ -101,7 +101,7 @@ void Composer::loadStrDoc( QString doc )
         QString uid = properties.takeFirst().value;
         QString newUid = uid;
 
-        if( type == "Wire" )
+        if( type == "FuncWire" )
         {
             WireBase* wire = createWire( properties, newUid );
             if( wire ) m_wireList.append( wire );

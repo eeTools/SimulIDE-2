@@ -17,7 +17,7 @@ EnumWidget::~EnumWidget() {}
 
 void EnumWidget::setup( bool isComp )
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
     m_blocked = true;
 
     setEnums( m_property->unit() );

@@ -14,10 +14,10 @@ template <class Comp>
 class PointProp : public ComProperty
 {
     public:
-        PointProp( QString name, QString caption, QString unit, Comp* comp
+        PointProp( QString id, QString label, QString unit, Comp* comp
                  , QPointF (Comp::*getter)(), void (Comp::*setter)(QPointF)
                  , QString type="point", uint8_t flags=0 )
-        : ComProperty( name, caption, unit, type, flags )
+        : ComProperty( id, label, unit, type, flags )
         {
             m_comp = comp;
             m_getter = getter;

@@ -17,14 +17,14 @@ StrWidget::~StrWidget() {}
 
 void StrWidget::setup( bool )
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
     updtValues();
     this->adjustSize();
 }
 
 void StrWidget::updateName()
 {
-    valLabel->setText( m_property->name() );
+    valLabel->setText( m_property->label() );
 }
 
 void StrWidget::on_value_editingFinished()

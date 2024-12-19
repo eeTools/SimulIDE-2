@@ -6,8 +6,8 @@
 #include "numprop.h"
 #include "utils.h"
 
-NumProp::NumProp( QString name, QString caption, QString unit, QString type, uint8_t flags )
-       : ComProperty( name, caption, unit, type, flags )
+NumProp::NumProp( QString id, QString label, QString unit, QString type, uint8_t flags )
+       : ComProperty( id, label, unit, type, flags )
 {
 }
 

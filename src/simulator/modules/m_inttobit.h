@@ -30,7 +30,5 @@ class IntToBit : public Module
         int m_input;
 
         ModSlot m_inputSlot;
-
- static QString m_moduleType;
 };
 #endif

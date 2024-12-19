@@ -102,7 +102,6 @@ class Simulator : public QObject, public Kcl
         void resetSim();
         void runCircuit();
         inline void solveCircuit();
-        inline void solveMatrix();
 
         inline void clearEventList();
 

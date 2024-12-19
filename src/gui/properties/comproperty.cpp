@@ -7,10 +7,10 @@
 #include "propwidget.h"
 #include "utils.h"
 
-ComProperty::ComProperty( QString id, QString name, QString unit, QString type, uint8_t flags )
+ComProperty::ComProperty( QString id, QString label, QString unit, QString type, uint8_t flags )
 {
     m_id    = id;
-    m_name  = name;
+    m_label = label;
     m_unit  = unit;
     m_type  = type;
     m_flags = flags;
@@ -18,7 +18,7 @@ ComProperty::ComProperty( QString id, QString name, QString unit, QString type, 
     m_widget = nullptr;
 }
 QString ComProperty::id()   { return m_id; }
-QString ComProperty::name() { return m_name; }
+QString ComProperty::label(){ return m_label; }
 QString ComProperty::type() { return m_type; }
 QString ComProperty::unit() { return m_unit; }
 uint8_t ComProperty::flags(){ return m_flags; }
@@ -31,7 +31,7 @@ QString ComProperty::toString(){ return getValStr(); }
 
 void ComProperty::setName( QString n )
 {
-    m_name = n;
+    m_label = n;
     m_id = n.toLower().replace(" ", "_");
     if( m_widget ) m_widget->updateName();
 }

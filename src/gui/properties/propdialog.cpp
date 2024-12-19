@@ -88,9 +88,9 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
                  || prop->flags() & propSignal
                  || prop->flags() & propSlot ) continue; // Property hidden
 
-                if( prop->name() == "" ) // Just a label
+                if( prop->id() == "" ) // Just a label
                 {
-                    QString text = prop->name();
+                    QString text = prop->label();
                     if( text == "separator")
                     {
                         QFrame* line = new QFrame;

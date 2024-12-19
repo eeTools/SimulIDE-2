@@ -21,6 +21,9 @@
 #include "utils.h"
 
 #include "intfprop.h"
+#include "intprop.h"
+#include "boolprop.h"
+#include "stringprop.h"
 
 #define tr(str) simulideTr("fComponent",str)
 
@@ -43,6 +46,24 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
     setShapeStr("Rectangle");
 
     m_area = QRect(-m_width*8/2,-m_height*8/2, m_width*8, m_height*8 );
+
+    addPropGroup( { tr("Package"),
+    {
+        new IntProp<fComponent>("width", tr("Width"), ""
+                       , this, &fComponent::width, &fComponent::setWidth, 0 ),
+
+        new IntProp<fComponent>("height", tr("Height"), ""
+                       , this, &fComponent::height, &fComponent::setHeight, 0 ),
+
+        new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
+                      , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
+
+        new StrProp<fComponent>("background", tr("Background"), ""
+                       , this, &fComponent::background, &fComponent::setBackground, 0 ),
+
+        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
+                       , this, &fComponent::startHalf, &fComponent::setStartHalf ),
+    },0} );
 }
 fComponent::~fComponent()
 {

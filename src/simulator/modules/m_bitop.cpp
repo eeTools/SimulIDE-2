@@ -12,14 +12,12 @@
 #include "intprop.h"
 #include "stringprop.h"
 
-QString BitOp::m_moduleType = "BitOp";
-
 listItem_t BitOp::registerItem(){
     return {
         "Unary Operation",
         "Operations",
         "gate.png",
-        m_moduleType,
+        "BitOp",
         [](QString id){ return (CompBase*)new BitOp( id ); } };
 }
 
@@ -28,7 +26,6 @@ BitOp::BitOp( QString name )
      , m_inputSlot("input", hookInputInt/*, &m_changed*/ )
      , m_outSignal("output", hookOutputInt )
 {
-    m_type = m_moduleType;
     m_bitOpType = AND;
 
     m_outSignal.setIntData( &m_output );
