@@ -60,7 +60,7 @@ void mIoPort::setup()
 
 void mIoPort::initModule()
 {
-    m_changed = false;
+    m_modChanged = false;
     for( PinBase* pin : m_pins )
     {
         IoPin* ioPin = (IoPin*)pin;
@@ -70,13 +70,13 @@ void mIoPort::initModule()
 
 void mIoPort::runStep() // Update outputs
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     m_state = m_inputSlot.intData();
 
     m_outSignal.changed();
-    m_component->voltChanged();
+    /// m_component->voltChanged();
 }
 
 PinBase* mIoPort::addPin( QString id )

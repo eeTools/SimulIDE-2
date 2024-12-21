@@ -149,12 +149,29 @@ TreeItem* ListBase::addCategory( QString nameTr, QString name, QString parent, Q
 
 TreeItem* ListBase::getCategory( QString category )
 {
+    QStringList catPath = category.split("/");
+    QString parent = "";
+    category = "";
     TreeItem* catItem = nullptr;
-    if( m_categories.contains( category ) ) catItem = m_categories.value( category );
-    else{
-        category = m_catNames.value( category );
-        if( !category.isEmpty() && m_categories.contains( category ) )
-            catItem = m_categories.value( category );
+
+    while( !catPath.isEmpty() )
+    {
+        parent = category;
+        category = catPath.takeFirst();
+
+        //catItem = getCategory( category );
+        if( m_categories.contains( category ) ) catItem = m_categories.value( category );
+        /*else{
+            category = m_catNames.value( category );
+            if( !category.isEmpty() && m_categories.contains( category ) )
+                catItem = m_categories.value( category );
+        }*/
+
+        if( !catItem && !category.isEmpty() )
+        {
+            QString catTr = QObject::tr( category.toLocal8Bit() );
+            catItem = addCategory( catTr, category, parent, "" );
+        }
     }
     return catItem;
 }

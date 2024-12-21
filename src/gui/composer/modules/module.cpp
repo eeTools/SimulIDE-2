@@ -17,7 +17,7 @@ Module::Module( QString id )
     m_component = nullptr;
     m_funcBlock = nullptr;
     m_index = 0;
-    m_changed = false;
+    m_modChanged = false;
 }
 Module::~Module(){}
 

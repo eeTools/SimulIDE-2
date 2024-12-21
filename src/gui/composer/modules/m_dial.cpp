@@ -9,6 +9,7 @@
 #include "m_dial.h"
 #include "fblock.h"
 #include "fcomponent.h"
+#include "dialwidget.h"
 
 #include "boolprop.h"
 #include "intprop.h"
@@ -91,8 +92,8 @@ void mDial::initModule()
 
 void mDial::runStep()
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     m_output = m_dialW->value();
     m_outSignal.changed();
@@ -104,7 +105,7 @@ void mDial::setMinVal( int min )
     if( min > m_maxVal ) min = m_maxVal;
     m_minVal = min;
 
-    m_changed = true;
+    m_modChanged = true;
 }
 
 void mDial::setMaxVal( int max )
@@ -113,7 +114,7 @@ void mDial::setMaxVal( int max )
     if( max < m_minVal ) max = m_minVal;
     m_maxVal = max;
 
-    m_changed = true;
+    m_modChanged = true;
 }
 
 void mDial::setSteps( int s )
@@ -141,6 +142,8 @@ void mDial::setSlider( bool s )
     updateProxy();
 }
 
+double mDial::scale() { return m_dialW->scale(); }
+
 void mDial::setScale( double s )
 {
     if( s <= 0 ) return;
@@ -163,7 +166,7 @@ void mDial::setPosition( QPointF p )
 
 void mDial::dialChanged( int ) // Called when dial is rotated
 {
-    m_changed = true;
+    m_modChanged = true;
     //if( !Simulator::self()->isRunning() ) updateStep();
 }
 

@@ -65,8 +65,8 @@ void AbOp::initModule()
 
 void AbOp::runStep()
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     m_inputA = m_inSlotA.intData() & m_mask;
     m_inputB = m_inSlotB.intData() & m_mask;

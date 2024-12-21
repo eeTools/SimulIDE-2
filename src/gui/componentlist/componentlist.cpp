@@ -66,9 +66,62 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
 {
     m_compSetDir = compSetDir;
 
-    if( compSetDir.cd("components") )
+
+
+    QStringList compList = compSetDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot /*QDir::Files*/ );
+    /// if( compList.isEmpty() ) return;                  // No comp sets to load
+
+    qDebug() << "\n" << tr("    Loading Component sets at:")<< "\n" << compSetDir.absolutePath()<<"\n";
+
+    for( QString comp : compList )
     {
-        qDebug() << "\n" << tr("    Loading User Components at:")<< "\n" << compSetDir.absolutePath()+"/components"<<"\n";
+        QString path = compSetDir.absoluteFilePath( comp );
+        QFileInfo fileInfo = QFileInfo( path );
+
+        if( fileInfo.isDir() ) LoadCompSetAt( path );
+        else{
+            if( fileInfo.suffix() != "comp") continue;
+
+            QString doc = fileToString( path, "ComponentList::LoadCompSetAt" );
+            QString line = doc.split("\n").takeFirst();
+
+            QStringList tokens = line.split("; ");
+            if( tokens.takeFirst() != "Component" ) continue;
+
+            QString label;
+            QString type;
+            QString icon;
+            TreeItem* categ = nullptr;
+
+            for( QString prop : tokens )
+            {
+                QStringList p = prop.split("=");
+                if( p.size() != 2 ) continue;
+                if     ( p.first() == "icon"    ) icon  = p.last();
+                else if( p.first() == "type"    ) type  = p.last();
+                else if( p.first() == "label"   ) label = p.last();
+                else if( p.first() == "category") categ = getCategory( p.last() );
+            }
+
+            if( categ )
+            {
+                addItem( label, categ, ":/"+icon, type );
+               m_dataFileList.insert( type, path );
+            }
+        }
+    }
+    qDebug() << "\n";
+    /// sortByColumn( 1, Qt::DescendingOrder );
+
+
+
+
+
+
+
+    if( compSetDir.cd("Components") )
+    {
+        qDebug() << "\n" << tr("    Loading User Components at:")<< "\n" << compSetDir.absolutePath()+"/Components"<<"\n";
         loadComps( compSetDir );
         compSetDir.cd("..");
     }
@@ -78,7 +131,7 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
         if( !dirList.isEmpty() )
         {
             TreeItem* catItem = getCategory("test");
-            if( !catItem ) catItem = addCategory("test","test","","" );
+            //if( !catItem ) catItem = addCategory("test","test","","" );
 
             for( QString compName : dirList )
             {
@@ -180,8 +233,11 @@ void ComponentList::loadComps( QDir compSetDir )
         if( attribs.hasAttribute("compname") )
             compName = attribs.value("compname").toString();
 
-        /// TODO: reuse get category from catPath
         QString category = attribs.value("category").toString();
+        TreeItem* catItem = getCategory( category );
+
+        /// TODO: reuse get category from catPath
+        /*QString category = attribs.value("category").toString();
         QStringList catPath = category.split("/");
 
         TreeItem* catItem = nullptr;
@@ -192,12 +248,12 @@ void ComponentList::loadComps( QDir compSetDir )
             parent = category;
             category = catPath.takeFirst();
             catItem = getCategory( category );
-            if( !catItem /*&& !parent.isEmpty()*/ )
+            if( !catItem )
             {
                 QString catTr = QObject::tr( category.toLocal8Bit() );
                 catItem = addCategory( catTr, category, parent, "" );
             }
-        }
+        }*/
         QString type = attribs.value("itemtype").toString();
 
         if( !type.isEmpty() && !m_components.contains( compName ) )
@@ -249,7 +305,9 @@ void ComponentList::loadXml( QString xmlFile )
                     icon = MainWindow::self()->getDataFilePath("images/"+icon);
             }
 
-            QString catFull = reader.attributes().value("category").toString();
+            QString category = reader.attributes().value("category").toString();
+            TreeItem* catItem = getCategory( category );
+            /*QString catFull = reader.attributes().value("category").toString();
             //catFull.replace( "IC 74", "Logic/IC 74");
             QStringList catPath = catFull.split("/");
 
@@ -261,12 +319,12 @@ void ComponentList::loadXml( QString xmlFile )
                 parent = category;
                 category = catPath.takeFirst();
                 catItem = getCategory( category );
-                if( !catItem /*&& !parent.isEmpty()*/ )
+                if( !catItem )
                 {
                     QString catTr = QObject::tr( category.toLocal8Bit() );
                     catItem = addCategory( catTr, category, parent, icon );
                 }
-            }
+            }*/
 
             QString type = reader.attributes().value("type").toString();
             QString folder = reader.attributes().value("folder").toString();

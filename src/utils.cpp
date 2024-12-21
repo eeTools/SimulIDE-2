@@ -19,7 +19,7 @@
 #include "utils.h"
 #include "pin.h"
 
-QHash<QString, double> multipliers = {{"p",1e-12},{"n",1e-9},{"µ",1e-6},{"m",1e-3},{"k",1e3},{"M",1e6},{"G",1e9},{"T",1e12}};
+QMap<QString, double> multipliers = {{"p",1e-12},{"n",1e-9},{"µ",1e-6},{"m",1e-3},{"k",1e3},{"M",1e6},{"G",1e9},{"T",1e12}};
 
 double getMultiplier( QString mult )
 {

@@ -68,9 +68,9 @@ void CanvasBase::clearCanvas()
 
 WireBase* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
 {
-    WireBase* wire = nullptr;
+    WireBase*    wire = nullptr;
     PinBase* startpin = nullptr;
-    PinBase* endpin   = nullptr;
+    PinBase*   endpin = nullptr;
     QString startpinid, endpinid;
     QStringList pointList;
 

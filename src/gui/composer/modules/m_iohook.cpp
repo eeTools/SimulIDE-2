@@ -41,8 +41,8 @@ IoHook::~IoHook(){}
 
 void IoHook::runStep()
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     m_outState = m_inputSlot.intData();
 

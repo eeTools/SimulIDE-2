@@ -39,8 +39,8 @@ class ListBase : public QTreeWidget
         virtual void registerItems(){;}
 
         void addItem( listItem_t item );
-        void addItem( QString caption, TreeItem* catItem, QString icon, QString type );
-        void addItem( QString caption, TreeItem* catItem, QIcon &icon, QString type );
+        void addItem( QString label, TreeItem* catItem, QString icon, QString type );
+        void addItem( QString label, TreeItem* catItem, QIcon &icon, QString type );
         TreeItem* addCategory( QString nameTr, QString name, QString parent, QString icon );
 
         QString getIcon( QString folder, QString name );

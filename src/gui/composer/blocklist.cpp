@@ -34,6 +34,7 @@ BlockList::~BlockList(){}
 #include "m_delay.h"
 #include "m_wavegen.h"
 #include "m_dial.h"
+#include "m_button.h"
 #include "m_property.h"
 
 void BlockList::registerItems()
@@ -48,6 +49,7 @@ void BlockList::registerItems()
     addItem( BitToInt::registerItem() );
     addItem( IntToBit::registerItem() );
     addCategory( tr("Controls"),"Controls","","" );
+    addItem( mButton::registerItem() );
     addItem( mDial::registerItem() );
     addCategory( tr("Other"),"Other","","" );
     addItem( WaveGen::registerItem() );

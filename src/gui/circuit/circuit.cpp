@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "subcircuit.h"
 #include "subpackage.h"
+#include "fcomponent.h"
 //#include "mcu.h"
 #include "simulator.h"
 #include "linker.h"
@@ -426,7 +427,12 @@ Component* Circuit::createItem( QString type, QString id, bool map )
 {
     CompBase* comp = ComponentList::self()->createItem( type, id );
 
-    /// if( !comp ) comp = new fComponent( type, id );
+    if( !comp )
+    {
+        fComponent* fComp = new fComponent( type, id, this );
+        fComp->setup();
+        comp = fComp;
+    }
 
     if( comp && map ) m_compMap[id] = comp;
     return (Component*)comp;

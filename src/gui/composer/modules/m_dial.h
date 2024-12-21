@@ -8,7 +8,9 @@
 
 #include "module.h"
 #include "modsignal.h"
-#include "dialwidget.h"
+
+class DialWidget;
+class QGraphicsProxyWidget;
 
 class mDial : public Module
 {
@@ -43,7 +45,7 @@ class mDial : public Module
         bool slider() { return m_slider; }
         void setSlider( bool s );
 
-        double scale() { return m_dialW->scale(); }
+        double scale();
         void setScale( double s );
 
     public slots:

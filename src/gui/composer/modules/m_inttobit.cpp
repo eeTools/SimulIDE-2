@@ -46,8 +46,8 @@ void IntToBit::initModule()
 
 void IntToBit::runStep()
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     int input = m_inputSlot.intData() & m_mask;
 

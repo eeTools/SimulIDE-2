@@ -50,12 +50,12 @@ class Module : public CompBase
         std::vector<ModSlot*>   getSlots()   { return m_slots; }
 
         virtual ModSlot* getSlot( QString name );
-        virtual void connect( QString signal, ModSlot* slot, bool* modChanged, bool* fCompChanged  );
+        virtual void connect( QString signal, ModSlot* slot, bool* modChanged, bool* fCompChanged );
 
     protected:
         int m_index;
 
-        bool m_changed;
+        bool m_modChanged;
 
         fComponent* m_component;
         FuncBlock*  m_funcBlock;

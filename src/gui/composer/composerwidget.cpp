@@ -216,7 +216,7 @@ void ComposerWidget::save( QString file )
     compStr += "; width="   + QString::number( m_fComp->width() );
     compStr += "; height="  + QString::number( m_fComp->height() );
     compStr += "; shape="   + m_fComp->shapeStr();
-    compStr += "; type="    + m_fComp->itemType();
+    compStr += "; type="    + m_listItem.itemType();
     compStr += "; label="   + m_listItem.label();
     compStr += "; category="+ m_listItem.category();
     compStr += "; icon="    + m_listItem.icon();

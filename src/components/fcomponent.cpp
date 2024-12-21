@@ -44,6 +44,7 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
     m_minWidth = 4;
     m_minHeight = 4;
     m_startHalf = false;
+    m_compChanged = false;
     setShapeStr("Rectangle");
 
     m_area = QRect(-m_width*8/2,-m_height*8/2, m_width*8, m_height*8 );
@@ -78,10 +79,11 @@ void fComponent::initialize()
 
 void fComponent::voltChanged()
 {
-    while( m_changed )  /// TODO: optimize list
+    while( m_compChanged )
     {
-        m_changed = false;
-        for( Module* module : m_activeMod ) module->runStep();
+        m_compChanged = false;
+        for( Module* module : m_activeMod )  /// TODO: optimize list
+            module->runStep();
     }
 }
 
@@ -127,7 +129,7 @@ void fComponent::setup() // Called from Circuit
         QString uid = properties.takeFirst().value;
         QString newUid = uid;
 
-        if( type == "Wire" )
+        if( type == "FuncWire" )
         {
             QString signalStr;
             Module* signalModule = nullptr;
@@ -152,7 +154,7 @@ void fComponent::setup() // Called from Circuit
                     if( signalStr.isEmpty() ) qDebug() << "fComponent::setup Error creating Connection " << uid;
                     else if( slot ) // Create connetion Signal->Slot
                     {
-                        signalModule->connect( signalStr, slot, &slotModule->m_changed, &m_changed );
+                        signalModule->connect( signalStr, slot, &slotModule->m_modChanged, &m_compChanged );
                     }
                     else           // Must be a property
                     {
@@ -201,7 +203,8 @@ void fComponent::setup() // Called from Circuit
                 for( prop_t prop : properties )
                     module->setPropStr( prop.name, prop.value );
             }
-            else qDebug() << "fComponent::setup Error creating Module" << uid;
+            else
+                qDebug() << "fComponent::setup Error creating Module" << uid;
         }
     }
 

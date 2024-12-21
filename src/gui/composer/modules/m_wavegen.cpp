@@ -48,8 +48,8 @@ void WaveGen::initModule()
 
 void WaveGen::runStep()
 {
-    if( !m_changed ) return;
-    m_changed = false;
+    if( !m_modChanged ) return;
+    m_modChanged = false;
 
     ///m_input = m_inputSlot.intData() & m_mask;
     //for( int i=0; i<m_bits; ++i )

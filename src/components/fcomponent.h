@@ -70,6 +70,7 @@ class fComponent : public Component, public Element
         int m_minHeight;
 
         bool m_startHalf;
+        bool m_compChanged;
 
         fShape_t m_shape;
         QString m_shapeStr;
