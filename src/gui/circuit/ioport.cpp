@@ -24,10 +24,10 @@ void IoPort::reset()
     m_index = 0;
     m_pinState  = 0;
     m_nextState = 0;
-    m_pinDirection = 0;
+    //m_pinDirection = 0;
     m_pinMode  = input;
 
-    for( IoPin* pin : m_pins ) {
+    for( IoPin* pin : m_ioPins ) {
         pin->setOutState( 0 );
         pin->setPinMode( input );
     }
@@ -78,7 +78,7 @@ void IoPort::setOutState( uint32_t val )
 
     for( int i=0; i<m_numPins; ++i ){
         uint32_t flag = 1<<i;
-        if( changed & flag ) m_pins[i]->setOutState( (val & flag) > 0 ); // Pin changed
+        if( changed & flag ) m_ioPins[i]->setOutState( (val & flag) > 0 ); // Pin changed
     }
 }
 
@@ -90,18 +90,18 @@ void IoPort::setOutStatFast( uint32_t val )
 
     for( int i=0; i<m_numPins; ++i ){
         uint32_t flag = 1<<i;
-        if( changed & flag ) m_pins[i]->setOutStatFast( (val & flag) > 0 ); // Pin changed
+        if( changed & flag ) m_ioPins[i]->setOutStatFast( (val & flag) > 0 ); // Pin changed
     }
 }
 
 uint32_t IoPort::getInpState()
 {
     uint32_t data = 0;
-    for( int i=0; i<m_numPins; ++i ) if( m_pins[i]->getInpState() ) data += (1 << i);
+    for( int i=0; i<m_numPins; ++i ) if( m_ioPins[i]->getInpState() ) data += (1 << i);
     return data;
 }
 
-void IoPort::setDirection( uint32_t val )
+/*void IoPort::setDirection( uint32_t val )
 {
     uint32_t changed = m_pinDirection ^ val;  // See which Pins have actually changed
     if( changed == 0 ) return;
@@ -109,19 +109,19 @@ void IoPort::setDirection( uint32_t val )
 
     for( int i=0; i<m_numPins; ++i ){
         uint32_t flag = 1<<i;
-        if( changed & flag ) m_pins[i]->setPinMode( ((val & flag) > 0) ? output : input ); // Pin changed
-}   }
+        if( changed & flag ) m_ioPins[i]->setPinMode( ((val & flag) > 0) ? output : input ); // Pin changed
+}   }*/
 
 void IoPort::setPinMode( pinMode_t mode )
 {
     if( m_pinMode == mode ) return;
     m_pinMode = mode;
-    for( IoPin* pin : m_pins ) pin->setPinMode( mode );
+    for( IoPin* pin : m_ioPins ) pin->setPinMode( mode );
 }
 
 /*void IoPort::changeCallBack( eElement* el, bool ch )
 {
-    for( IoPin* pin : m_pins ) pin->changeCallBack( el, ch );
+    for( IoPin* pin : m_ioPins ) pin->changeCallBack( el, ch );
 }*/
 
 void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
@@ -130,19 +130,19 @@ void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
     m_numPins = pins.toUInt(0,0);
     if( m_numPins )
     {
-        m_pins.resize( m_numPins );
+        m_ioPins.resize( m_numPins );
 
         for( int i=0; i<m_numPins; ++i )
         {
             if( pinMask & 1<<i )
-                m_pins[i] = createPin( m_name+QString::number(i)+"@"+compId , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
+                m_ioPins[i] = createPin( m_name+QString::number(i)+"@"+compId , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
         }
     }else{
         QStringList pinList = pins.split(",");
         for( QString pinName : pinList )
         {
             IoPin* pin = createPin( m_name+pinName+"@"+compId , comp );//new IoPin( this, i, m_name+pinName, IoComp );
-            m_pins.emplace_back( pin );
+            m_ioPins.emplace_back( pin );
             m_numPins++;
         }
     }
@@ -157,8 +157,8 @@ IoPin* IoPort::createPin( QString id, Component* comp )
 
 IoPin* IoPort::getPinN( uint8_t i )
 {
-    if( i >= m_pins.size() ) return nullptr;
-    return m_pins[i];
+    if( i >= m_ioPins.size() ) return nullptr;
+    return m_ioPins[i];
 }
 
 IoPin* IoPort::getPin( QString pinName )
@@ -170,12 +170,11 @@ IoPin* IoPort::getPin( QString pinName )
         int pinNumber = pinId.toInt();
         pin = getPinN( pinNumber );
     }else{
-        for( IoPin* ioPin : m_pins )
+        for( IoPin* ioPin : m_ioPins )
         {
             QString pid = ioPin->pinId();
             pid = pid.split("-").last().remove( m_name );
-            if( pid == pinName )
-                return ioPin;
+            if( pid == pinName ) return ioPin;
         }
     }
     //if( !pin )

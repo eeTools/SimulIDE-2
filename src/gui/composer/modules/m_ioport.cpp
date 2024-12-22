@@ -24,6 +24,7 @@ listItem_t mIoPort::registerItem(){
 
 mIoPort::mIoPort( QString name )
        : PortBase( name )
+       , IoPort( name )
        , m_inputSlot("input" , hookInputInt )
        , m_outSignal("output", hookOutputInt )
 {
@@ -61,11 +62,17 @@ void mIoPort::setup()
 void mIoPort::initModule()
 {
     m_modChanged = false;
+
+    pinMode_t pinMode = m_direction ? output : input;
+
+    m_ioPins.clear();
     for( PinBase* pin : m_pins )
     {
         IoPin* ioPin = (IoPin*)pin;
-        /// ioPin->initPin();
+        ioPin->setPinMode( pinMode );
+        m_ioPins.emplace_back( ioPin );
     }
+    m_numPins = m_pins.size();
 }
 
 void mIoPort::runStep() // Update outputs
@@ -73,14 +80,22 @@ void mIoPort::runStep() // Update outputs
     if( !m_modChanged ) return;
     m_modChanged = false;
 
-    m_state = m_inputSlot.intData();
-
-    m_outSignal.changed();
-    /// m_component->voltChanged();
+    if( m_direction == 1 ) // Output
+    {
+        m_state = m_inputSlot.intData();
+        setOutState( m_state );
+    }
+    else                   // Input
+    {
+        m_state = getInpState();
+        m_outSignal.changed();
+        /// m_component->voltChanged();
+    }
 }
 
 PinBase* mIoPort::addPin( QString id )
 {
     IoPin* pin = new IoPin( 0, QPoint(0, 0), id, m_component );
+    pin->setOutHighV( 5 );
     return pin;
 }

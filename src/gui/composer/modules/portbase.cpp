@@ -43,8 +43,8 @@ void PortBase::setSize( int size )
     {
         for( int i=size; i<m_size; ++i )
         {
-            m_component->deletePin( m_pins.at(i) );
-            m_pins.takeLast();
+            PinBase* pin = m_pins.takeLast();
+            m_component->deletePin( pin );
         }
     }
     m_size = size;

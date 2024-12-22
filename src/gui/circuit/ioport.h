@@ -34,7 +34,7 @@ class IoPort :public Element
         void setOutStatFast( uint32_t val );
         uint32_t getInpState();
 
-        void setDirection( uint32_t val );
+        ///void setDirection( uint32_t val );
         void setPinMode( pinMode_t mode );
         void setPinMode( uint mode ) { setPinMode( (pinMode_t) mode ); }
 
@@ -44,7 +44,7 @@ class IoPort :public Element
         IoPin* getPin( QString pinName );
 
         QString name() { return m_name; }
-        int     size() { return m_numPins; }
+        /// int     size() { return m_numPins; }
 
         // ----------------
         struct outState_t{
@@ -67,12 +67,12 @@ class IoPort :public Element
 
         uint m_pinState;
         uint m_nextState;
-        uint m_pinDirection;
+        //uint m_pinDirection;
 
         pinMode_t m_pinMode;
 
         uint8_t m_numPins;
-        std::vector<IoPin*> m_pins;
+        std::vector<IoPin*> m_ioPins;
 
         uint m_index;
         std::vector<outState_t>* m_outVector;

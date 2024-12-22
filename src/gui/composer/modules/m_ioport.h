@@ -7,11 +7,12 @@
 #define MIOPORT_H
 
 #include "portbase.h"
+#include "ioport.h"
 #include "modsignal.h"
 
 //class IoPin;
 
-class mIoPort : public PortBase
+class mIoPort : public PortBase, public IoPort
 {
     public:
         mIoPort( QString name );
