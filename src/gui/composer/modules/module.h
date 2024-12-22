@@ -18,14 +18,6 @@ class fComponent;
 class FuncBlock;
 class Module;
 
-/*struct listItem_t{
-    QString label;
-    QString type;
-    QString category;
-    QString icon;
-    Module* (*construct)(QString);
-};*/
-
 class Module : public CompBase
 {
     friend class fComponent;
@@ -33,8 +25,6 @@ class Module : public CompBase
     public:
         Module( QString id );
         ~Module();
-
-        //virtual void setProperty( QString name, QString val ) {;}
 
         virtual void setComponent( fComponent* c ) { m_component = c; }
         void setFuncBlock( FuncBlock*  f ) { m_funcBlock = f; }

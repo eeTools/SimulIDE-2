@@ -23,15 +23,9 @@ Canvas::~Canvas(){}
 
 void Canvas::drawBackground( QPainter* painter, const QRectF &rect )
 {
-    /*painter->setBrush(QColor( 255, 255, 255 ) );
-    painter->drawRect( m_scenerect );
-    return;*/
-
     painter->setBrush( QColor( 240, 240, 210 ) );
     painter->drawRect( m_scenerect );
     painter->setPen( QColor( 210, 210, 210 ) );
-
-    //if( m_hideGrid ) return;
 
     int startx = int(m_scenerect.x());///2;
     int endx   = int(m_scenerect.width())/2;

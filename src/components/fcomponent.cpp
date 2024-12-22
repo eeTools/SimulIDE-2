@@ -197,8 +197,7 @@ void fComponent::setup() // Called from Circuit
             if( module ){
                 module->setComponent( this );
                 m_modules.insert( uid, module );
-                /// if( type != "IoPin" )
-                    m_activeMod.append( module );
+                m_activeMod.append( module );
 
                 for( prop_t prop : properties )
                     module->setPropStr( prop.name, prop.value );

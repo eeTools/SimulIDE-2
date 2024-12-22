@@ -48,11 +48,7 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     //Circuit::self()->addHook( this, id );
 
 }
-Hook::~Hook()
-{
-    //Circuit::self()->remHook( m_id );
-    /// if( m_wire ) Hook::removeWire();
-}
+Hook::~Hook(){}
 
 void Hook::setWire( WireBase* w )
 {

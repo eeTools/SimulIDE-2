@@ -10,8 +10,6 @@
 #include "simulator.h"
 #include "circuit.h"
 
-//eNode IoPin::m_gndEnode("");
-
 IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode )
      : Pin( angle, pos, id, parent )
      , PinSource( id )
