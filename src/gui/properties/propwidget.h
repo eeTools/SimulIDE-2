@@ -15,6 +15,8 @@ class ComProperty;
 
 class PropWidget : public QWidget
 {
+    Q_OBJECT
+
     public:
         PropWidget( PropDialog* parent, CompBase* comp, ComProperty* prop );
         ~PropWidget();
@@ -24,6 +26,9 @@ class PropWidget : public QWidget
         virtual void updateName() {;}
 
         QString propId() { return m_propId; }
+
+    signals:
+        void showToggled( QString propId, bool checked );
 
     protected:
         void prepareChange();

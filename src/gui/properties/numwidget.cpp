@@ -61,8 +61,10 @@ void NumWidget::on_showVal_toggled( bool checked )
     if( m_blocked ) return;
     m_blocked = true;
 
-    if( checked ) m_component->setPropStr("ShowProp", m_propId );
-    else          m_component->setPropStr("ShowProp", "" );
+    //if( checked ) m_component->setPropStr("ShowProp", m_propId );
+    //else          m_component->setPropStr("ShowProp", "" );
+
+    emit showToggled( m_propId, checked );
 
     /// m_propDialog->updtValues();
     if( m_propDialog ) m_propDialog->changed();

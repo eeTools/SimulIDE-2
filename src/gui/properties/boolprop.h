@@ -30,9 +30,9 @@ class BoolProp : public ComProperty
         virtual QString getValStr() override
         { return (m_comp->*m_getter)() ? "1" : "0"; }
 
-    private:
-        void createWidget() override { m_widget = new BoolWidget( nullptr, m_comp, this ); }
+        PropWidget* createWidget() override { return new BoolWidget( nullptr, m_comp, this ); }
 
+    private:
         Comp* m_comp;
         bool (Comp::*m_getter)();
         void (Comp::*m_setter)(bool);

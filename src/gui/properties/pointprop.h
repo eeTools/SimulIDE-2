@@ -31,9 +31,9 @@ class PointProp : public ComProperty
         virtual QString getValStr()  override
         { return getStrPointF( (m_comp->*m_getter)() ); }
 
-    private:
-        void createWidget() override { m_widget = new StrWidget( nullptr, m_comp, this ); }
+        PropWidget* createWidget() override { return new StrWidget( nullptr, m_comp, this ); }
 
+    private:
         Comp* m_comp;
         QPointF (Comp::*m_getter)();
         void    (Comp::*m_setter)(QPointF);

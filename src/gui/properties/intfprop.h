@@ -41,10 +41,9 @@ class IntPropF : public ComProperty
         virtual double getValue() override
         { return m_value; }
 
-    private:
-        void createWidget() override
-        { m_widget = new NumWidget( nullptr, m_component, this ); }
+        PropWidget* createWidget() override { return new NumWidget( nullptr, m_component, this ); }
 
+    private:
         int m_value;
         int m_minVal;
         int m_maxVal;

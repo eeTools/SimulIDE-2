@@ -41,3 +41,5 @@ void PropWidget::saveChanges()
     if( m_propDialog ) m_propDialog->updtValues();
     else               updtValues();
 }
+
+#include "moc_propwidget.cpp"

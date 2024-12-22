@@ -27,8 +27,10 @@ class IntProp : public NumProp
         virtual double getValue()
         { return (m_comp->*m_getter)(); }
 
+        PropWidget* createWidget() override { return new NumWidget( nullptr, m_comp, this ); }
+
     private:
-        void createWidget() override { m_widget = new NumWidget( nullptr, m_comp, this ); }
+
         virtual void setVal( double v ) override { (m_comp->*m_setter)(v); }
 
         Comp* m_comp;

@@ -30,9 +30,9 @@ class ScriptProp : public ComProperty
         virtual QString getValStr() override
         { return (m_comp->*m_getter)(this); }
 
-    private:
-        void createWidget() override { m_widget = new StrWidget( nullptr, m_comp, this ); }
+        PropWidget* createWidget() override { return new StrWidget( nullptr, m_comp, this ); }
 
+    private:
         Comp* m_comp;
         QString (Comp::*m_getter)(ComProperty*);
         void    (Comp::*m_setter)(ComProperty*, QString);
