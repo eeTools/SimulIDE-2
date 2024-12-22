@@ -351,7 +351,7 @@ void CanvasBase::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
     {
         event->accept();
         ///if( event->modifiers() & Qt::ShiftModifier) m_newWire->m_freeLine = true;
-        ///m_newWire->updateConWireBase( event->scenePos() );
+        m_newWire->updateConRoute( event->scenePos() );
     }
     QGraphicsScene::mouseMoveEvent( event );
 }

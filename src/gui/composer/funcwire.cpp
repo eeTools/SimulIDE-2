@@ -16,8 +16,8 @@
 #define tr(str) simulideTr("FuncWire",str)
 
 FuncWire::FuncWire( QString id, PinBase* startpin, PinBase* endpin )
-       : WireBase( id, startpin )
-       , QGraphicsItem()
+        : WireBase( id, startpin )
+        , QGraphicsItem()
 {
     m_type = "FuncWire";
 
@@ -79,6 +79,29 @@ void FuncWire::refreshPointList()
     }
     m_pointList.append( QString::number( m_lastPoint.x() ) );
     m_pointList.append( QString::number( m_lastPoint.y() ) );
+}
+
+void FuncWire::invertPointList()
+{
+    PinBase* pin = m_startPin;
+    m_startPin = m_endPin;
+    m_endPin = pin;
+    QList<QPoint> list;
+
+    for( QPoint point : m_pList ) list.prepend( point );
+    list.prepend( m_lastPoint );
+
+    m_lastPoint = list.takeLast();
+    m_pList = list;
+}
+
+void FuncWire::updateConRoute( PinBase* pin )
+{
+    bool invert = pin == m_startPin;
+    if( invert ) invertPointList(); // Convert startPin in endPin
+
+    updateConRoute( pin->scenePos() );
+    if( invert ) invertPointList(); // Convert endPin in startPin
 }
 
 void FuncWire::updateConRoute( QPointF thisPoint )
@@ -145,24 +168,8 @@ void FuncWire::updateConRoute( QPointF thisPoint )
             }
         }
     }
+    update();
     Composer::self()->update();
-}
-
-void FuncWire::updateConRoute( PinBase* pin )
-{
-    if( pin == m_startPin ) // Convert startPin in endPin
-    {
-        m_startPin = m_endPin;
-        m_endPin = pin;
-        QList<QPoint> list;
-
-        for( QPoint point : m_pList ) list.prepend( point );
-        list.prepend( m_lastPoint );
-
-        m_lastPoint = list.takeLast();
-        m_pList = list;
-    }
-    updateConRoute( pin->scenePos() );
 }
 
 void FuncWire::move( QPointF delta )
@@ -291,27 +298,17 @@ void FuncWire::mousePressEvent( QGraphicsSceneMouseEvent* event )
     {
         if( event->modifiers() == Qt::ControlModifier ) setSelected( !isSelected() ); // Select - Deselect
 
-        else if( event->modifiers() & Qt::ShiftModifier ) // Move Corner
+        /*else if( event->modifiers() & Qt::ShiftModifier ) // Move Corner
         {
             QPoint evPoint = toGrid( event->scenePos() ).toPoint();
 
             ///if     ( evPoint==p1() ) m_moveP1 = true;
             ///else if( evPoint==p2() ) m_moveP2 = true;
-        }
-        else                                          // Connecting a wire here
-        {
-            WireBase* route = Composer::self()->getNewWire();
-            if( Composer::self()->getNewWire() )     // FuncWire started at Pin is connecting here
-            {
-                FuncWire* wire = static_cast<FuncWire*>(route);
-                if( wire == this ) return;
-                if( wire->wireFlags() != m_wireFlags ) { event->ignore(); return; } // Avoid connect Bus with no-Bus
-            }
-            QPoint point1 = toGrid( event->scenePos() ).toPoint();
-
-            if( connectToWire( point1 ) ) event->accept();
-            else                          event->ignore();
-}   }   }
+        }*/
+        else QGraphicsItem::mousePressEvent( event );
+    }
+    else QGraphicsItem::mousePressEvent( event );
+}
 
 void FuncWire::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 {

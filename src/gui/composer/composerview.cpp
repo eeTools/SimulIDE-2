@@ -13,6 +13,7 @@
 #include "composer.h"
 #include "fblock.h"
 #include "module.h"
+#include "utils.h"
 
 ComposerView* ComposerView::m_pSelf = nullptr;
 
@@ -139,7 +140,7 @@ void ComposerView::dragEnterEvent( QDragEnterEvent* event )
 void ComposerView::dragMoveEvent( QDragMoveEvent* event )
 {
     event->accept();
-    if( m_enterItem ) m_enterItem->setPos( mapToScene( event->pos() ) );
+    if( m_enterItem ) m_enterItem->setPos( toGrid( mapToScene( event->pos()) ) );
 }
 
 void ComposerView::dragLeaveEvent( QDragLeaveEvent* event )

@@ -55,6 +55,7 @@ class FuncWire : public WireBase, public QGraphicsItem
         void refreshPointList() override;
         void splitCon( int index, Node* node );
         int  eventPointIndex( QPoint cutPoint );
+        void invertPointList();
 
         bool m_moving;
 

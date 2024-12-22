@@ -161,7 +161,6 @@ void Pin::mousePressEvent( QGraphicsSceneMouseEvent* event )
             WireBase* wire = Circuit::self()->getNewWire();
             if( wire )
             {
-
                 if( m_wireFlags != wire->wireFlags()  ) // Avoid connect Bus with no-Bus
                 { event->ignore(); return; }
             }

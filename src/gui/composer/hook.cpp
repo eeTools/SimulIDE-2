@@ -27,7 +27,7 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     m_angle = angle;
     m_space = 0;
 
-    m_area = QRect(-5,-5, 10, 10);
+    m_area = QRect(-4,-4, 8, 8);
 
     m_color[0] = QColor(  50,  50,  50 ); // None
     m_color[1] = QColor( 250, 240, 240 ); // Property
@@ -37,8 +37,6 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
     m_color[5] = QColor(  50, 150, 255 ); // Output bit
     m_color[6] = QColor(  50, 255, 100 ); // Output int
     m_color[7] = QColor( 255, 200,  30 ); // Output doub
-
-    //setConnector( nullptr );
 
     setFontSize( 11 );
     setAcceptHoverEvents( true );
@@ -59,8 +57,10 @@ Hook::~Hook()
 void Hook::setWire( WireBase* w )
 {
     if( m_wireList.contains(w) ) return;
-
     m_wireList.append( w );
+
+    if( m_wireList.isEmpty() ) setCursor( Qt::CrossCursor );
+    else if( !m_output )       setCursor( Qt::ArrowCursor );
 }
 
 void Hook::wireRemoved( WireBase* w )
@@ -81,7 +81,10 @@ void Hook::mousePressEvent( QGraphicsSceneMouseEvent* event )
         event->accept();
 
         if( Composer::self()->getNewWire() ){
-            if( !m_output && !m_wire ) Composer::self()->closeWire( this );
+            if( !m_output && m_wireList.isEmpty() )
+            {
+                Composer::self()->closeWire( this );
+            }
         }
         else if( m_output ) Composer::self()->startWire( this );
     }
@@ -90,7 +93,6 @@ void Hook::mousePressEvent( QGraphicsSceneMouseEvent* event )
 void Hook::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {
     if( !isVisible() ) return;
-    //m_HookChanged = false;
 
     /*QPen pen0( m_color[0], 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
     p->setPen(pen0);
