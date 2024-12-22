@@ -81,9 +81,6 @@ void BitToInt::setSize( int bits )
     }
     m_bits = bits;
 
-    if( m_funcBlock ){
-        m_funcBlock->updateSlots();
-        m_funcBlock->updateSize();
-    }
+    if( m_funcBlock ) m_funcBlock->updateWidget();
 }
 

@@ -51,10 +51,10 @@ mButton::mButton( QString name )
         new PointProp<mButton>("pos", tr("Position"),""
                             , this, &mButton::position, &mButton::setPosition ),
 
-        new IntProp<mButton>("width", tr("Scale") ,""
+        new IntProp<mButton>("width", tr("Width") ,""
                            , this, &mButton::width , &mButton::setWidth ),
 
-        new IntProp<mButton>("height", tr("Scale") ,""
+        new IntProp<mButton>("height", tr("Height") ,""
                            , this, &mButton::height , &mButton::setHeight ),
     },0} );
 }

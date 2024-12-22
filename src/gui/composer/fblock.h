@@ -12,6 +12,7 @@
 #include "compbase.h"
 
 class fComponent;
+class PropWidget;
 class Module;
 class Hook;
 
@@ -32,9 +33,7 @@ class FuncBlock : public QGraphicsItem
 
         void move( QPointF delta );
 
-        void updateSignals();
-        void updateSlots();
-        void updateSize();
+        void updateWidget();
 
         QString toString();
 
@@ -50,6 +49,7 @@ class FuncBlock : public QGraphicsItem
 
     protected slots:
         virtual void slotProperties();
+        void showToggled( QString propId, bool checked );
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
@@ -59,27 +59,31 @@ class FuncBlock : public QGraphicsItem
 
         void setup();
 
-        bool m_moving;
+        int visibleProperties();
+        void updateSignals();
+        void updateSlots();
+        void updateSize();
 
-        int m_propSize;
-        int m_propSlots;
-        int m_propSignals;
+        bool m_moving;
 
         QString m_type;
         QString m_id;
 
         QRectF  m_area;
-        QRectF  m_header;
+        QRectF  m_bodyArea;
+        QRectF  m_headArea;
+        QRectF  m_PropArea;
 
         QColor  m_color;
         QColor  m_hColor;
+        QColor  m_pColor;
 
         QFont m_font;
 
         QList<FuncBlock*> m_blockMoveList;
-
         QList<Hook*> m_signalHooks;
         QList<Hook*> m_slotHooks;
+        QMap<QString, Hook*> m_propHooks;
 
         fComponent* m_fComp;
         Module* m_module;

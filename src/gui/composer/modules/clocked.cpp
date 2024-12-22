@@ -101,10 +101,7 @@ void Clocked::setTrigger( trigger_t trigger )
 
     m_trigger = trigger;
 
-    if( m_funcBlock ){
-        m_funcBlock->updateSlots();
-        m_funcBlock->updateSize();
-    }
+    if( m_funcBlock ) m_funcBlock->updateWidget();
 }
 
 void Clocked::remove()

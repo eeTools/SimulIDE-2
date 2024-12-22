@@ -84,9 +84,6 @@ void IntToBit::setSize( int bits )
     m_bits = bits;
     m_mask = pow( 2, m_bits )-1;
 
-    if( m_funcBlock ){
-        m_funcBlock->updateSignals();
-        m_funcBlock->updateSize();
-    }
+    if( m_funcBlock ) m_funcBlock->updateWidget();
 }
 

@@ -25,6 +25,9 @@
 #include "propwidget.h"
 #include "modsignal.h"
 
+#define HOOK_HEIGHT 8
+#define HEAD_HEIGHT 16
+
 FuncBlock::FuncBlock( fComponent* fComp, Module* module, QString type, QString id )
          : QGraphicsItem()
 {
@@ -44,9 +47,10 @@ FuncBlock::FuncBlock( fComponent* fComp, Module* module, QString type, QString i
     }
     m_color  = QColor( 85, 85, 90 );
     m_hColor = QColor( 240, 240, 215 );
+    m_pColor = QColor( 105, 105, 95 );
 
     m_font.setFamily("Ubuntu Mono");
-    m_font.setPixelSize( 14 );
+    m_font.setPixelSize( 13 );
     m_font.setStretch( 100 );
     m_font.setLetterSpacing( QFont::PercentageSpacing, 100 );
 #ifndef Q_OS_UNIX
@@ -56,9 +60,6 @@ FuncBlock::FuncBlock( fComponent* fComp, Module* module, QString type, QString i
 
     setCursor( Qt::OpenHandCursor );
     setFlag( QGraphicsItem::ItemIsSelectable, true );
-
-    m_propSlots   = 0;
-    m_propSignals = 0;
 
     if( m_module ) setup();
 }
@@ -77,7 +78,7 @@ void FuncBlock::setup()
     m_module->setFuncBlock( this );
     m_module->setComponent( m_fComp );
 
-    m_propSize= 0;
+    //m_propSize= 0;
     int p = 0;
     QList<propGroup>* groups = m_module->properties();
     for( propGroup group : *groups )
@@ -92,52 +93,80 @@ void FuncBlock::setup()
             //if( prop->flags() & propHidden ) continue; // Property hidden
             if( prop->id() == "" )           continue; // Just a label
 
-            //QString type = prop->type();
-            if( (prop->flags() & propSignal) || (prop->flags() & propSlot ) )
+            // We use propWidget in properties dialog to call us
+            // Then we show/hide the hook here
+            QObject::connect( prop->getWidget(), &PropWidget::showToggled,
+                              [=](QString propId, bool checked){ showToggled( propId, checked ); } );
+
+            QString propId = prop->id();
+
+            //if( prop->flags() & propSlot )
             {
-                PropWidget* mp = prop->getWidget();        // Property widget
-                if( !mp ) continue;
-
-                mp->setup( false );
-                mp->setFixedSize( 100, 18 );
-                mp->setStyleSheet("font-size:11px; font-family:Ubuntu Mono; background-color:#696964; color:#EBFFFF;");
-
-                QGraphicsProxyWidget* proxy = Composer::self()->addWidget( mp );
-                proxy->setZValue( 100-p );
-                proxy->setParentItem( this );
-                proxy->setPos( QPoint(-50, p*20-8) );
-
-                if( prop->flags() & propSlot ){
-                    Hook* hook0 = new Hook( 180, QPoint(-60, p*20 ), prop->id()+"@"+m_id,-1, hookProperty, this );
-                    m_slotHooks.append( hook0);
-                    m_propSlots++;
-                }
-                if( prop->flags() & propSignal ){
-                    Hook* hook1 = new Hook( 0, QPoint( 60, p*20 ), prop->id()+"@"+m_id,-1, hookProperty, this );
-                    m_signalHooks.append( hook1 );
-                    m_propSignals++;
-                }
-                p++;
+                Hook* hook0 = new Hook( 180, QPoint(-60, p*HOOK_HEIGHT ), propId+"@"+m_id,-1, hookProperty, this );
+                hook0->setLabelText( prop->label() );
+                hook0->setFontSize( 10 );
+                hook0->setVisible( false );
+                m_propHooks.insert( propId, hook0 );
             }
+            /*if( prop->flags() & propSignal ){
+                Hook* hook1 = new Hook( 0, QPoint( 60, p*HOOK_HEIGHT ), propId+"@"+m_id,-1, hookProperty, this );
+                //hook1->setLabelText( prop->label() );
+                m_signalHooks.append( hook1 );
+                m_propSignals++;
+            }*/
+            p++;
         }
-        m_propSize += p;
     }
 
+    updateWidget();
+}
+
+void FuncBlock::showToggled( QString propId, bool checked )
+{
+    Hook* hook = m_propHooks.value( propId );
+    if( !hook ) return;
+
+    hook->setVisible( checked );
+    updateSize();
+}
+
+void FuncBlock::updateWidget()
+{
     updateSlots();
     updateSignals();
     updateSize();
+}
 
-    /// TODO: Add secondary property groups as dropdowns
+void FuncBlock::updateSize()
+{
+    int propSlots = visibleProperties();
+    if( propSlots > 0 ) propSlots++;
+    int  sizeIn   = m_slotHooks.size();
+    int  sizeOut  = m_signalHooks.size();
+
+    bool fullSize = sizeIn && sizeOut;
+    int width     = fullSize ? 120 : 60;
+
+    int hookSize = (sizeIn > sizeOut) ? sizeIn : sizeOut;
+    m_area     = QRectF(-60  ,  -HEAD_HEIGHT    , width  , HEAD_HEIGHT+(propSlots+hookSize+1)*HOOK_HEIGHT+2 );
+    m_bodyArea = QRectF(-60  , 2-HEAD_HEIGHT    , width  , HEAD_HEIGHT+(propSlots+hookSize+1)*HOOK_HEIGHT );
+    m_headArea = QRectF(-59.5, 2-HEAD_HEIGHT-0.5, width-1, HEAD_HEIGHT );
+    m_PropArea = QRectF(-59.5, 2-HEAD_HEIGHT-0.5, width-1, HEAD_HEIGHT+propSlots*HOOK_HEIGHT );
+
+    for( int i=0; i<m_slotHooks.size();   ++i ) m_slotHooks.at( i )->setY( (propSlots+i+1)*HOOK_HEIGHT );
+    for( int i=0; i<m_signalHooks.size(); ++i ) m_signalHooks.at( i )->setY( (propSlots+i+1)*HOOK_HEIGHT );
+
+    Composer::self()->update();
 }
 
 void FuncBlock::updateSignals()
 {
-    bool fullSize = m_propSize > 0 || m_slotHooks.size() > 0;
+    bool fullSize = m_slotHooks.size() > 0;
     int posX = fullSize ? 60 : 0;
 
     std::vector<ModSignal*> signList = m_module->getSignals();
     int newSize = signList.size();
-    int oldSize = m_signalHooks.size()-m_propSignals;
+    int oldSize = m_signalHooks.size();
 
     if( newSize > oldSize )    // Create Signal Hooks
     {
@@ -145,16 +174,16 @@ void FuncBlock::updateSignals()
         {
             ModSignal* signal = signList.at(i);
             QString name = signal->name();
-            Hook*   hook = new Hook( 0, QPoint( posX, m_propSize*20+i*10 ), name+"@"+m_id, i, signal->type(), this );
+            Hook*   hook = new Hook( 0, QPoint( posX, 0 ), name+"@"+m_id, i, signal->type(), this );
             hook->setLabelText( name );
+            hook->setFontSize( 10 );
             m_signalHooks.append( hook );
         }
     }else                     // Delete Signal Hooks
     {
-        for( int i=newSize+m_propSignals; i<oldSize+m_propSignals; ++i )
+        for( int i=newSize; i<oldSize; ++i )
         {
-            Hook* hook = m_signalHooks.at(i);
-            m_signalHooks.removeOne( hook );
+            Hook* hook = m_signalHooks.takeLast();
             delete hook;
         }
     }
@@ -164,7 +193,7 @@ void FuncBlock::updateSlots()
 {
     std::vector<ModSlot*> slotList = m_module->getSlots();
     int newSize = slotList.size();
-    int oldSize = m_slotHooks.size()-m_propSlots;
+    int oldSize = m_slotHooks.size();
 
     if( newSize > oldSize )    // Create Slot Hooks
     {
@@ -173,16 +202,16 @@ void FuncBlock::updateSlots()
             ModSlot* slot = slotList.at(i);
             QString  name = slot->name();
 
-            Hook* hook = new Hook( 180, QPoint(-60, m_propSize*20+i*10 ), name+"@"+m_id,-1, slot->type(), this );
+            Hook* hook = new Hook( 180, QPoint(-60, 0 ), name+"@"+m_id,-1, slot->type(), this );
             hook->setLabelText( name );
+            hook->setFontSize( 10 );
             m_slotHooks.append( hook );
         }
     }else                     // Delete Slot Hooks
     {
-        for( int i=newSize+m_propSlots; i<oldSize+m_propSlots; ++i )
+        for( int i=newSize; i<oldSize; ++i )
         {
-            Hook* hook = m_slotHooks.at(i);
-            m_slotHooks.removeOne( hook );
+            Hook* hook = m_slotHooks.takeLast();
             delete hook;
         }
     }
@@ -205,20 +234,6 @@ Hook* FuncBlock::getSlotHook( QString id )
 {
     for( Hook* hook : m_slotHooks ) if( hook->pinId() == id ) return hook;
     return nullptr;
-}
-
-void FuncBlock::updateSize()
-{
-    int  sizeIn   = (m_slotHooks.size()-m_propSlots)*10;
-    int  sizeOut  = (m_signalHooks.size()-m_propSignals)*10;
-    bool fullSize = m_propSize > 0 || (sizeIn && sizeOut);
-    int width     = fullSize ? 120 : 60;
-
-    int hookSize = (sizeIn > sizeOut) ? sizeIn : sizeOut;
-    m_area   = QRectF(-60,-30, width, 30+m_propSize*20+hookSize );
-    m_header = QRectF(-59.5,-29.5, width-1, 18 );
-
-    Composer::self()->update();
 }
 
 QString FuncBlock::toString()
@@ -268,7 +283,7 @@ void FuncBlock::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 {
     event->accept();
 
-    QPointF delta = event->scenePos() - event->lastScenePos();
+    QPointF delta = toGrid(event->scenePos()) - toGrid(event->lastScenePos());
 
     QList<QGraphicsItem*> itemlist = Composer::self()->selectedItems();
 
@@ -322,21 +337,33 @@ void FuncBlock::slotProperties()
     m_propDialog->show();
 }
 
+int FuncBlock::visibleProperties()
+{
+    int propSlots = 0;
+    for( Hook* hook : m_propHooks ) if( hook->isVisible() ) propSlots++;
+    return propSlots;
+}
+
+
 void FuncBlock::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {
     QPen pen( Qt::black, 1.3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
     p->setPen( pen );
-    p->setBrush( m_color );
 
-    //p->fillRect( m_area, color );
-    p->drawRoundedRect( m_area, 5, 5 );
+    p->setBrush( m_color );
+    p->drawRoundedRect( m_bodyArea, 5, 5 );
 
     pen.setWidth( 1 );
     p->setPen( pen );
+
+    if( m_PropArea.height() > HEAD_HEIGHT ) {
+        p->setBrush( m_pColor );
+        p->drawRoundedRect( m_PropArea, 5, 5 );
+    }
     p->setBrush( m_hColor );
-    p->drawRoundedRect( m_header, 5, 5 );
+    p->drawRoundedRect( m_headArea, 5, 5 );
 
     p->setBrush( QColor( 0, 0, 20 ) );
     p->setFont( m_font );
-    p->drawText( m_header, Qt::AlignCenter, m_type );
+    p->drawText( m_headArea, Qt::AlignCenter, m_type );
 }
