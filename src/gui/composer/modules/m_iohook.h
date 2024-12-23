@@ -21,10 +21,5 @@ class IoHook : public PortBase
 
     protected:
         PinBase* addPin( QString id ) override;
-
-        int m_outState;
-
-        ModSlot   m_inputSlot;
-        ModSignal m_outSignal;
 };
 #endif

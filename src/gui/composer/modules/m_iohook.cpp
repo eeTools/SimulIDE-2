@@ -23,14 +23,7 @@ listItem_t IoHook::registerItem(){
 
 IoHook::IoHook( QString name )
       : PortBase( name )
-      , m_inputSlot("input" , hookInputInt )
-      , m_outSignal("output", hookOutputInt )
 {
-    m_outSignal.setIntData( &m_outState );
-
-    m_slots.emplace_back( &m_inputSlot );
-    m_signals.emplace_back( &m_outSignal );
-
     addPropGroup( { "Main",
     {
         new IntProp<IoHook>("dir", "Direction", ""
@@ -44,7 +37,7 @@ void IoHook::runStep()
     if( !m_modChanged ) return;
     m_modChanged = false;
 
-    m_outState = m_inputSlot.intData();
+    m_state = m_inputSlot.intData();
 
     m_outSignal.changed();
     m_component->voltChanged();

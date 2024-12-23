@@ -8,9 +8,6 @@
 
 #include "portbase.h"
 #include "ioport.h"
-#include "modsignal.h"
-
-//class IoPin;
 
 class mIoPort : public PortBase, public IoPort
 {
@@ -27,10 +24,5 @@ class mIoPort : public PortBase, public IoPort
 
     protected:
         PinBase* addPin( QString id ) override;
-
-        int m_state;
-
-        ModSlot   m_inputSlot;
-        ModSignal m_outSignal;
 };
 #endif

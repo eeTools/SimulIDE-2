@@ -9,11 +9,20 @@
 
 PortBase::PortBase( QString name )
         : Module( name )
+        , m_inputSlot("input" , hookInputInt )
+        , m_outSignal("output", hookOutputInt )
 {
+    m_outSignal.setIntData( &m_state );
+    m_slots.emplace_back( &m_inputSlot );
+    m_signals.emplace_back( &m_outSignal );
+
     m_size = 0;
     m_position = 0;
     m_direction = 0;
     m_side = Right;
+    m_sideStr = "Right";
+
+    m_sideList = QStringList()<<"Right"<<"Left"<<"Top"<<"Bottom";
 }
 PortBase::~PortBase(){;}
 

@@ -7,6 +7,7 @@
 #define PORTBASE_H
 
 #include "module.h"
+#include "modsignal.h"
 
 enum side_t{
     Right=0,
@@ -45,13 +46,18 @@ class PortBase : public Module
     protected:
         virtual PinBase* addPin( QString id ){ return nullptr;}
 
+        int m_size;
+        int m_position;
+        int m_direction;
+
         side_t m_side;
         QString m_sideStr;
         QStringList m_sideList;
 
-        int m_size;
-        int m_position;
-        int m_direction;
+        int m_state;
+
+        ModSlot   m_inputSlot;
+        ModSignal m_outSignal;
 
         QString m_pinNames;
 
