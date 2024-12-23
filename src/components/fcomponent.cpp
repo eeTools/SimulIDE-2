@@ -28,9 +28,9 @@
 
 #define tr(str) simulideTr("fComponent",str)
 
-QStringList fComponent::m_shapes = {"None","Rectangle","Diamond","Ellipse","And","Or","Xor"};
+QStringList fComponent::m_shapes = {"None","Rectangle","Triangle","Diamond","Ellipse","And","Or","Xor"};
 QString fComponent::getShapes() { return m_shapes.join(",")+";"
-                                 +tr("None")+","+tr("Rectangle")+","+tr("Diamond")+","+tr("Ellipse")+","
+                                 +tr("None")+","+tr("Rectangle")+","+tr("Triangle")+","+tr("Diamond")+","+tr("Ellipse")+","
                                  +tr("And")+","+tr("Or")+","+tr("Xor");}
 
 fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
@@ -392,6 +392,15 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             p->drawPath( path );
         } break;
         case shapeElli: p->drawEllipse( m_area ); break;
+        case shapeTria:
+        {
+            QPainterPath path;
+            path.moveTo(-endX,-endY );
+            path.lineTo(-endX, endY );
+            path.lineTo( endX, 0 );
+            path.lineTo(-endX, -endY );
+            p->drawPath( path );
+        } break;
         case shapeAnd:
         {
             endX += 1;
@@ -399,7 +408,7 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             path.moveTo(-endX,-endY );
             path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0 ) );
             path.quadTo( QPoint( endX, endY ), QPoint(-endX, endY ) );
-            path.lineTo( -endX, -endY );
+            path.lineTo(-endX, -endY );
             p->drawPath( path );
         } break;
         case shapeOr:

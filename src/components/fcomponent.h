@@ -17,6 +17,7 @@ class QGraphicsProxyWidget;
 enum fShape_t{
     shapeNone=0,
     shapeRect,
+    shapeTria,
     shapeDiam,
     shapeElli,
     shapeAnd,
