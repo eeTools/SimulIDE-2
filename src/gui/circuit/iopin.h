@@ -84,8 +84,8 @@ class IoPin : public Pin, public PinSource
 
         void skipStamp( bool s ) { m_skipStamp = s; }
 
-        void setRiseTime( double time ) { m_timeRis = time; }
-        void setFallTime( double time ) { m_timeFal = time; }
+        void setRiseTime( uint64_t time ) { m_timeRis = time; }
+        void setFallTime( uint64_t time ) { m_timeFal = time; }
 
  static QStringList registerScript( asIScriptEngine* engine );
 
