@@ -78,8 +78,6 @@ void FuncBlock::setup()
     m_module->setFuncBlock( this );
     m_module->setComponent( m_fComp );
 
-    //m_propSize= 0;
-    int p = 0;
     QList<propGroup>* groups = m_module->properties();
     for( propGroup group : *groups )
     {
@@ -102,11 +100,12 @@ void FuncBlock::setup()
 
             //if( prop->flags() & propSlot )
             {
-                Hook* hook0 = new Hook( 180, QPoint(-60, p*HOOK_HEIGHT ), propId+"@"+m_id,-1, hookProperty, this );
+                Hook* hook0 = new Hook( 180, QPoint(-60, 0 ), propId+"@"+m_id,-1, hookProperty, this );
                 hook0->setLabelText( prop->label() );
                 hook0->setFontSize( 10 );
                 hook0->setVisible( false );
-                m_propHooks.insert( propId, hook0 );
+                m_propHooks.append( hook0 );
+                m_propHookMap.insert( propId, hook0 );
             }
             /*if( prop->flags() & propSignal ){
                 Hook* hook1 = new Hook( 0, QPoint( 60, p*HOOK_HEIGHT ), propId+"@"+m_id,-1, hookProperty, this );
@@ -114,7 +113,6 @@ void FuncBlock::setup()
                 m_signalHooks.append( hook1 );
                 m_propSignals++;
             }*/
-            p++;
         }
     }
 
@@ -123,7 +121,7 @@ void FuncBlock::setup()
 
 void FuncBlock::showToggled( QString propId, bool checked )
 {
-    Hook* hook = m_propHooks.value( propId );
+    Hook* hook = m_propHookMap.value( propId );
     if( !hook ) return;
 
     hook->setVisible( checked );
@@ -139,7 +137,13 @@ void FuncBlock::updateWidget()
 
 void FuncBlock::updateSize()
 {
-    int propSlots = visibleProperties();
+    int propSlots = 0;
+    for( Hook* hook : m_propHooks )
+    {
+        if( !hook->isVisible() ) continue;
+        hook->setY( (propSlots+1)*HOOK_HEIGHT );
+        propSlots++;
+    }
     if( propSlots > 0 ) propSlots++;
     int  sizeIn   = m_slotHooks.size();
     int  sizeOut  = m_signalHooks.size();
@@ -336,14 +340,6 @@ void FuncBlock::slotProperties()
     }
     m_propDialog->show();
 }
-
-int FuncBlock::visibleProperties()
-{
-    int propSlots = 0;
-    for( Hook* hook : m_propHooks ) if( hook->isVisible() ) propSlots++;
-    return propSlots;
-}
-
 
 void FuncBlock::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {

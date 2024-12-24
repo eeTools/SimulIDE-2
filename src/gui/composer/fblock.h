@@ -59,7 +59,6 @@ class FuncBlock : public QGraphicsItem
 
         void setup();
 
-        int visibleProperties();
         void updateSignals();
         void updateSlots();
         void updateSize();
@@ -83,7 +82,8 @@ class FuncBlock : public QGraphicsItem
         QList<FuncBlock*> m_blockMoveList;
         QList<Hook*> m_signalHooks;
         QList<Hook*> m_slotHooks;
-        QMap<QString, Hook*> m_propHooks;
+        QList<Hook*> m_propHooks;
+        QMap<QString, Hook*> m_propHookMap;
 
         fComponent* m_fComp;
         Module* m_module;
