@@ -7,6 +7,7 @@
 #include "component.h"
 #include "circuit.h"
 
+#include "labelwidget.h"
 #include "numwidget.h"
 #include "pathwidget.h"
 #include "strwidget.h"
@@ -86,6 +87,23 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
                 if( prop->flags() & propHidden ) continue; // Property hidden
                  //|| prop->flags() & propSignal
                  //|| prop->flags() & propSlot ) continue; // Property hidden
+
+                if( prop->id() == "" ) // Just a label
+                {
+                    QString text = prop->label();
+                    if( text == "separator")
+                    {
+                        QFrame* line = new QFrame;
+                        line->setFrameShape( QFrame::HLine );
+                        line->setFrameShadow( QFrame::Sunken );
+                        groupWidget->layout()->addWidget( line );
+                    }else{
+                        LabelWidget* mp = new LabelWidget( this );
+                        mp->setLabelVal( text );
+                        groupWidget->layout()->addWidget( mp );
+                    }
+                    continue;
+                }
 
                 PropWidget* mp = prop->getWidget();
                 if( !mp ) continue;

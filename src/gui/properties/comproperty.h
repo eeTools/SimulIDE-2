@@ -41,9 +41,9 @@ class ComProperty
         void addCallBack( ComProperty* cb );
 
         virtual PropWidget* getWidget();
-        virtual PropWidget* createWidget();
 
     protected:
+        virtual void createWidget(){;}
 
         QList<ComProperty*> m_callbacks;
 

@@ -25,15 +25,15 @@ class PointProp : public ComProperty
         }
         ~PointProp(){;}
 
-        virtual void setValStr( QString val ) override
+        void setValStr( QString val ) override
         { (m_comp->*m_setter)( getPointF( val ) ); }
 
-        virtual QString getValStr()  override
+        QString getValStr()  override
         { return getStrPointF( (m_comp->*m_getter)() ); }
 
-        PropWidget* createWidget() override { return new StrWidget( nullptr, m_comp, this ); }
-
     private:
+        void createWidget() override { m_widget = new StrWidget( nullptr, m_comp, this ); }
+
         Comp* m_comp;
         QPointF (Comp::*m_getter)();
         void    (Comp::*m_setter)(QPointF);

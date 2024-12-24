@@ -48,23 +48,6 @@ void ComProperty::addCallBack( ComProperty* cb )
 
 PropWidget* ComProperty::getWidget()
 {
-    if( !m_widget ) m_widget = createWidget();
+    if( !m_widget ) createWidget();
     return m_widget;
-}
-
-PropWidget* ComProperty::createWidget()
-{
-    PropWidget* mp = nullptr;
-
-    if( m_label == "separator")
-    {
-        QFrame* line = new QFrame;
-        line->setFrameShape( QFrame::HLine );
-        line->setFrameShadow( QFrame::Sunken );
-    }else{
-        LabelWidget* lw = new LabelWidget( nullptr );
-        lw->setLabelVal( m_label );
-        //mp = lw;
-    }
-    return mp;
 }

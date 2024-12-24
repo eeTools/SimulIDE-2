@@ -24,10 +24,10 @@ class IntPropF : public ComProperty
         }
         ~IntPropF(){;}
 
-        virtual QString getValStr()  override
+        QString getValStr()  override
         { return QString::number( m_value ); }
 
-        virtual void setValStr( QString valStr ) override
+        void setValStr( QString valStr ) override
         {
             int val = valStr.toInt();
             if( val < m_minVal ) val = m_minVal;
@@ -41,9 +41,9 @@ class IntPropF : public ComProperty
         virtual double getValue() override
         { return m_value; }
 
-        PropWidget* createWidget() override { return new NumWidget( nullptr, m_component, this ); }
-
     private:
+        void createWidget() override { m_widget = new NumWidget( nullptr, m_component, this ); }
+
         int m_value;
         int m_minVal;
         int m_maxVal;

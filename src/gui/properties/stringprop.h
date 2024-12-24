@@ -32,14 +32,13 @@ class StrProp : public ComProperty
         virtual QString getValStr() override
         { return (m_comp->*m_getter)(); }
 
-        PropWidget* createWidget() override
-        {
-            if( m_type == "string"  ) return new StrWidget ( nullptr, m_comp, this );
-            if( m_type == "enum"    ) return new EnumWidget( nullptr, m_comp, this );
-            if( m_type == "icon"    ) return new IconWidget( nullptr, m_comp, this );
-        }
-
     private:
+        void createWidget() override
+        {
+            if( m_type == "string"  ) m_widget = new StrWidget ( nullptr, m_comp, this );
+            if( m_type == "enum"    ) m_widget = new EnumWidget( nullptr, m_comp, this );
+            if( m_type == "icon"    ) m_widget = new IconWidget( nullptr, m_comp, this );
+        }
 
         Comp* m_comp;
         QString (Comp::*m_getter)();
