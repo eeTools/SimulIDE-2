@@ -17,7 +17,7 @@ class Hook : public PinBase
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGraphicsItem* parent=0 );
+        Hook( int angle, QPoint pos, QString id, hookType_t type, QGraphicsItem* parent=0 );
         ~Hook();
 
         int type() const override { return UserType + 4; }
@@ -30,6 +30,7 @@ class Hook : public PinBase
         WireBase* wire() override { return nullptr; } // We can have more than 1 wire.
         void setWire( WireBase* c ) override;
         void wireRemoved( WireBase* w ) override;
+        void removeWire() override;
 
         void isMoved() override;
 

@@ -21,7 +21,7 @@ class FuncBlock : public QGraphicsItem
     Q_INTERFACES( QGraphicsItem )
 
     public:
-        FuncBlock( fComponent* fComp, Module* module, QString type="", QString id="" );
+        FuncBlock( fComponent* fComp, QString type, QString id );
         ~FuncBlock();
 
         enum { Type = UserType + 10 };
@@ -44,6 +44,8 @@ class FuncBlock : public QGraphicsItem
         Hook* getHook( QString id );
         Hook* getSignalHook( QString id );
         Hook* getSlotHook( QString id );
+
+        void setPropStr( QString name, QString value );
 
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
 
@@ -82,10 +84,14 @@ class FuncBlock : public QGraphicsItem
         QList<FuncBlock*> m_blockMoveList;
         QList<Hook*> m_signalHooks;
         QList<Hook*> m_slotHooks;
-        QList<Hook*> m_propHooks;
-        QMap<QString, Hook*> m_propHookMap;
 
-        fComponent* m_fComp;
+        QList<Hook*> m_propSlots;
+        QMap<QString, Hook*> m_propSlotMap;
+
+        QList<Hook*> m_propSignals;
+        QMap<QString, Hook*> m_propSignalMap;
+
+        //fComponent* m_fComp;
         Module* m_module;
 
         PropDialog* m_propDialog;

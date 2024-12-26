@@ -16,7 +16,7 @@ class eNode;
 class PinBase : public QGraphicsItem, public Updatable
 {
     public:
-        PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent=0, int length=8 );
+        PinBase( int angle, QPoint pos, QGraphicsItem* parent=0, int length=0 );
         ~PinBase();
 
         enum pinType_t{

@@ -24,7 +24,7 @@ class Composer : public CanvasBase
 
         void clearCanvas() override;
 
-        FuncBlock* createBlock( Module* module, QString type="", QString id="" );
+        FuncBlock* createBlock( QString type, QString id="" );
         void       removeBlock( FuncBlock* fb );
 
         WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;

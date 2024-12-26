@@ -121,7 +121,7 @@ void ComposerView::dragEnterEvent( QDragEnterEvent* event )
 
     event->accept();
 
-    m_enterItem = Composer::self()->createBlock( nullptr, type );
+    m_enterItem = Composer::self()->createBlock( type );
     if( m_enterItem )
     {
         //Composer::self()->clearSelection();

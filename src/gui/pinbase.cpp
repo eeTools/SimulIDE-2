@@ -12,7 +12,7 @@
 #include "wirebase.h"
 #include "simulator.h"
 
-PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int length )
+PinBase::PinBase( int angle, QPoint pos, QGraphicsItem* parent, int length )
        : QGraphicsItem( parent )
        , m_label( parent )
 {
@@ -23,10 +23,11 @@ PinBase::PinBase( int angle, QPoint pos, QString id, QGraphicsItem* parent, int 
 
     m_pinType = pinNormal;
     m_wire  = nullptr;
-    m_angle  = angle;
+    m_angle = angle;
     m_space = 0;
     m_Hflip = 1;
     m_Vflip = 1;
+
     m_overScore = -1;
     m_wireFlags = 0;
 

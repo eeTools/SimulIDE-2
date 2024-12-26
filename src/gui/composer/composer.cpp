@@ -106,19 +106,6 @@ void Composer::loadStrDoc( QString doc )
             WireBase* wire = createWire( properties, newUid );
             if( wire ) m_wireList.append( wire );
         }
-        else if( type == "Fblock" )
-        {
-            if( module ){
-                FuncBlock* block = createBlock( module, "", uid );
-
-                for( prop_t prop : properties ){
-                    if     ( prop.name == "x" ) block->setX( prop.value.toDouble() );
-                    else if( prop.name == "y" ) block->setY( prop.value.toDouble() );
-                }
-                module = nullptr;
-            }
-            else qDebug() << "Error: Missing Module creating Block " << uid;
-        }
         else if( type == "Package" || type == "Component" )
         {
             for( prop_t prop : properties )
@@ -126,22 +113,19 @@ void Composer::loadStrDoc( QString doc )
         }
         else   // Create Module
         {
-            module = (Module*)BlockList::self()->createItem( type, uid );
-            if( module ){
-                module->setComponent( fComp );
-                for( prop_t prop : properties )
-                    module->setPropStr( prop.name, prop.value );
-            }
-            else qDebug() << "Error creating Module" << uid;
+            FuncBlock* block = createBlock( type, uid );
+            if( !block ) continue;
+            for( prop_t prop : properties )
+                block->setPropStr( prop.name, prop.value );
         }
     }
 }
 
-FuncBlock* Composer::createBlock( Module* module, QString type, QString id )
+FuncBlock* Composer::createBlock( QString type, QString id )
 {
     fComponent* fComp = ComposerWidget::self()->package();
     if( id.isEmpty() ) id = newSceneId();
-    FuncBlock* fb = new FuncBlock( fComp, module, type, id );
+    FuncBlock* fb = new FuncBlock( fComp, type, id );
     QGraphicsScene::addItem( fb );
     m_blockList.insert( fb );
     return fb;

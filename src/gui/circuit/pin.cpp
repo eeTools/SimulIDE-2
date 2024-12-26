@@ -18,7 +18,7 @@
 #include "simulator.h"
 
 Pin::Pin( int angle, QPoint pos, QString id, Component* parent, int length )
-   : PinBase( angle, pos, id, parent, length )
+   : PinBase( angle, pos, parent, length )
    , ePin( id )
 {
     m_area = QRect(-3, -3, 11, 6);

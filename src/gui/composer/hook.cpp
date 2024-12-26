@@ -15,8 +15,8 @@
 #include "funcwire.h"
 #include "composer.h"
 
-Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGraphicsItem* parent )
-    : PinBase( angle, pos, id, parent )
+Hook::Hook( int angle, QPoint pos, QString id, hookType_t type, QGraphicsItem* parent )
+    : PinBase( angle, pos, parent, 3 )
 {
     m_id = id;
     m_hookType = type;
@@ -43,6 +43,8 @@ Hook::Hook( int angle, QPoint pos, QString id, int index, hookType_t type, QGrap
 
     m_label.setBrush( m_color[type] );
 
+    Composer::self()->addPin( this, id );
+
     setFlag( QGraphicsItem::ItemStacksBehindParent, false );
 
     //Circuit::self()->addHook( this, id );
@@ -62,6 +64,12 @@ void Hook::setWire( WireBase* w )
 void Hook::wireRemoved( WireBase* w )
 {
     if( m_wireList.contains(w) ) m_wireList.removeOne( w );
+}
+
+void Hook::removeWire()
+{
+    for( WireBase* wire : m_wireList ) Composer::self()->removeWire( wire );
+    PinBase::removeWire();
 }
 
 void Hook::isMoved()

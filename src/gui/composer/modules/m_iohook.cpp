@@ -45,6 +45,6 @@ void IoHook::runStep()
 
 PinBase* IoHook::addPin( QString id )
 {
-    Hook* pin = new Hook( 0, QPoint(0, 0), id, 0, hookNone, m_component );
+    Hook* pin = new Hook( 0, QPoint(0, 0), id, hookNone, m_component );
     return pin;
 }
