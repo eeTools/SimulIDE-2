@@ -42,6 +42,7 @@ IntToBit::~IntToBit(){}
 void IntToBit::initModule()
 {
     m_input = 0;
+    for( int i=0; i<m_bits; ++i ) m_outputs[i] = 0;
 }
 
 void IntToBit::runStep()
@@ -54,11 +55,13 @@ void IntToBit::runStep()
     if( m_input == input ) return;
     m_input = input;
 
-    int out = 0;
-    //for( int i=0; i<m_bits; ++i )
-
-        //m_signals.at(i)->setIntData( m_input & 1<<i );
-
+    for( int i=0; i<m_bits; ++i )
+    {
+        int out = m_input & 1<<i;
+        if( out == m_outputs[i] ) continue;
+        m_outputs[i] = out;
+        m_signals.at(i)->changed();
+    }
 }
 
 void IntToBit::setSize( int bits )
@@ -68,12 +71,15 @@ void IntToBit::setSize( int bits )
 
     if( bits == m_bits ) return;
 
+     m_outputs.resize( bits );
+
     if( bits > m_bits ) // Add hooks
     {
         for( int i=m_bits; i<bits; ++i )
         {
             ModSignal* signal = new ModSignal("output"+QString::number(i), hookOutputBit );
             m_signals.emplace_back( signal );
+            signal->setIntData( &m_outputs.at(i) );
         }
     }
     else               // Remove hooks
@@ -83,6 +89,8 @@ void IntToBit::setSize( int bits )
     }
     m_bits = bits;
     m_mask = pow( 2, m_bits )-1;
+
+
 
     if( m_funcBlock ) m_funcBlock->updateWidget();
 }

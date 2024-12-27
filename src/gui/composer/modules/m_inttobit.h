@@ -29,6 +29,8 @@ class IntToBit : public Module
         int m_mask;
         int m_input;
 
+        std::vector<int> m_outputs;
+
         ModSlot m_inputSlot;
 };
 #endif
