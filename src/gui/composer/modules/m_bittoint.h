@@ -28,7 +28,6 @@ class BitToInt : public Module
         int m_bits;
         int m_output;
 
-        //std::vector<ModSlot*> m_bitSlots;
         ModSignal m_outSignal;
 };
 #endif

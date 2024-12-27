@@ -6,28 +6,30 @@
 #include <QStringList>
 #include <math.h>
 
-#include "m_abop.h"
+#include "m_binaryop.h"
 #include "fblock.h"
 
 #include "intprop.h"
 #include "stringprop.h"
 
-listItem_t AbOp::registerItem(){
+#define tr(str) simulideTr("BinaryOpOp",str)
+
+listItem_t BinaryOp::registerItem(){
     return {
         "Binary Operation",
         "Operations",
         "gate.png",
-        "AbOp",
-        [](QString id){ return (CompBase*)new AbOp( id ); } };
+        "BinaryOp",
+        [](QString id){ return (CompBase*)new BinaryOp( id ); } };
 }
 
-AbOp::AbOp( QString name )
-    : Module( name )
-    , m_inSlotA("input A", hookInputInt )
-    , m_inSlotB("input B", hookInputInt )
-    , m_outSignal("output", hookOutputInt )
+BinaryOp::BinaryOp( QString name )
+        : Module( name )
+        , m_inSlotA("inputA", hookInputInt )
+        , m_inSlotB("inputB", hookInputInt )
+        , m_outSignal("output", hookOutputInt )
 {
-    m_abOpType = AND;
+    m_binOpType = AND;
 
     m_outSignal.setIntData( &m_output );
 
@@ -38,32 +40,37 @@ AbOp::AbOp( QString name )
     m_bits = 0;
     setSize( 2 );
 
-    m_abOpList = QStringList()<<"AND"<<"OR"<<"XOR"
-                              <<"Add"<<"Substract"
-                              <<"Multiply"<<"Divide"
-                              <<"Modulo"<<"Compare";
+    m_binOpList = QStringList() <<"AND"<<"OR"<<"XOR"
+                                <<"Add"<<"Substract"
+                                <<"Multiply"<<"Divide"
+                                <<"Modulo"<<"Compare";
+
+    QString trOpList = tr("AND")+","+tr("OR")+","+tr("XOR")
+                  +","+tr("Add")+","+tr("Substract")
+                  +","+tr("Multiply")+","+tr("Divide")
+                  +","+tr("Modulo")+","+tr("Compare");
 
     /// TODO: Add Clock
 
     addPropGroup( { "Main",
     {
-        new StrProp<AbOp>("gType", "Type", m_abOpList.join(",")
-                         , this, &AbOp::typeStr, &AbOp::setTypeStr,propSlot,"enum" ),
+        new StrProp<BinaryOp>("gType", "Type", m_binOpList.join(",")+";"+trOpList
+                         , this, &BinaryOp::typeStr, &BinaryOp::setTypeStr,propSlot,"enum" ),
 
-        new IntProp<AbOp>("size", "bits", ""
-                         , this, &AbOp::size, &AbOp::setSize, propSlot ),
+        new IntProp<BinaryOp>("size", "bits", ""
+                         , this, &BinaryOp::size, &BinaryOp::setSize, propSlot ),
     },0} );
 }
-AbOp::~AbOp(){}
+BinaryOp::~BinaryOp(){}
 
-void AbOp::initModule()
+void BinaryOp::initModule()
 {
     m_inputA = 0;
     m_inputB = 0;
     m_output = 0;
 }
 
-void AbOp::runStep()
+void BinaryOp::runStep()
 {
     if( !m_modChanged ) return;
     m_modChanged = false;
@@ -74,11 +81,11 @@ void AbOp::runStep()
     updateOutput();
 }
 
-void AbOp::updateOutput()
+void BinaryOp::updateOutput()
 {
     int out;
 
-    switch( m_abOpType ) {
+    switch( m_binOpType ) {
         case AND: out = m_inputA & m_inputB; break;
         case  OR: out = m_inputA | m_inputB; break;
         case XOR: out = m_inputA ^ m_inputB; break;
@@ -95,7 +102,7 @@ void AbOp::updateOutput()
     m_outSignal.changed();
 }
 
-int AbOp::cmp()
+int BinaryOp::cmp()
 {
     int o = m_inputA - m_inputB;
     if( o  < 0 ) return 1;
@@ -104,16 +111,16 @@ int AbOp::cmp()
     return -1;
 }
 
-void AbOp::setTypeStr( QString type )
+void BinaryOp::setTypeStr( QString type )
 {
-    if( !m_abOpList.contains( type )) type = "AND";
-    int t = m_abOpList.indexOf( type );
+    if( !m_binOpList.contains( type )) type = "AND";
+    int t = m_binOpList.indexOf( type );
 
-    m_abOpStr = type;
-    m_abOpType = (abOpType)t;
+    m_binOpStr = type;
+    m_binOpType = (binOpType_t)t;
 }
 
-void AbOp::setSize( int bits )
+void BinaryOp::setSize( int bits )
 {
     if     ( bits < 1  ) bits = 1;
     else if( bits > 32 ) bits = 32;

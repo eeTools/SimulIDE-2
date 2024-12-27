@@ -25,8 +25,8 @@ BlockList::~BlockList(){}
 // --------------------------------------------
 // BEGIN Item includes
 
-#include "m_bitop.h"
-#include "m_abop.h"
+#include "m_unaryop.h"
+#include "m_binaryop.h"
 #include "m_bittoint.h"
 #include "m_inttobit.h"
 #include "m_ioport.h"
@@ -43,8 +43,8 @@ void BlockList::registerItems()
     addItem( mIoPort::registerItem() );
     addItem( IoHook::registerItem() );
     addCategory( tr("Operations"),"Operations","","" );
-    addItem( BitOp::registerItem() );
-    addItem( AbOp::registerItem() );
+    addItem( UnaryOp::registerItem() );
+    addItem( BinaryOp::registerItem() );
     addCategory( tr("Converters"),"Converters","","" );
     addItem( BitToInt::registerItem() );
     addItem( IntToBit::registerItem() );

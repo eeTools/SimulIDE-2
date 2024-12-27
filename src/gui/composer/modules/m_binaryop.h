@@ -3,19 +3,19 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef ABOP_H
-#define ABOP_H
+#ifndef BINARYOP_H
+#define BINARYOP_H
 
 #include "module.h"
 #include "modsignal.h"
 
-class AbOp : public Module
+class BinaryOp : public Module
 {
     public:
-        AbOp( QString name );
-        ~AbOp();
+        BinaryOp( QString name );
+        ~BinaryOp();
 
-        enum abOpType{
+        enum binOpType_t{
             AND=0,
             OR,
             XOR,
@@ -35,7 +35,7 @@ class AbOp : public Module
         int size() { return m_bits; }
         void setSize( int s );
 
-        QString typeStr() { return m_abOpStr; }
+        QString typeStr() { return m_binOpStr; }
         void setTypeStr( QString type );
 
     private:
@@ -43,9 +43,9 @@ class AbOp : public Module
 
         inline int cmp();
 
-        abOpType m_abOpType;
-        QString m_abOpStr;
-        QStringList m_abOpList;
+        binOpType_t m_binOpType;
+        QString     m_binOpStr;
+        QStringList m_binOpList;
 
         int m_bits;
         int m_mask;

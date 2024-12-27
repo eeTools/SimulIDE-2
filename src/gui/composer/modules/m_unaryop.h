@@ -3,19 +3,19 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef BITOP_H
-#define BITOP_H
+#ifndef UNARYOP_H
+#define UNARYOP_H
 
 #include "modsignal.h"
 #include "clocked.h"
 
-class BitOp : public Clocked
+class UnaryOp : public Clocked
 {
     public:
-        BitOp( QString name );
-        ~BitOp();
+        UnaryOp( QString name );
+        ~UnaryOp();
 
-        enum bitOpType{
+        enum unOpType_t{
             AND=0,
             OR,
             XOR,
@@ -39,7 +39,7 @@ class BitOp : public Clocked
         int size() { return m_bits; }
         void setSize( int s );
 
-        QString typeStr() { return m_bitOpStr; }
+        QString typeStr() { return m_unOpStr; }
         void setTypeStr( QString type );
 
     private:
@@ -47,9 +47,9 @@ class BitOp : public Clocked
 
         inline int dtb();
 
-        bitOpType m_bitOpType;
-        QString m_bitOpStr;
-        QStringList m_bitOpList;
+        unOpType_t  m_unOpType;
+        QString     m_unOpStr;
+        QStringList m_unOpList;
 
         int m_bits;
         int m_mask;
