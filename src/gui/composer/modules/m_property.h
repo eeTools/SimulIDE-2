@@ -13,7 +13,7 @@ class CallBack;
 class PropertyM : public Module
 {
     public:
-        PropertyM( QString name );
+        PropertyM( QString id );
         ~PropertyM();
 
         QString propName() { return m_propName; }
@@ -25,7 +25,7 @@ class PropertyM : public Module
         int minVal() { return m_minVal; }
         void setMinVal( int v );
 
-        int maxVal() { return m_minVal; }
+        int maxVal() { return m_maxVal; }
         void setMaxVal( int v );
 
         void addCallBack( CallBack* c );
@@ -41,7 +41,5 @@ class PropertyM : public Module
         int m_maxVal;
 
         CallBack* m_outCallback;
-
-        ComProperty* m_valueProp;
 };
 #endif

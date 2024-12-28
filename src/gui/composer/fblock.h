@@ -41,9 +41,7 @@ class FuncBlock : public QGraphicsItem
 
         Module* module() { return m_module; }
 
-        Hook* getHook( QString id );
-        Hook* getSignalHook( QString id );
-        Hook* getSlotHook( QString id );
+        void renamePropHooks( QString oldName, QString newName );
 
         void setPropStr( QString name, QString value );
 
@@ -91,7 +89,6 @@ class FuncBlock : public QGraphicsItem
         QList<Hook*> m_propSignals;
         QMap<QString, Hook*> m_propSignalMap;
 
-        //fComponent* m_fComp;
         Module* m_module;
 
         PropDialog* m_propDialog;

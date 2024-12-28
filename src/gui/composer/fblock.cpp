@@ -21,6 +21,7 @@
 #include "propdialog.h"
 #include "utils.h"
 
+#include "m_property.h"
 #include "comproperty.h"
 #include "propwidget.h"
 #include "modsignal.h"
@@ -37,6 +38,7 @@ FuncBlock::FuncBlock( fComponent* fComp, QString type, QString id )
 
     m_type = type;
     m_module = (Module*)BlockList::self()->createItem( type, m_id );
+    if( !m_module ) m_module = new Module( id );
     m_module->setComponent( fComp );
     m_module->setFuncBlock( this );
 
@@ -108,30 +110,34 @@ void FuncBlock::setup()
 
         for( ComProperty* prop : propList )            // Add Properties
         {
+            QString propId = prop->id();
             //if( prop->flags() & propHidden ) continue; // Property hidden
-            if( prop->id() == "" )           continue; // Just a label
+            if( propId == "" )           continue; // Just a label
 
+            bool visible = false;
+            QString hookLabel = propId;
+            if( propId == "propval") // This is a Property Module
+            {
+                PropertyM* pm = (PropertyM*)m_module;
+                hookLabel = pm->propName();
+                visible = true;
+            }
             // We use propWidget in properties dialog to call us
             // Then we show/hide the hook here
             QObject::connect( prop->getWidget(), &PropWidget::showToggled,
                               [=](QString propId, bool checked){ showToggled( propId, checked ); } );
 
-            QString propId = prop->id();
+            Hook* hook0 = new Hook( 180, QPoint(-60, 0 ), propId+"Slot@"+m_id, hookProperty, this );
+            hook0->setLabelText( hookLabel );
+            hook0->setFontSize( 9 );
+            hook0->setVisible( visible );
+            m_propSlots.append( hook0 );
+            m_propSlotMap.insert( hookLabel, hook0 );
 
-            //if( prop->flags() & propSlot )
-            {
-                Hook* hook0 = new Hook( 180, QPoint(-60, 0 ), propId+"Slot@"+m_id, hookProperty, this );
-                hook0->setLabelText( prop->label() );
-                hook0->setFontSize( 9 );
-                hook0->setVisible( false );
-                m_propSlots.append( hook0 );
-                m_propSlotMap.insert( propId, hook0 );
-            }
-            if( prop->flags() & propSignal ){
-                Hook* hook1 = new Hook( 0, QPoint( 60, 0 ), propId+"Signal@"+m_id, hookProperty, this );
-                m_propSignals.append( hook1 );
-                m_propSignalMap.insert( propId, hook1 );
-            }
+            if( !(prop->flags() & propSignal) ) continue;
+            Hook* hook1 = new Hook( 0, QPoint( 60, 0 ), propId+"Signal@"+m_id, hookProperty, this );
+            m_propSignals.append( hook1 );
+            m_propSignalMap.insert( hookLabel, hook1 );
         }
     }
     updateWidget();
@@ -163,8 +169,8 @@ void FuncBlock::updateWidget()
 
 void FuncBlock::updateSize()
 {
-    int  sizeIn   = m_slotHooks.size();
-    int  sizeOut  = m_signalHooks.size();
+    int  sizeIn  = m_slotHooks.size();
+    int  sizeOut = m_signalHooks.size();
 
     bool fullSize = sizeIn && sizeOut;
     int width     = fullSize ? 80 : 60;
@@ -178,8 +184,7 @@ void FuncBlock::updateSize()
         QString propId = m_propSlotMap.key( hook );
         propId.replace("Slot", "Signal");
         hook = m_propSignalMap.value( propId );
-        if( hook )
-        {
+        if( hook ) {
             hook->setX( 60-width );
             hook->setY( (propSlots+1)*HOOK_HEIGHT );
         }
@@ -257,23 +262,19 @@ void FuncBlock::updateSlots()
     }
 }
 
-Hook* FuncBlock::getHook( QString id )
+void FuncBlock::renamePropHooks( QString oldName, QString newName )
 {
-    Hook* hook = getSignalHook( id );
-    if( !hook ) hook = getSlotHook( id );
-    return hook;
-}
+    Hook* hook = m_propSlotMap.value( oldName );
+    if( !hook ) return;
 
-Hook* FuncBlock::getSignalHook( QString id )
-{
-    for( Hook* hook : m_signalHooks ) if( hook->pinId() == id ) return hook;
-    return nullptr;
-}
+    m_propSlotMap.remove( oldName );
+    m_propSlotMap.insert( newName, hook );
+    hook->setLabelText( newName );
 
-Hook* FuncBlock::getSlotHook( QString id )
-{
-    for( Hook* hook : m_slotHooks ) if( hook->pinId() == id ) return hook;
-    return nullptr;
+    hook = m_propSignalMap.value( oldName );
+    hook->setPinId( newName.toLower()+"Signal@"+m_id );
+    m_propSignalMap.remove( oldName );
+    m_propSignalMap.insert( newName, hook );
 }
 
 QString FuncBlock::toString()
