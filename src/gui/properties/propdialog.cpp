@@ -67,6 +67,7 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
     for( propGroup group : *groups )
     {
         if( group.flags & groupHidden ) continue;
+        if( group.flags & groupPkg && isComp ) continue;
 
         bool groupEnabled = true;
         bool isMaincomp = comp->isHidden() && (comp->getPropStr("mainComp") == "true"); // main Compoenent & is in subcircuit

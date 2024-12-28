@@ -21,6 +21,7 @@ class CompBase;
 enum groupFlags{
     groupHidden = 1,
     groupNoCopy = 1<<1,
+    groupPkg    = 1<<2
 };
 
 struct propGroup{

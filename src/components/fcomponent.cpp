@@ -52,20 +52,20 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
     addPropGroup( { tr("Package"),
     {
         new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
-                       , this, &fComponent::startHalf, &fComponent::setStartHalf ),
+                                , this, &fComponent::startHalf, &fComponent::setStartHalf ),
 
         new IntProp<fComponent>("width", tr("Width"), ""
-                       , this, &fComponent::width, &fComponent::setWidth, 0 ),
+                               , this, &fComponent::width, &fComponent::setWidth, 0 ),
 
         new IntProp<fComponent>("height", tr("Height"), ""
-                       , this, &fComponent::height, &fComponent::setHeight, 0 ),
+                               , this, &fComponent::height, &fComponent::setHeight, 0 ),
 
         new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
-                       , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
+                               , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
 
         new StrProp<fComponent>("background", tr("Background"), ""
-                       , this, &fComponent::background, &fComponent::setBackground, 0 ),
-    },0} );
+                               , this, &fComponent::background, &fComponent::setBackground, 0 ),
+    }, groupPkg } );
 }
 fComponent::~fComponent()
 {
@@ -142,16 +142,19 @@ void fComponent::setup() // Called from Circuit
                 {
                     QStringList words = prop.value.split("@");
                     signalModule = m_modules.value( words.takeLast() );
-                    signalStr = words.join("@");
+                    signalStr = words.join("@").remove("Signal");
                 }
                 else if( prop.name == "pin1" )
                 {
                     QStringList words = prop.value.split("@");
                     slotModule = m_modules.value( words.takeLast() );
-                    QString slotStr = words.join("@");
+                    QString slotStr = words.join("@").remove("Slot");
                     slot = slotModule->getSlot( slotStr );
 
-                    if( signalStr.isEmpty() ) qDebug() << "fComponent::setup Error creating Connection " << uid;
+                    if( signalStr.isEmpty() )
+                    {
+                        qDebug() << "fComponent::setup Error creating Connection " << uid;
+                    }
                     else if( slot ) // Create connetion Signal->Slot
                     {
                         signalModule->connect( signalStr, slot, &slotModule->m_modChanged, &m_compChanged );
@@ -161,20 +164,15 @@ void fComponent::setup() // Called from Circuit
                         ComProperty* signalPrp = myProperties.value( signalStr );
                         ComProperty* slotPrp   = slotModule->getProperty( slotStr );
                         if( signalPrp && slotPrp ) signalPrp->addCallBack( slotPrp );
-                        else qDebug() << "fComponent::setup Error creating Connection " << uid << signalStr << slotStr;
+                        else                       qDebug() << "fComponent::setup Error creating Property Connection " << uid << signalStr << slotStr;
                     }
                 }
             }
         }
-        else if( type == "Fblock" ) /// Maybe not needed anymore??
-        {
-            if( !module ) continue;
-            prop_t prop = properties.first();
-            module->setIndex( prop.value.toInt() );
-        }
         else if( type == "Component" )
         {
-            continue;
+            for( prop_t prop : properties )
+                this->setPropStr( prop.name, prop.value );
         }
         else if( type == "Property" )
         {
@@ -184,12 +182,12 @@ void fComponent::setup() // Called from Circuit
 
             for( prop_t prop : properties )
             {
-                if( prop.name == "name" ) { name = prop.value; id = name.toLower(); }
-                if( prop.name == "value") valStr = prop.value;
+                if( prop.name == "name"   ) { name = prop.value; id = name.toLower(); }
+                if( prop.name == "propval") valStr = prop.value;
             }
             ComProperty* prop = new IntPropF( id, name, "", this, 0 );
             prop->setValStr( valStr );
-            myProperties[id] = prop;
+            myProperties.insert( id, prop );
         }
         else   // Create Module
         {
@@ -397,8 +395,8 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             QPainterPath path;
             path.moveTo(-endX,-endY );
             path.lineTo(-endX, endY );
-            path.lineTo( endX, 0 );
-            path.lineTo(-endX, -endY );
+            path.lineTo( endX, 0    );
+            path.lineTo(-endX,-endY );
             p->drawPath( path );
         } break;
         case shapeAnd:
@@ -406,7 +404,7 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             endX += 1;
             QPainterPath path;
             path.moveTo(-endX,-endY );
-            path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0 ) );
+            path.quadTo( QPoint( endX,-endY ), QPoint( endX, 0    ) );
             path.quadTo( QPoint( endX, endY ), QPoint(-endX, endY ) );
             path.lineTo(-endX, -endY );
             p->drawPath( path );
@@ -416,7 +414,7 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             endX += 1;
             QPainterPath path;
             path.moveTo(-endX-1,-endY );
-            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX, 0    ) );
+            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX   , 0    ) );
             path.quadTo( QPoint( endX-2, endY ), QPoint(-endX-1 , endY ) );
             path.quadTo( QPoint(-endX+3  , 0  ), QPoint(-endX-1 ,-endY ) );
             p->drawPath( path );
@@ -426,7 +424,7 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
             endX += 1;
             QPainterPath path;
             path.moveTo(-endX+2,-endY );
-            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX, 0   ) );
+            path.quadTo( QPoint( endX-2,-endY ), QPoint( endX   , 0    ) );
             path.quadTo( QPoint( endX-2, endY ), QPoint(-endX+2 , endY ) );
             path.quadTo( QPoint(-endX+6, 0    ), QPoint(-endX+2 ,-endY ) );
             p->drawPath( path );
@@ -442,9 +440,7 @@ void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget*
 
     //if( true ) p->drawImage( m_area, m_bckImage );
     if( m_backPixmap ) p->drawPixmap( QRect(m_area.x(), m_area.y(), m_width*8, m_height*8), *m_backPixmap );
-    else
-    {
-        //p->drawRoundedRect( m_area, 1, 1);
+    else{
         /*if( m_backData  )
         {
             int w = m_backData->size();
