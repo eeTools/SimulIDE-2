@@ -71,7 +71,7 @@ void IntToBit::setSize( int bits )
 
     if( bits == m_bits ) return;
 
-     m_outputs.resize( bits );
+     m_outputs.resize( bits, 0 );
 
     if( bits > m_bits ) // Add hooks
     {
@@ -89,8 +89,6 @@ void IntToBit::setSize( int bits )
     }
     m_bits = bits;
     m_mask = pow( 2, m_bits )-1;
-
-
 
     if( m_funcBlock ) m_funcBlock->updateWidget();
 }

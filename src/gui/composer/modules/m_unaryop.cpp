@@ -28,8 +28,6 @@ UnaryOp::UnaryOp( QString name )
        , m_inputSlot("input", hookInputInt )
        , m_outSignal("output", hookOutputInt )
 {
-    m_unOpType = AND;
-
     m_outSignal.setIntData( &m_output );
 
     m_slots.emplace_back( &m_inputSlot );
@@ -48,18 +46,20 @@ UnaryOp::UnaryOp( QString name )
                   +","+tr("Rotate Right")+","+tr("Rotate Left")
                   +","+tr("Encode")+","+tr("Decode");
 
+    setTypeStr("AND");
+
     /// TODO: Add Clock
 
     addPropGroup( { "Main",
     {
-        new StrProp<UnaryOp>("gType", "Type", m_unOpList.join(",")+";"+trOpList
-                         , this, &UnaryOp::typeStr, &UnaryOp::setTypeStr, propSlot, "enum" ),
+        new StrProp<UnaryOp>("gtype", "Type", m_unOpList.join(",")+";"+trOpList
+                            , this, &UnaryOp::typeStr, &UnaryOp::setTypeStr, propSlot, "enum" ),
 
         new IntProp<UnaryOp>("size", "bits", ""
-                         , this, &UnaryOp::size, &UnaryOp::setSize, propSlot ),
+                            , this, &UnaryOp::size, &UnaryOp::setSize, propSlot ),
 
-        new StrProp <UnaryOp>("Trigger", "Trigger Type",""
-                         , this, &UnaryOp::triggerStr, &UnaryOp::setTriggerStr, propNoCopy, "enum" ),
+        new StrProp<UnaryOp>("trigger", "Trigger Type",""
+                            , this, &UnaryOp::triggerStr, &UnaryOp::setTriggerStr, propNoCopy, "enum" ),
     },0} );
 }
 UnaryOp::~UnaryOp(){}

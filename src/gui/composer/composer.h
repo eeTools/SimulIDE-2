@@ -42,7 +42,7 @@ class Composer : public CanvasBase
 
         void loadStrDoc( QString doc ) override;
 
-        Hook* getHook( QString id );
+        //Hook* getHook( QString id );
 
         QSet<FuncBlock*> m_blockList;
 };

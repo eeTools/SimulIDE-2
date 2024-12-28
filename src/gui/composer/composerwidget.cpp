@@ -72,37 +72,19 @@ void ComposerWidget::createPackage()
 
     Canvas::self()->addItem( m_fComp );
 
-    /*m_fComp->addPropGroup( { tr("Package"),
-    {
-        new IntProp<fComponent>("width", tr("Width"), ""
-                       , m_fComp, &fComponent::width, &fComponent::setWidth, 0 ),
-
-        new IntProp<fComponent>("height", tr("Height"), ""
-                       , m_fComp, &fComponent::height, &fComponent::setHeight, 0 ),
-
-        new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
-                      , m_fComp, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
-
-        new StrProp<fComponent>("background", tr("Background"), ""
-                       , m_fComp, &fComponent::background, &fComponent::setBackground, 0 ),
-
-        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
-                       , m_fComp, &fComponent::startHalf, &fComponent::setStartHalf ),
-    },0} );*/
-
     m_fComp->addPropGroup( { tr("List Item"),
     {
         new StrProp<ListItem>("label", tr("Label"), ""
-                       , &m_listItem, &ListItem::label, &ListItem::setLabel, 0 ),
+                             , &m_listItem, &ListItem::label, &ListItem::setLabel, 0 ),
 
         new StrProp<ListItem>("category", tr("Category"), ""
-                       , &m_listItem, &ListItem::category, &ListItem::setCategory, 0 ),
+                             , &m_listItem, &ListItem::category, &ListItem::setCategory, 0 ),
 
         new StrProp<ListItem>("type", tr("Type"), ""
-                       , &m_listItem, &ListItem::itemType, &ListItem::setItemType, 0 ),
+                             , &m_listItem, &ListItem::itemType, &ListItem::setItemType, 0 ),
 
         new StrProp<ListItem>("icon", tr("Icon"), ""
-                       , &m_listItem, &ListItem::icon, &ListItem::setIcon, 0, "icon" ),
+                             , &m_listItem, &ListItem::icon, &ListItem::setIcon, 0, "icon" ),
     },0} );
 
     if( m_pkgProps ) m_pkgProps->close();

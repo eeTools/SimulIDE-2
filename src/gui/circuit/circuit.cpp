@@ -430,11 +430,11 @@ Component* Circuit::createItem( QString type, QString id, bool map )
     if( !comp )
     {
         fComponent* fComp = new fComponent( type, id, this );
-        fComp->setup();
+        //fComp->setup();
         comp = fComp;
     }
 
-    if( comp && map ) m_compMap[id] = comp;
+    if( comp && map ) m_compMap.insert( id, comp );
     return (Component*)comp;
 }
 

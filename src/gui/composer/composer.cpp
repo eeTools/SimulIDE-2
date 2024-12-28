@@ -137,13 +137,13 @@ void Composer::removeBlock( FuncBlock* fb )
     m_blockList.remove( fb );
 }
 
-Hook* Composer::getHook( QString id )
+/*Hook* Composer::getHook( QString id )
 {
     QString blockId = id.split("@").takeLast();
     for( FuncBlock* fb : m_blockList )
         if( fb->uid() == blockId ) return fb->getHook( id );
     return nullptr;
-}
+}*/
 
 WireBase* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
 {

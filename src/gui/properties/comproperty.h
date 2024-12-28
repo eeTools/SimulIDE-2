@@ -14,6 +14,7 @@ enum propFlags{
     propNoCopy = 1<<1,
     propSignal = 1<<2,
     propSlot   = 1<<3,
+    propPkg    = 1<<4
 };
 
 class PropWidget;
@@ -30,7 +31,7 @@ class ComProperty
         QString unit();
         uint8_t flags();
 
-        void setName( QString n );
+        //void setName( QString n );
 
         virtual void    setValStr( QString );
         virtual QString getValStr();

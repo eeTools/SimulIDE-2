@@ -110,6 +110,7 @@ void CircuitView::dragEnterEvent( QDragEnterEvent* event )
     m_enterItem = m_circuit->createItem( type, m_circuit->newSceneId() );
     if( m_enterItem )
     {
+        m_enterItem->setup();
         m_circuit->clearSelection();
         m_circuit->addComponent( m_enterItem );
         m_circuit->saveItemChange( m_enterItem->getUid(), COMP_STATE_NEW, "" );

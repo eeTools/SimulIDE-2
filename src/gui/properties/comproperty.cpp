@@ -32,12 +32,12 @@ double  ComProperty::getValue(){ return getValStr().toDouble(); }
 
 QString ComProperty::toString(){ return getValStr(); }
 
-void ComProperty::setName( QString n )
+/*void ComProperty::setName( QString n )
 {
     m_label = n;
-    m_id = n.toLower().replace(" ", "_");
+    //m_id = n.toLower().replace(" ", "_");
     if( m_widget ) m_widget->updateName();
-}
+}*/
 
 void ComProperty::addCallBack( ComProperty* cb )
 {
