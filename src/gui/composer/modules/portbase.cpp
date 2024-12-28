@@ -30,19 +30,19 @@ PortBase::PortBase( QString name )
     addPropGroup( { "Main",
     {
         new StrProp<PortBase>("side", "Side", m_sideList.join(",")
-                           , this, &PortBase::side, &PortBase::setSide,0,"enum" ),
+                             , this, &PortBase::side, &PortBase::setSide,0,"enum" ),
 
         new IntProp<PortBase>("pos", "Offset", ""
-                           , this, &PortBase::position, &PortBase::setPosition, 0 ),
+                             , this, &PortBase::position, &PortBase::setPosition, 0 ),
 
         new IntProp<PortBase>("dir", "Direction", ""
-                           , this, &PortBase::direction, &PortBase::setDirection, 0 ),
+                             , this, &PortBase::direction, &PortBase::setDirection, 0 ),
 
         new IntProp<PortBase>("size", "Pins", ""
-                           , this, &PortBase::size, &PortBase::setSize, propSlot ),
+                             , this, &PortBase::size, &PortBase::setSize, propSlot ),
 
         new StrProp<PortBase>("pinnames", "Pin Names", ""
-                          , this, &PortBase::pinNames, &PortBase::setPinNames,0  ),
+                             , this, &PortBase::pinNames, &PortBase::setPinNames,0  ),
     },0} );
 }
 PortBase::~PortBase(){;}
@@ -157,4 +157,9 @@ void PortBase::setPinNames( QString n )
         pin->setLabelText( pinName );
         pin->setFlag( QGraphicsItem::ItemStacksBehindParent, pinName.isEmpty() );
     }
+}
+
+void PortBase::remove()
+{
+    for( PinBase* pin : m_pins ) m_component->deletePin( pin );
 }

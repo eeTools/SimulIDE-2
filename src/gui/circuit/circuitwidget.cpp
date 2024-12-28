@@ -21,7 +21,7 @@
 #include "about.h"
 #include "utils.h"
 
-CircuitWidget* CircuitWidget::m_pSelf = 0l;
+CircuitWidget* CircuitWidget::m_pSelf = nullptr;
 
 CircuitWidget::CircuitWidget( QWidget *parent  )
              : QWidget( parent )

@@ -43,6 +43,8 @@ class PortBase : public Module
         QString pinNames() { return m_pinNames; }
         void setPinNames( QString n );
 
+        void remove() override;
+
     protected:
         virtual PinBase* addPin( QString id ){ return nullptr;}
 

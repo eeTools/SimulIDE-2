@@ -58,6 +58,8 @@ class fComponent : public Component, public Element
 
         void upDateShape();
 
+        void remove() override;
+
  static QString getShapes();
 
     protected:

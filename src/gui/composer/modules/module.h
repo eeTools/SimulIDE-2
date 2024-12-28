@@ -42,6 +42,8 @@ class Module : public CompBase
         virtual ModSlot* getSlot( QString name );
         virtual void connect( QString signal, ModSlot* slot, bool* modChanged, bool* fCompChanged );
 
+        virtual void remove(){;}
+
     protected:
         int m_index;
 

@@ -67,10 +67,7 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
                                , this, &fComponent::background, &fComponent::setBackground, 0 ),
     }, groupPkg } );
 }
-fComponent::~fComponent()
-{
-    for( Module* m : m_modules ) delete m;
-}
+fComponent::~fComponent(){}
 
 void fComponent::initialize()
 {
@@ -363,6 +360,15 @@ void fComponent::setBackground( QString bck )
         }
     }
     update();
+}
+
+void fComponent::remove()
+{
+    for( Module* module : m_modules )
+    {
+        module->remove();
+        delete module;
+    }
 }
 
 void fComponent::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
