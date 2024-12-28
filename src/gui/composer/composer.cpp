@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QApplication>
+#include <QMimeData>
 #include <QGraphicsSceneMouseEvent>
 
 #include "composer.h"
@@ -148,4 +149,18 @@ void Composer::removeBlock( FuncBlock* fb )
 WireBase* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
 {
     return new FuncWire( id, startPin, endPin );
+}
+
+void Composer::dropEvent( QGraphicsSceneDragDropEvent* event )
+{
+    QString id   = event->mimeData()->text();
+    QString file = "file://";
+
+    if( !id.startsWith( file ) ) return;
+
+    id.replace( file, "" ).replace("\r\n", "" ).replace("%20", " ");
+#ifdef _WIN32
+    if( id.startsWith( "/" )) id.remove( 0, 1 );
+#endif
+    ComposerWidget::self()->load( id );
 }

@@ -36,6 +36,7 @@ class Composer : public CanvasBase
  static Composer* self() { return m_pSelf; }
 
     protected:
+        void dropEvent( QGraphicsSceneDragDropEvent* event ) override;
 
     private:
  static Composer* m_pSelf;
