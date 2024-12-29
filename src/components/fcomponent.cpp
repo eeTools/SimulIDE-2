@@ -197,8 +197,7 @@ void fComponent::setup() // Called from Circuit
                 for( prop_t prop : properties )
                     module->setPropStr( prop.name, prop.value );
             }
-            else
-                qDebug() << "fComponent::setup Error creating Module" << uid;
+            else qDebug() << "fComponent::setup Error creating Module" << uid;
         }
     }
 
@@ -343,6 +342,10 @@ void fComponent::setBackground( QString bck )
         if( rgb.size() < 3 ) return;
 
         m_color = QColor( rgb.at(0).toInt(), rgb.at(1).toInt(), rgb.at(2).toInt() );
+    }
+    if( bck.startsWith("#") )
+    {
+        m_color = QColor( bck );
     }
     else if( bck != "" )
     {
