@@ -23,8 +23,8 @@ class Delay : public Module
             m_delay = t*1e12;
         }
 
-        virtual void initModule() override;
-        virtual void runStep() override;
+        void initModule() override;
+        void runStep() override;
 
         void runOutput( SimEventInt<Delay>* event );
         //void setDelay( int s );

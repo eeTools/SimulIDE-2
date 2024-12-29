@@ -22,7 +22,7 @@ listItem_t Delay::registerItem(){
 
 Delay::Delay( QString name )
      : Module( name )
-     , m_inputSlot("input", hookInputInt/*, &m_modChanged*/ )
+     , m_inputSlot("input", hookInputInt )
      , m_outSignal("output", hookOutputInt )
 {
     m_delay = 10000;         // 10 ns
