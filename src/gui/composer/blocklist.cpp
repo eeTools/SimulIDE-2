@@ -36,6 +36,7 @@ BlockList::~BlockList(){}
 #include "m_dial.h"
 #include "m_button.h"
 #include "m_property.h"
+#include "m_config.h"
 
 void BlockList::registerItems()
 {
@@ -55,4 +56,5 @@ void BlockList::registerItems()
     addItem( WaveGen::registerItem() );
     addItem( Delay::registerItem() );
     addItem( PropertyM::registerItem() );
+    addItem( mConfig::registerItem() );
 }
