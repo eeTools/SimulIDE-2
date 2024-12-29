@@ -16,12 +16,12 @@ class Socket : public ConnBase
 
  static listItem_t registerItem();
 
-        virtual void updateStep() override;
+        void updateStep() override;
 
         void updateConnections( bool u  );
 
     private:
-        virtual void updatePixmap() override;
+        void updatePixmap() override;
 };
 
 #endif

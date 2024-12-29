@@ -19,7 +19,7 @@ class Capacitor : public Component, public Capacitance
 
         void initialize() override;
 
-       void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 };
 
 #endif

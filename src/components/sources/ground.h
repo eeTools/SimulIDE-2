@@ -17,9 +17,9 @@ class Ground : public Component
 
  static listItem_t registerItem();
 
-        virtual void initialize() override;
+        void initialize() override;
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
 
     private:
         PinSource m_out;

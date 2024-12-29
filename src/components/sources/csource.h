@@ -43,14 +43,14 @@ class Csource : public Component, public Resistance
 
         void setVoltage( double v );
 
-        virtual bool setLinkedTo( Linker* li ) override;
-        virtual void setLinkedValue( double v, int i=0 ) override;
+        bool setLinkedTo( Linker* li ) override;
+        void setLinkedValue( double v, int i=0 ) override;
 
         //virtual QPainterPath shape() const;
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     protected slots:
-        virtual void slotProperties() override;
+        void slotProperties() override;
 
     private:
         void updtProperties();

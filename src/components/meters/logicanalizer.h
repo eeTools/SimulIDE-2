@@ -25,26 +25,26 @@ class LAnalizer : public PlotBase
 
  static listItem_t registerItem();
 
-        virtual void updateStep() override;
+        void updateStep() override;
 
-        virtual QString timPos() override;
-        virtual void setTimPos( QString tp ) override;
+        QString timPos() override;
+        void setTimPos( QString tp ) override;
 
-        virtual QString volDiv() override;
-        virtual void setVolDiv( QString vd ) override;
+        QString volDiv() override;
+        void setVolDiv( QString vd ) override;
 
-        virtual void setTimeDiv( uint64_t td ) override;
+        void setTimeDiv( uint64_t td ) override;
 
         int64_t timePos(){ return m_timePos; }
         void setTimePos( int64_t tp );
-        virtual void moveTimePos( int64_t delta ) override;
+        void moveTimePos( int64_t delta ) override;
 
         double voltDiv(){ return m_voltDiv; }
         void setVoltDiv( double vd );
 
         void setIsBus( int ch, bool b ) { m_channel[ch]->setIsBus( b ); }
 
-        virtual void setTrigger( int ch ) override;
+        void setTrigger( int ch ) override;
 
         double thresholdR() { return m_thresholdR; }
         void setThresholdR( double thr );
@@ -55,13 +55,13 @@ class LAnalizer : public PlotBase
         QString busStr();
         void setBusStr( QString b );
 
-        virtual void setConds( QString conds ) override;
+        void setConds( QString conds ) override;
 
-        virtual void setTunnels( QString tunnels ) override;
+        void setTunnels( QString tunnels ) override;
 
-        virtual void expand( bool e ) override;
+        void expand( bool e ) override;
 
-        virtual void dumpData( const QString& fn ) override;
+        void dumpData( const QString& fn ) override;
 
     private:
         uint64_t getGcd( uint64_t a, uint64_t b ); // greatest Common Denominator

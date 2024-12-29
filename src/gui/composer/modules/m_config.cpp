@@ -29,7 +29,6 @@ mConfig::mConfig( QString name )
     m_slots.emplace_back( &m_inputSlot );
 
     Simulator::self()->addToUpdateList( this );
-
 }
 mConfig::~mConfig(){}
 
@@ -53,8 +52,6 @@ void mConfig::runStep()
 {
     if( !m_modChanged ) return;
     m_modChanged = false;
-
-    //int value = m_inputSlot.intData();
 
     m_changed = true;
 }

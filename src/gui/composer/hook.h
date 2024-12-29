@@ -34,7 +34,7 @@ class Hook : public PinBase
 
         void isMoved() override;
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;

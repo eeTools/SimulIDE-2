@@ -30,8 +30,8 @@ class UnaryOp : public Clocked
 
  static listItem_t registerItem();
 
-        virtual void initModule() override;
-        virtual void runStep() override;
+        void initModule() override;
+        void runStep() override;
 
         //void setState( int s );
         //void setBitState( int s, int bit );

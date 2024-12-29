@@ -26,8 +26,8 @@ class WaveGen : public Module
 
  static listItem_t registerItem();
 
-        virtual void initModule() override;
-        virtual void runStep() override;
+        void initModule() override;
+        void runStep() override;
 
     private:
 

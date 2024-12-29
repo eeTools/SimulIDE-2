@@ -29,10 +29,10 @@ class Probe : public Component, public Element
         double threshold() { return m_voltTrig; }
         void setThreshold( double t ) { m_voltTrig = t; }
 
-        virtual void rotateAngle( double a ) override;
+        void rotateAngle( double a ) override;
 
-        virtual QPainterPath shape() const override;
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        QPainterPath shape() const override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private: 
         double m_voltIn;

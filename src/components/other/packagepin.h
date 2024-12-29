@@ -15,16 +15,16 @@ class PackagePin : public Pin
         PackagePin( int angle, const QPoint pos, QString id, SubPackage* parent=0 );
         ~PackagePin();
 
-        virtual void setLabelText( QString label, bool over=true ) override;
-        virtual void setLength( int length ) override;
+        void setLabelText( QString label, bool over=true ) override;
+        void setLength( int length ) override;
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     protected:
-        virtual void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
-        virtual void mouseMoveEvent( QGraphicsSceneMouseEvent* event ) override;
-        virtual void mouseReleaseEvent( QGraphicsSceneMouseEvent* event ) override;
-        virtual void contextMenuEvent( QGraphicsSceneContextMenuEvent* event ) override;
+        void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
+        void mouseMoveEvent( QGraphicsSceneMouseEvent* event ) override;
+        void mouseReleaseEvent( QGraphicsSceneMouseEvent* event ) override;
+        void contextMenuEvent( QGraphicsSceneContextMenuEvent* event ) override;
 
     private:
         SubPackage* m_package;

@@ -32,27 +32,27 @@ class SubPackage : public Chip, public Linker
         void setPackageFile( QString package );
 
         QString bckGndData() { return m_BckGndData; }
-        virtual void setBckGndData( QString data ) override;
-        virtual void setBackground( QString bck ) override;
+        void setBckGndData( QString data ) override;
+        void setBackground( QString bck ) override;
 
-        virtual void setLogicSymbol( bool ls ) override;
+        void setLogicSymbol( bool ls ) override;
 
         QString packagePins();
         void setPackagePins( QString pinsStr );
 
-        virtual std::vector<Pin*> getPins() override { std::vector<Pin*> p; return p; } // Used to access wires (we have no wires)
+        std::vector<Pin*> getPins() override { std::vector<Pin*> p; return p; } // Used to access wires (we have no wires)
 
         void setEventPin( Pin* pin ) { m_eventPin = pin; }
 
         void savePackage( QString fileName );
 
-        virtual void setSubcTypeStr( QString s ) override;
+        void setSubcTypeStr( QString s ) override;
 
-        virtual void compSelected( Component* comp ) override;  // Use link mechanism to select main components
+        void compSelected( Component* comp ) override;  // Use link mechanism to select main components
 
         /// virtual void moveSignal() override {;}
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+       void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
         void invertPin( bool invert );
         void setPinId( QString id );
@@ -77,9 +77,9 @@ class SubPackage : public Chip, public Linker
         void hoverMoveEvent( QGraphicsSceneHoverEvent* event ) override;
         void hoverLeaveEvent( QGraphicsSceneHoverEvent* event ) override;
         
-        virtual void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu ) override;
+        void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu ) override;
 
-        virtual void addNewPin( QString id, QString type, QString label,
+        void addNewPin( QString id, QString type, QString label,
                             int pos, int xpos, int ypos, int angle, int length=8, int space=0 ) override;
 
     private:

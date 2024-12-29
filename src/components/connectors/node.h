@@ -19,14 +19,14 @@ class Node : public Component
 
         Pin* getPin( int pin ) const { return m_pin[pin]; }
 
-        virtual void registerEnode( int enode, int n=-1 ) override;
+        void registerEnode( int enode, int n=-1 ) override;
 
-        virtual void setHidden( bool hid, bool hidArea=false, bool hidLabel=false ) override;
+        void setHidden( bool hid, bool hidArea=false, bool hidLabel=false ) override;
 
         void pinMessage( int rem=1 ) override;
         bool checkRemove();
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     protected:
         void contextMenuEvent( QGraphicsSceneContextMenuEvent* ) override {;}

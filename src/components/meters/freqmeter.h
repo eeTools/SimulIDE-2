@@ -25,10 +25,10 @@ class FreqMeter : public Component, public Element
         double filter() { return m_filter; }
         void setFilter( double f ) { m_filter = f; }
         
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
         
     protected:
-        virtual void setflip() override;
+        void setflip() override;
 
         bool m_rising;
         bool m_falling;

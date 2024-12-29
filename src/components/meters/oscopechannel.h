@@ -17,11 +17,11 @@ class OscopeChannel : public DataChannel
         OscopeChannel( Oscope* oscope, QString id );
         ~OscopeChannel();
 
-        virtual void initialize() override;
-        virtual void updateStep() override;
-        virtual void voltChanged() override;
+        void initialize() override;
+        void updateStep() override;
+        void voltChanged() override;
 
-        virtual void setFilter( double f ) override;
+        void setFilter( double f ) override;
 
     private:
         void updateValues();

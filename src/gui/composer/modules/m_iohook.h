@@ -17,7 +17,7 @@ class IoHook : public PortBase
 
  static listItem_t registerItem();
 
-        virtual void runStep() override;
+        void runStep() override;
 
     protected:
         PinBase* addPin( QString id ) override;

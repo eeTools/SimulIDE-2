@@ -20,7 +20,7 @@ class Canvas : public QGraphicsScene
 
  static Canvas* self() { return m_pSelf; }
 
-        virtual void drawBackground( QPainter* painter, const QRectF &rect ) override;
+        void drawBackground( QPainter* painter, const QRectF &rect ) override;
 
     private:
  static Canvas* m_pSelf;

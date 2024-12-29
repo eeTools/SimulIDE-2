@@ -29,9 +29,9 @@ class Tunnel : public Component
         bool rotated() { return m_rotated; }
         void setRotated( bool rot );
 
-        virtual void remove() override;
+        void remove() override;
 
-        virtual void registerEnode( int enode, int n=-1 ) override;
+        void registerEnode( int enode, int n=-1 ) override;
 
         QString tunnelUid() { return m_tunUid; }
         void setTunnelUid( QString uid ) { m_tunUid = uid; }
@@ -46,7 +46,7 @@ class Tunnel : public Component
 
  static void clearTunnels();
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     public slots:
         void showGroup();
@@ -55,7 +55,7 @@ class Tunnel : public Component
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
-        virtual void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu ) override;
+        void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu ) override;
 
         void showHide( bool show );
         void setGroupName( QString name, bool single );
@@ -68,7 +68,6 @@ class Tunnel : public Component
         bool m_rotated;
         bool m_blocked;
         bool m_packed;
-
 
  static QHash<QString, QList<Tunnel*>*> m_tunnels;
 };

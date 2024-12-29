@@ -16,7 +16,7 @@ class AmpMeter : public Meter
 
  static listItem_t registerItem();
 
-        virtual void updateStep() override;
+        void updateStep() override;
 };
 
 #endif

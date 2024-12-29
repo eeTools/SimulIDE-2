@@ -32,24 +32,24 @@ class Oscope : public PlotBase
         int tracks();
         void setTracks( int tracks );
 
-        virtual QString timPos() override;
-        virtual void setTimPos( QString tp ) override;
+        QString timPos() override;
+        void setTimPos( QString tp ) override;
 
-        virtual QString volDiv() override;
-        virtual void setVolDiv( QString vd ) override;
+        QString volDiv() override;
+        void setVolDiv( QString vd ) override;
 
         QString volPos();
         void setVolPos( QString vp );
 
-        virtual void setTrigger( int ch ) override;
+        void setTrigger( int ch ) override;
 
-        virtual void updateStep() override;
+        void updateStep() override;
 
-        virtual void setTimeDiv( uint64_t td ) override;
+        void setTimeDiv( uint64_t td ) override;
 
         int64_t timePos( int ch ){ return m_timePos[ch]; }
         void setTimePos( int ch, int64_t tp );
-        virtual void moveTimePos( int64_t delta ) override;
+        void moveTimePos( int64_t delta ) override;
 
         double voltDiv( int ch ){ return m_voltDiv[ch]; }
         void setVoltDiv( int ch, double vd );
@@ -59,9 +59,9 @@ class Oscope : public PlotBase
 
         void hideChannel( int ch, bool hide );
 
-        virtual void setTunnels( QString tunnels ) override;
+        void setTunnels( QString tunnels ) override;
 
-        virtual void expand( bool e ) override;
+        void expand( bool e ) override;
 
         DataWidget* dataW() { return m_dataWidget; }
 

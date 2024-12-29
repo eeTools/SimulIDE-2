@@ -17,13 +17,13 @@ class Rail : public Component
 
  static listItem_t registerItem();
 
-        virtual void initialize() override;
-        virtual void updateStep() override;
+        void initialize() override;
+        void updateStep() override;
 
         double voltage() { return m_voltage; }
         void setVoltage( double v );
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private:
         double m_voltage;

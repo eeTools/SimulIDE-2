@@ -28,7 +28,7 @@ class LaChannel : public DataChannel
 
         void setPin( Pin* p );
 
-        virtual void setIsBus( bool b ) override;
+        void setIsBus( bool b ) override;
         void registerEnode( int enode, int n=-1 );
 
     private:
