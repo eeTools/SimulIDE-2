@@ -559,6 +559,23 @@ void Component::setBackground( QString bck )
     m_background = bck;
 }
 
+void Component::setColor( QString color )
+{
+    m_colorStr = color;
+
+    if( color.contains(",") )
+    {
+        color.remove("color").remove("(").remove(")").remove(" ");
+        QStringList rgb = color.split(",");
+        if( rgb.size() < 3 ) return;
+
+        m_color = QColor( rgb.at(0).toInt(), rgb.at(1).toInt(), rgb.at(2).toInt() );
+    }
+    else m_color = QColor( color );
+
+    update();
+}
+
 /*QString Component::print()
 {
     if( !m_printable ) return "";

@@ -121,6 +121,9 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         virtual QString background() { return m_background; }
         virtual void setBackground( QString bck );
 
+        QString color() { return m_colorStr; }
+        void setColor( QString color );
+
         virtual void registerEnode( int, int n=-1 ) {;}
 
         virtual void pinMessage( int ){;}
@@ -209,6 +212,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
 
         Linker* m_linkedTo;
 
+        QString m_colorStr;
         QString m_background;   // BackGround Image path
         QPixmap* m_backPixmap;  // Background Pixmap
 

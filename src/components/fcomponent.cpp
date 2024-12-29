@@ -63,7 +63,10 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
         new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
                                , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
 
-        new StrProp<fComponent>("background", tr("Background"), ""
+        new StrProp<fComponent>("color", tr("Color"), ""
+                               , this, &fComponent::color, &fComponent::setColor, 0 ),
+
+        new StrProp<fComponent>("background", tr("Background image"), ""
                                , this, &fComponent::background, &fComponent::setBackground, 0 ),
     }, groupPkg } );
 }
@@ -335,33 +338,21 @@ void fComponent::setBackground( QString bck )
 {
     m_background = bck;
 
-    if( bck.startsWith("color") )
-    {
-        bck.remove("color").remove("(").remove(")").remove(" ");
-        QStringList rgb = bck.split(",");
-        if( rgb.size() < 3 ) return;
+    if( bck.isEmpty() ) return;
 
-        m_color = QColor( rgb.at(0).toInt(), rgb.at(1).toInt(), rgb.at(2).toInt() );
-    }
-    if( bck.startsWith("#") )
+    /// TODO define path for these components
+    QString  pixmapPath = MainWindow::self()->getDataFilePath("images/"+bck );
+    if( QFile::exists( pixmapPath ) )
     {
-        m_color = QColor( bck );
+        if( m_backPixmap ) delete m_backPixmap;
+        m_backPixmap = new QPixmap( m_width*32, m_height*32 );
+        //m_bckImage = m_bckImage.scaled( m_width*32, m_height*32 );
+        //QSvgRenderer* ren = new QSvgRenderer( QString("/home/user/andgate.svg") );
+        //QPainter painter( m_backPixmap );
+        //ren->render(&painter);
+        m_backPixmap->load( pixmapPath );
     }
-    else if( bck != "" )
-    {
-        /// TODO define path for these components
-        QString  pixmapPath = MainWindow::self()->getDataFilePath("images/"+bck );
-        if( QFile::exists( pixmapPath ) )
-        {
-            if( m_backPixmap ) delete m_backPixmap;
-            m_backPixmap = new QPixmap( m_width*32, m_height*32 );
-            //m_bckImage = m_bckImage.scaled( m_width*32, m_height*32 );
-            //QSvgRenderer* ren = new QSvgRenderer( QString("/home/user/andgate.svg") );
-            //QPainter painter( m_backPixmap );
-            //ren->render(&painter);
-            m_backPixmap->load( pixmapPath );
-        }
-    }
+
     update();
 }
 
