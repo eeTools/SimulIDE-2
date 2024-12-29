@@ -96,12 +96,8 @@ void FuncBlock::remove()
 
 void FuncBlock::setup()
 {
-    //qDebug() << "FuncBlock::setup"<< m_fComp;
-    //m_module->setFuncBlock( this );
-    //m_module->setComponent( m_fComp );
-
-    QList<propGroup>* groups = m_module->properties();
-    for( propGroup group : *groups )
+    QList<propGroup> groups = m_module->getPropGroups();
+    for( propGroup group : groups )
     {
         if( group.flags & groupHidden ) continue;
 

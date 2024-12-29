@@ -488,7 +488,7 @@ QString SubCircuit::toString()
         {
             Component* mainComponent = m_mainComponents.value( uid );
             item += "\n<mainCompProps MainCompId=\""+uid+"\" ";
-            for( propGroup pg : *mainComponent->properties() )
+            for( propGroup pg : mainComponent->getPropGroups() )
             {
                 if( pg.flags & groupNoCopy ) continue;
 

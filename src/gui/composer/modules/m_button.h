@@ -24,7 +24,6 @@ class mButton : public Module, public Updatable
         void setComponent( fComponent* c ) override;
         void initModule() override;
         void updateStep() override;
-        //void runStep() override;
 
         int width() { return m_width; }
         void setWidth( int width );

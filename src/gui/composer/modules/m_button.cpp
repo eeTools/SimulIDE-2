@@ -91,15 +91,6 @@ void mButton::updateStep()
     m_component->voltChanged();
 }
 
-/*void mButton::runStep()
-{
-    if( !m_modChanged ) return;
-    m_modChanged = false;
-
-    m_output = m_button->isChecked() ? 1 : 0;
-    m_outSignal.changed();
-}*/
-
 void mButton::setWidth( int width )
 {
     m_width = width;

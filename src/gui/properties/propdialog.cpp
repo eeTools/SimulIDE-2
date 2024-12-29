@@ -62,9 +62,9 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
     showButton->setChecked( comp->getPropStr("Show_id") == "true" );
 
     int index=0;
-    QList<propGroup>* groups = comp->properties();
+    QList<propGroup> groups = comp->m_propGroups;
 
-    for( propGroup group : *groups )
+    for( propGroup group : groups )
     {
         if( group.flags & groupHidden ) continue;
         if( group.flags & groupPkg && isComp ) continue;

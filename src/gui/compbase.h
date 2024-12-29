@@ -42,6 +42,7 @@ class PropDialog;
 
 class CompBase
 {
+    friend class PropDialog;
     public:
         CompBase( QString id );
         virtual ~CompBase();
@@ -51,7 +52,8 @@ class CompBase
         void addProperty( QString group, ComProperty* p );
         void remProperty( QString prop );
         ComProperty* getProperty( QString name );
-        QList<propGroup>* properties() { return &m_propGroups; } // Circuit needs pointer bcos properties can change (ex: loadHex changes Config)
+        QList<propGroup> getPropGroups() { return m_propGroups; }
+        //QList<propGroup>* properties() { return &m_propGroups; } // Circuit needs pointer bcos properties can change (ex: loadHex changes Config)
 
         virtual void loadProperties( QVector<propStr_t> p );
 
