@@ -17,6 +17,8 @@ class IoHook : public PortBase
 
  static listItem_t registerItem();
 
+        void setup() override;
+
         void runStep() override;
 
     protected:

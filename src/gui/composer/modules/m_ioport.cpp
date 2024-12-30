@@ -6,7 +6,6 @@
 #include <QDebug>
 
 #include "m_ioport.h"
-//#include "fblock.h"
 #include "fcomponent.h"
 #include "iopin.h"
 
@@ -19,9 +18,9 @@
 
 listItem_t mIoPort::registerItem(){
     return {
-        "IO Port",
+        "Pin Port",
         "Ports",
-        "ioport.png",
+        "pinport.png",
         "IoPort",
         [](QString id){ return (CompBase*)new mIoPort( id ); } };
 }
@@ -30,24 +29,6 @@ mIoPort::mIoPort( QString name )
        : PortBase( name )
        , IoPort( name )
 {
-    /*addPropGroup( { "Main",
-    {
-        new StrProp<mIoPort>("side", "Side", m_sideList.join(",")
-                           , this, &mIoPort::side, &mIoPort::setSide,0,"enum" ),
-
-        new IntProp<mIoPort>("pos", "Offset", ""
-                           , this, &mIoPort::position, &mIoPort::setPosition, 0 ),
-
-        new IntProp<mIoPort>("dir", "Direction", ""
-                           , this, &mIoPort::direction, &mIoPort::setDirection, 0 ),
-
-        new IntProp<mIoPort>("size", "Pins", ""
-                           , this, &mIoPort::size, &mIoPort::setSize, propSlot ),
-
-        new StrProp<mIoPort>("pinnames", "Pin Names", ""
-                          , this, &mIoPort::pinNames, &mIoPort::setPinNames,0  ),
-    },0} );*/
-
 }
 mIoPort::~mIoPort(){;}
 

@@ -3,20 +3,18 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-//#include <QStringList>
-
 #include "m_iohook.h"
 #include "hook.h"
-#include "simulator.h"
+//#include "simulator.h"
 #include "fcomponent.h"
 
 #include "intprop.h"
 
 listItem_t IoHook::registerItem(){
     return {
-        "IO Hook",
+        "Hook Port",
         "Ports",
-        "delay.png",
+        "hookport.png",
         "IoHook",
         [](QString id){ return (CompBase*)new IoHook( id ); } };
 }
@@ -24,13 +22,13 @@ listItem_t IoHook::registerItem(){
 IoHook::IoHook( QString name )
       : PortBase( name )
 {
-    addPropGroup( { "Main",
-    {
-        new IntProp<IoHook>("dir", "Direction", ""
-                           , this, &IoHook::direction, &IoHook::setDirection, 0 ),
-    },0} );
 }
 IoHook::~IoHook(){}
+
+void IoHook::setup()
+{
+    setPropStr("size", "1");
+}
 
 void IoHook::runStep()
 {

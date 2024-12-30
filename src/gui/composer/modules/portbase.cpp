@@ -105,7 +105,10 @@ void PortBase::setPosition( int pos )
 
 void PortBase::updatePosition( double pos )
 {
+    if( m_pins.isEmpty() ) return;
+
     int x=0, y=0, angle=0;
+    int pinLenght = m_pins.at(0)->length();
     int width  = m_component->width()*8/2;
     int height = m_component->height()*8/2;
     bool vertical = true;
@@ -113,23 +116,23 @@ void PortBase::updatePosition( double pos )
     switch( m_side )
     {
         case Right:{
-            x = width+8;
+            x = width+pinLenght;
             y = -height+pos*8;
         }break;
         case Left:{
-            x = -width-8;
+            x = -width-pinLenght;
             y = -height+pos*8;
             angle = 180;
         }break;
         case Top:{
             x = -width+pos*8;
-            y = -height-8;
+            y = -height-pinLenght;
             angle = 90;
             vertical = false;
         }break;
         case Bottom:{
             x = -width+pos*8;
-            y = height+8;
+            y = height+pinLenght;
             angle = 270;
             vertical = false;
         }break;
