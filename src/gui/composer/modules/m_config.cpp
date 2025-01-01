@@ -54,6 +54,7 @@ void mConfig::runStep()
     m_modChanged = false;
 
     m_changed = true;
+    if( !Simulator::self()->isRunning() ) updateStep();
 }
 
 void mConfig::setComponent( fComponent* c )
@@ -62,8 +63,8 @@ void mConfig::setComponent( fComponent* c )
 
     QString compPropStr;
     QString compPropTra;
-    QList<propGroup>* groups = m_component->properties();
-    for( propGroup group : *groups )
+    QList<propGroup> groups = m_component->getPropGroups();
+    for( propGroup group : groups )
     {
         if( group.name != tr("Package") ) continue;
 

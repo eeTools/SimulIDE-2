@@ -76,8 +76,8 @@ void mButton::setComponent( fComponent* c )
 
 void mButton::initModule()
 {
-    m_output = 0;
-    m_outSignal.changed();
+    m_changed = true;
+    updateStep();
 }
 
 void mButton::updateStep()
@@ -114,6 +114,7 @@ void mButton::setPosition( QPointF p )
 void mButton::onbuttonclicked()
 {
     m_changed = true;
+    if( !Simulator::self()->isRunning() ) updateStep();
 }
 
 void mButton::updateProxy()
