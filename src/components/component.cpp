@@ -559,7 +559,7 @@ void Component::setBackground( QString bck )
     m_background = bck;
 }
 
-void Component::setColor( QString color )
+void Component::setColorStr( QString color )
 {
     m_colorStr = color;
 

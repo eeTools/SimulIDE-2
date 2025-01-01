@@ -64,7 +64,7 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
                                , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
 
         new StrProp<fComponent>("color", tr("Color"), ""
-                               , this, &fComponent::color, &fComponent::setColor, 0 ),
+                               , this, &fComponent::colorStr, &fComponent::setColorStr, 0 ),
 
         new StrProp<fComponent>("background", tr("Background image"), ""
                                , this, &fComponent::background, &fComponent::setBackground, 0 ),

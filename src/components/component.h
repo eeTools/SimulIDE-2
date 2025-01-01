@@ -121,8 +121,8 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         virtual QString background() { return m_background; }
         virtual void setBackground( QString bck );
 
-        QString color() { return m_colorStr; }
-        void setColor( QString color );
+        QString colorStr() { return m_colorStr; }
+        void setColorStr( QString color );
 
         virtual void registerEnode( int, int n=-1 ) {;}
 

@@ -194,16 +194,18 @@ void ComposerWidget::save( QString file )
     QString compStr= "Component";
     //component += "; uid=0";
     compStr += "; uid=0";
-    compStr += "; starthalf="+ QString::number( m_fComp->startHalf() );
-    compStr += "; width="   + QString::number( m_fComp->width() );
-    compStr += "; height="  + QString::number( m_fComp->height() );
-    compStr += "; shape="   + m_fComp->shapeStr();
-    compStr += "; type="    + m_listItem.itemType();
-    compStr += "; label="   + m_listItem.label();
-    compStr += "; category="+ m_listItem.category();
-    compStr += "; icon="    + m_listItem.icon();
-    compStr += "; version=" + QString( APP_VERSION );
-    compStr += "; rev="     + QString( REVNO );
+    compStr += "; starthalf=" + QString::number( m_fComp->startHalf() );
+    compStr += "; width="     + QString::number( m_fComp->width() );
+    compStr += "; height="    + QString::number( m_fComp->height() );
+    compStr += "; shape="     + m_fComp->shapeStr();
+    compStr += "; color="     + m_fComp->colorStr();
+    compStr += "; background="+ m_fComp->background();
+    compStr += "; type="      + m_listItem.itemType();
+    compStr += "; label="     + m_listItem.label();
+    compStr += "; category="  + m_listItem.category();
+    compStr += "; icon="      + m_listItem.icon();
+    compStr += "; version="   + QString( APP_VERSION );
+    compStr += "; rev="       + QString( REVNO );
     compStr += "\n";
 
     compStr += Composer::self()->toString();
