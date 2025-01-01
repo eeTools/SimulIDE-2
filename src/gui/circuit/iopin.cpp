@@ -51,7 +51,7 @@ void IoPin::stampAdmit()
     m_steps = Simulator::self()->slopeSteps();
 
     m_inpState  = false;
-    m_outState  = false;
+    //m_outState  = false;
     m_nextState = false;
 
     m_nodes[0] = m_enode;

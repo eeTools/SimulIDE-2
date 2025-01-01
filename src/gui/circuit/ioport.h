@@ -18,7 +18,7 @@ class IoPin;
 class Component;
 class asIScriptEngine;
 
-class IoPort :public Element
+class IoPort : public Element
 {
         friend class McuCreator;
 
@@ -26,7 +26,7 @@ class IoPort :public Element
         IoPort( QString name );
         ~IoPort();
 
-        void reset();
+        /// void reset();
         /// void runEvent() override;
 
         void scheduleState( uint32_t val, uint64_t time );

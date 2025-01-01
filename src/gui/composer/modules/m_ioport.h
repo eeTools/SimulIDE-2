@@ -40,6 +40,7 @@ class mIoPort : public PortBase, public IoPort, public LogicFamily
         //bool openCol() { return m_openCol; }
         //void setOpenCol( bool op );
 
+        void setSize( int size ) override;
 
     protected:
         PinBase* addPin( QString id ) override;

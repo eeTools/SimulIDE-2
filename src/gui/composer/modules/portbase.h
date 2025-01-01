@@ -35,7 +35,7 @@ class PortBase : public Module
         void updatePosition( double p );
 
         int size() { return m_size; }
-        void setSize( int s );
+        virtual void setSize( int s );
 
         int direction() { return m_direction; }
         void setDirection( int d ) { m_direction = d; }

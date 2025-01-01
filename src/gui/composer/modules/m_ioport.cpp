@@ -41,16 +41,8 @@ void mIoPort::initModule()
 {
     m_modChanged = false;
 
-    pinMode_t pinMode = m_direction ? output : input;
-
-    m_ioPins.clear();
-    for( PinBase* pin : m_pins )
-    {
-        IoPin* ioPin = (IoPin*)pin;
-        ioPin->setPinMode( pinMode );
-        m_ioPins.emplace_back( ioPin );
-    }
-    m_numPins = m_pins.size();
+    m_pinState = 0;
+    if( m_direction == 1 ) setOutState( m_state );
 }
 
 void mIoPort::runStep() // Update outputs
@@ -82,22 +74,22 @@ QList<ComProperty*> mIoPort::inputProps()
     QList<ComProperty*> props =
     {
         new StrProp<mIoPort>("Family", tr("Logic Family"), m_families.keys().join(",")
-                                , this, &mIoPort::family, &mIoPort::setFamily, 0,"enum" ),
+                            , this, &mIoPort::family, &mIoPort::setFamily, 0,"enum" ),
 
         new DoubProp<mIoPort>("SupplyV", tr("Supply Voltage"), "V"
-                                 , this, &mIoPort::supplyV, &mIoPort::setSupplyV ),
+                             , this, &mIoPort::supplyV, &mIoPort::setSupplyV ),
 
         //new ComProperty("", " ","","",0),
         new ComProperty( "", tr("Inputs:"),"","",0),
 
         new DoubProp<mIoPort>("Input_High_V", tr("Low to High Threshold"), "V"
-                                 , this, &mIoPort::inpHighV, &mIoPort::setInpHighV ),
+                             , this, &mIoPort::inpHighV, &mIoPort::setInpHighV ),
 
         new DoubProp<mIoPort>("Input_Low_V", tr("High to Low Threshold"), "V"
-                                 , this, &mIoPort::inpLowV, &mIoPort::setInpLowV ),
+                             , this, &mIoPort::inpLowV, &mIoPort::setInpLowV ),
 
         new DoubProp<mIoPort>("Input_Imped", tr("Input Impedance"), "MΩ"
-                                 , this, &mIoPort::inputImp, &mIoPort::setInputImp )
+                             , this, &mIoPort::inputImp, &mIoPort::setInputImp )
     };
     return props;
 }
@@ -109,13 +101,13 @@ QList<ComProperty*> mIoPort::outputProps()
         new ComProperty("", tr("Outputs:"),"","",0),
 
         new DoubProp<mIoPort>("Out_High_V", tr("Output High Voltage"), "V"
-                                 , this, &mIoPort::outHighV, &mIoPort::setOutHighV ),
+                             , this, &mIoPort::outHighV, &mIoPort::setOutHighV ),
 
         new DoubProp<mIoPort>("Out_Low_V", tr("Output Low Voltage"), "V"
-                                 , this, &mIoPort::outLowV, &mIoPort::setOutLowV ),
+                             , this, &mIoPort::outLowV, &mIoPort::setOutLowV ),
 
         new DoubProp<mIoPort>("Out_Imped", tr("Output Impedance"), "Ω"
-                                 , this, &mIoPort::outImp, &mIoPort::setOutImp )
+                             , this, &mIoPort::outImp, &mIoPort::setOutImp )
     };
     return props;
 }
@@ -134,16 +126,16 @@ QList<ComProperty*> mIoPort::edgeProps()
 {
     return {
         new DoubProp<mIoPort>("pd_n"  , tr("Delay Multiplier"), ""
-                                 , this, &mIoPort::propSize, &mIoPort::setPropSize ),
+                             , this, &mIoPort::propSize, &mIoPort::setPropSize ),
 
         new UintProp<mIoPort>("tpd_ps", tr("Family Delay"), "ns"
-                                 , this, &mIoPort::propDelay, &mIoPort::setPropDelay ),
+                             , this, &mIoPort::propDelay, &mIoPort::setPropDelay ),
 
         new UintProp<mIoPort>("tr_ps" , tr("Rise Time"), "ns"
-                                 , this, &mIoPort::riseTime,  &mIoPort::setRiseTime ),
+                             , this, &mIoPort::riseTime,  &mIoPort::setRiseTime ),
 
         new UintProp<mIoPort>("tf_ps" , tr("Fall Time"), "ns"
-                                 , this, &mIoPort::fallTime,  &mIoPort::setFallTime ) };
+                             , this, &mIoPort::fallTime,  &mIoPort::setFallTime ) };
 }
 
 void mIoPort::setInpHighV( double volt )
@@ -260,4 +252,20 @@ void mIoPort::setFallTime( uint64_t time )
 {
     LogicFamily::setFallTime( time );
     for( IoPin* pin : m_ioPins ) pin->setFallTime( m_timeHL*1.25 ); // Time for Output voltage to switch from 90% to 10% (1 gate)
+}
+
+void mIoPort::setSize(int size )
+{
+    PortBase::setSize( size );
+
+    pinMode_t pinMode = m_direction ? output : input;
+
+    m_ioPins.clear();
+    for( PinBase* pin : m_pins )
+    {
+        IoPin* ioPin = (IoPin*)pin;
+        ioPin->setPinMode( pinMode );
+        m_ioPins.emplace_back( ioPin );
+    }
+    m_numPins = size;
 }

@@ -19,7 +19,7 @@ IoPort::IoPort( QString name )
 }
 IoPort::~IoPort(){}
 
-void IoPort::reset()
+/*void IoPort::reset()
 {
     m_index = 0;
     m_pinState  = 0;
@@ -34,7 +34,7 @@ void IoPort::reset()
 
     for( std::vector<outState_t> v : m_outVectors ) v.clear();
     m_outVectors.clear();
-}
+}*/
 
 /*void IoPort::runEvent()
 {
