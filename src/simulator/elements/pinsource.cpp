@@ -20,7 +20,7 @@ PinSource::~PinSource(){}
 
 void PinSource::stampAdmit()
 {
-    m_voltage = 0;
+    //m_voltage = 0;
 
     m_node = m_nodes[0];
     if( m_node >= 0 ) m_kcl->addAdmitance( &m_admitance, m_node );

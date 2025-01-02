@@ -156,11 +156,14 @@ void IoPin::setPinMode( pinMode_t mode )
             m_gndAdmit = 1/m_inputImp;
             break;
         case output:
-            m_admitance = 1/m_outputImp;
-            updtAdmitance( m_admitance );
+            m_vddAdmit = 1/m_outputImp;
+            m_gndAdmit = cero_doub;
+            //m_admitance = 1/m_outputImp;
+            /// updtAdmitance( m_admitance );
             break;
         case openCo:
             m_vddAdmit = cero_doub;
+            m_gndAdmit = 1/m_outputImp;
             break;
         case source:
             m_vddAdmit = 1/cero_doub;
