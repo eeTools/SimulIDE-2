@@ -158,17 +158,10 @@ TreeItem* ListBase::getCategory( QString category )
     {
         parent = category;
         category = catPath.takeFirst();
+        if( category.isEmpty() ) continue;
 
-        //catItem = getCategory( category );
         if( m_categories.contains( category ) ) catItem = m_categories.value( category );
-        /*else{
-            category = m_catNames.value( category );
-            if( !category.isEmpty() && m_categories.contains( category ) )
-                catItem = m_categories.value( category );
-        }*/
-
-        if( !catItem && !category.isEmpty() )
-        {
+        else{
             QString catTr = QObject::tr( category.toLocal8Bit() );
             catItem = addCategory( catTr, category, parent, "" );
         }

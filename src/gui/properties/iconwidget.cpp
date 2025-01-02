@@ -37,7 +37,7 @@ void IconWidget::setup( bool )
     this->adjustSize();
 }
 
-void IconWidget::on_iconBox_currentIndexChanged( QString val )
+void IconWidget::on_iconBox_currentIndexChanged( QString )
 {
     if( m_blocked ) return;
 
@@ -45,7 +45,7 @@ void IconWidget::on_iconBox_currentIndexChanged( QString val )
     QString iconData;
     if( index > 0 ) iconData = m_itemList.at( index ).iconData;
 
-    m_component->setPropStr( m_propId, iconData );
+    m_property->setValStr( iconData );
 
     if( m_propDialog ) m_propDialog->changed();
 }
@@ -72,6 +72,8 @@ void IconWidget::addIconFile( QString iconFile )
     iconItem.iconData = iconData;
 
     addIcon( iconItem );
+
+    on_iconBox_currentIndexChanged("");
 }
 
 void IconWidget::addIcon( iconItem_t iconItem )

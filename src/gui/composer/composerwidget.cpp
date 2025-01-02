@@ -83,7 +83,7 @@ void ComposerWidget::createPackage()
         new StrProp<ListItem>("type", tr("Type"), ""
                              , &m_listItem, &ListItem::itemType, &ListItem::setItemType, 0 ),
 
-        new StrProp<ListItem>("icon", tr("Icon"), ""
+        new StrProp<ListItem>("icondata", tr("Icon"), ""
                              , &m_listItem, &ListItem::icon, &ListItem::setIcon, 0, "icon" ),
     },0} );
 
@@ -203,7 +203,7 @@ void ComposerWidget::save( QString file )
     compStr += "; type="      + m_listItem.itemType();
     compStr += "; label="     + m_listItem.label();
     compStr += "; category="  + m_listItem.category();
-    compStr += "; icon="      + m_listItem.icon();
+    compStr += "; icondata="  + m_listItem.icon();
     compStr += "; version="   + QString( APP_VERSION );
     compStr += "; rev="       + QString( REVNO );
     compStr += "\n";

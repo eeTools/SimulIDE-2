@@ -39,21 +39,21 @@ ComponentList::ComponentList( QWidget* parent )
     ///m_restoreList = false; ///QFile::exists( m_listFile ); // Restore last List
     ///m_oldConfig = !m_restoreList; // xml file doesn't exist: read old config
 
+    m_customComp = false;
+    registerItems();
+    m_customComp = true;
+
     QString userDir = MainWindow::self()->userPath();
     if( !userDir.isEmpty() && QDir( userDir ).exists() ) LoadCompSetAt( userDir );
 
     ///if( !m_oldConfig ) readConfig(); // Read new xml config file
 
-    m_customComp = false;
-    registerItems();
-    m_customComp = true;
-
-    /*for( TreeItem* it : m_categories ) // Remove empty categories
+    for( TreeItem* it : m_categories ) // Remove empty categories
     {
         if( it->childCount() ) continue;
         QTreeWidgetItem* pa = it->parent();
         if( pa ) pa->removeChild( it  );
-    }*/
+    }
 
     setContextMenuPolicy( Qt::CustomContextMenu );
 
@@ -66,9 +66,7 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
 {
     m_compSetDir = compSetDir;
 
-
-
-    QStringList compList = compSetDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot /*QDir::Files*/ );
+    /*QStringList compList = compSetDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot);
     /// if( compList.isEmpty() ) return;                  // No comp sets to load
 
     qDebug() << "\n" << tr("    Loading Component sets at:")<< "\n" << compSetDir.absolutePath()<<"\n";
@@ -110,13 +108,8 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
             }
         }
     }
-    qDebug() << "\n";
+    qDebug() << "\n";*/
     /// sortByColumn( 1, Qt::DescendingOrder );
-
-
-
-
-
 
 
     if( compSetDir.cd("Components") )
@@ -125,7 +118,7 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
         loadComps( compSetDir );
         compSetDir.cd("..");
     }
-    if( compSetDir.cd("test") )
+    /*if( compSetDir.cd("test") )
     {
         QStringList dirList = compSetDir.entryList( {"*"}, QDir::Dirs );
         if( !dirList.isEmpty() )
@@ -160,7 +153,7 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
             }
         }
         compSetDir.cd("..");
-    }
+    }*/
     compSetDir.setNameFilters( QStringList( "*.xml" ) );
 
     QStringList xmlList = compSetDir.entryList( QDir::Files );
@@ -180,7 +173,71 @@ void ComponentList::LoadCompSetAt( QDir compSetDir )
 
 void ComponentList::loadComps( QDir compSetDir )
 {
-    QStringList compList = compSetDir.entryList( {"*.subc"}, QDir::Files );
+    QStringList compList = compSetDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot);
+    if( compList.isEmpty() ) return;                  // No comp sets to load
+
+    qDebug() << "\n" << tr("    Loading Components at:")<< "\n" << compSetDir.absolutePath()<<"\n";
+
+    for( QString comp : compList )
+    {
+        QString path = compSetDir.absoluteFilePath( comp );
+        QFileInfo fileInfo = QFileInfo( path );
+
+        if( fileInfo.isDir() ) LoadCompSetAt( path );
+        else{
+            if( fileInfo.suffix() != "comp") continue;
+
+            QString doc = fileToString( path, "ComponentList::LoadCompSetAt" );
+            QString line = doc.split("\n").takeFirst();
+
+            QStringList tokens = line.split("; ");
+            if( tokens.takeFirst() != "Component" ) continue;
+
+            QString label;
+            QString type;
+            QString icon;
+            QByteArray ba;
+            TreeItem* categ = nullptr;
+
+            for( QString prop : tokens )
+            {
+                QStringList p = prop.split("=");
+                if( p.size() != 2 ) continue;
+                if     ( p.first() == "type"    ) type  = p.last();
+                else if( p.first() == "label"   ) label = p.last();
+                else if( p.first() == "category") categ = getCategory( p.last() );
+                else if( p.first() == "icondata")
+                {
+                    QString icStr = p.last();
+                    bool ok;
+                    for( int i=0; i<icStr.size(); i+=2 )
+                    {
+                        QString ch = icStr.mid( i, 2 );
+                        ba.append( ch.toInt( &ok, 16 ) );
+                    }
+                }
+                else if( p.first() == "icon"    )
+                {
+                    QString icStr = p.last();
+                    if( !icStr.startsWith(":/") ) icon = MainWindow::self()->getDataFilePath("images/"+icon);
+                    else                          icon = getIcon("components", type );
+                    if( !icon.isEmpty() ) ba = fileToByteArray( icon, "ComponentList::loadComps");
+                }
+            }
+            QPixmap ic;
+            ic.loadFromData( ba );
+            QIcon ico( ic );
+
+            if( categ )
+            {
+                addItem( label, categ, ico, type );
+                m_dataFileList.insert( type, path );
+            }
+        }
+    }
+    qDebug() << "\n";
+
+    /*QStringList compList = compSetDir.entryList( {"*.subc"}, QDir::Files );
 
     for( QString compFile : compList )
     {
@@ -236,24 +293,6 @@ void ComponentList::loadComps( QDir compSetDir )
         QString category = attribs.value("category").toString();
         TreeItem* catItem = getCategory( category );
 
-        /// TODO: reuse get category from catPath
-        /*QString category = attribs.value("category").toString();
-        QStringList catPath = category.split("/");
-
-        TreeItem* catItem = nullptr;
-        QString parent = "";
-        category = "";
-        while( !catPath.isEmpty() )
-        {
-            parent = category;
-            category = catPath.takeFirst();
-            catItem = getCategory( category );
-            if( !catItem )
-            {
-                QString catTr = QObject::tr( category.toLocal8Bit() );
-                catItem = addCategory( catTr, category, parent, "" );
-            }
-        }*/
         QString type = attribs.value("itemtype").toString();
 
         if( !type.isEmpty() && !m_components.contains( compName ) )
@@ -275,7 +314,7 @@ void ComponentList::loadComps( QDir compSetDir )
 
         loadComps( compSetDir );
         compSetDir.cd( ".." );
-    }
+    }*/
 }
 
 void ComponentList::loadXml( QString xmlFile )
@@ -307,24 +346,6 @@ void ComponentList::loadXml( QString xmlFile )
 
             QString category = reader.attributes().value("category").toString();
             TreeItem* catItem = getCategory( category );
-            /*QString catFull = reader.attributes().value("category").toString();
-            //catFull.replace( "IC 74", "Logic/IC 74");
-            QStringList catPath = catFull.split("/");
-
-            TreeItem* catItem = nullptr;
-            QString parent   = "";
-            QString category = "";
-            while( !catPath.isEmpty() )
-            {
-                parent = category;
-                category = catPath.takeFirst();
-                catItem = getCategory( category );
-                if( !catItem )
-                {
-                    QString catTr = QObject::tr( category.toLocal8Bit() );
-                    catItem = addCategory( catTr, category, parent, icon );
-                }
-            }*/
 
             QString type = reader.attributes().value("type").toString();
             QString folder = reader.attributes().value("folder").toString();
@@ -687,7 +708,7 @@ void ComponentList::registerItems()
     //addItem( VoltReg::registerItem() );
     //addItem( MuxAnalog::registerItem() );
 
-    //addCategory( tr("Outputs"),"Outputs", "", "" );
+    addCategory( tr("Outputs"),"Outputs", "", "" );
     //addCategory( tr("Leds"),"Leds", "Outputs", "" );
     //addItem( Led::registerItem() );
     //addItem( LedRgb::registerItem() );
@@ -714,7 +735,7 @@ void ComponentList::registerItems()
     //addItem( AudioOut::registerItem() );
     //addItem( Lamp::registerItem() );
 
-    //addCategory( tr("Micro"),"Micro", "", "" );
+    addCategory( tr("Micro"),"Micro", "", "" );
     ////addItem( new LibraryItem( "AVR" , "Micro", "ic2.png","AVR", nullptr ) );
     ////addItem( new LibraryItem( "PIC" , "Micro", "ic2.png","PIC", nullptr ) );
     ////addItem( new LibraryItem( "I51" , "Micro", "ic2.png","I51", nullptr ) );
@@ -739,7 +760,7 @@ void ComponentList::registerItems()
     //addItem( DS1307::registerItem() );
     //addItem( Esp01::registerItem() );
 
-    //addCategory( tr("Logic"),"Logic", "", "" );
+    addCategory( tr("Logic"),"Logic", "", "" );
     //addCategory( tr("Gates"),"Gates", "Logic", "gates.png" );
     //addItem( Buffer::registerItem() );
     //addItem( AndGate::registerItem() );
