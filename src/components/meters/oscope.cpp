@@ -47,12 +47,13 @@ Oscope::Oscope( QString id )
     m_display->setFixedSize( m_baSizeX+6*8, m_baSizeY+2*8 );
 
     m_inPin.resize(5);
-    m_pin.resize(5);
-    m_pin[4] = m_inPin[4] = new IoPin( 180, QPoint(-80-8, 64 ), "refPin@"+id, this, input );
+
+
 
     for( int i=0; i<4; i++ )
     {
-        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-48+32*i ), "inPin"+QString::number(i)+"@"+id, this, input );
+        m_inPin[i] = new IoPin( 180, QPoint(-80-8,-48+32*i ), "inPin"+QString::number(i)+"@"+id, this, input );
+        m_pin << m_inPin[i];
         double admit = m_connectGnd ? m_inputAdmit : 0;
         m_inPin[i]->setInputAdmit( admit );
         m_channel[i] = new OscopeChannel( this, id+"Chan"+QString::number(i) );
@@ -72,6 +73,9 @@ Oscope::Oscope( QString id )
         setVoltDiv( i, 1 );
         setVoltPos( i, 0 );
     }
+    m_inPin[4] = new IoPin( 180, QPoint(-80-8, 64 ), "refPin@"+id, this, input );
+    m_pin << m_inPin[4];
+
     setFilter( 0.1 );
     setTimeDiv( 1e9 ); // 1 ms
     setLabelPos(-90,-100, 0);

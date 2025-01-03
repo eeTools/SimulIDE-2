@@ -24,6 +24,11 @@ class PortBase : public Module
         PortBase( QString name );
         ~PortBase();
 
+        enum portType_t{
+            portIO=0,
+            portHook
+        };
+
         void setComponent( fComponent* c ) override;
 
         side_t sideTipe() { return m_side;}
@@ -43,6 +48,10 @@ class PortBase : public Module
         QString pinNames() { return m_pinNames; }
         void setPinNames( QString n );
 
+        QList<PinBase*> getPinList() { return m_pins; }
+
+        portType_t portType() { return m_portType; }
+
         void remove() override;
 
     protected:
@@ -57,6 +66,8 @@ class PortBase : public Module
         QStringList m_sideList;
 
         int m_state;
+
+        portType_t m_portType;
 
         ModSlot   m_inputSlot;
         ModSignal m_outSignal;

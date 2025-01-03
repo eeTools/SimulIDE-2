@@ -39,8 +39,7 @@ Tunnel::Tunnel( QString id )
     m_show    = false;
     m_name = "";
 
-    m_pin.resize( 1 );
-    m_pin[0] = new Pin( 0, QPoint(0,0), "pin@"+id, this);
+    m_pin << new Pin( 0, QPoint(0,0), "pin@"+id, this);
     m_pin[0]->setLabelColor( Qt::black );
     m_pin[0]->setLength( 5 );
     m_pin[0]->setSpace( 4 );

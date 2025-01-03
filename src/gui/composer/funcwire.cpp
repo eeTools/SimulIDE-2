@@ -23,7 +23,7 @@ FuncWire::FuncWire( QString id, PinBase* startpin, PinBase* endpin )
 
     m_moving = false;
 
-    m_wireFlags = m_startPin->wireFlags();
+    m_wireFlags = wireFunc;
 
     QPoint pinPos = startPin()->scenePos().toPoint();
     m_pList.append( pinPos );
@@ -97,7 +97,7 @@ void FuncWire::invertPointList()
 
 void FuncWire::updateConRoute( PinBase* pin )
 {
-    bool invert = pin == m_startPin;
+    bool invert = (pin == m_startPin);
     if( invert ) invertPointList(); // Convert startPin in endPin
 
     updateConRoute( pin->scenePos() );

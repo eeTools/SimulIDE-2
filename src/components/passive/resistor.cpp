@@ -27,12 +27,8 @@ Resistor::Resistor( QString id )
 {
     m_area = QRectF(-11,-4.5, 22, 9 );
 
-    m_pin.resize(2);
-    m_pin[0] = new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this);
-    m_pin[1] = new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this);
-
-    m_pin[0]->setLength( 5 );
-    m_pin[1]->setLength( 5 );
+    m_pin << new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this, 5 );
+    m_pin << new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this, 5 );
 
     setValLabelPos(-16, 6, 0 );
     setLabelPos(-16,-24, 0 );

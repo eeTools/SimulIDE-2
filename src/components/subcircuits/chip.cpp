@@ -325,7 +325,7 @@ void Chip::addNewPin( QString id, QString type, QString label, int pos, int xpos
     if( !pin ) return;
 
     if( pin->unused() ) m_ncPins.append( pin );
-    else                m_pin.emplace_back( pin );
+    else                m_pin.append( pin );
 
     m_tempPins.removeOne( pin );
 }

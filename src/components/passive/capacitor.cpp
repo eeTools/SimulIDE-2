@@ -28,12 +28,8 @@ Capacitor::Capacitor( QString id )
 {
     m_area = QRectF(-10,-8, 20, 16 );
 
-    m_pin.resize(2);
-    m_pin[0] = new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this);
-    m_pin[1] = new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this);
-
-    m_pin[0]->setLength( 12 );
-    m_pin[1]->setLength( 12 );
+    m_pin << new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this, 12 );
+    m_pin << new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this, 12 );
 
     setValLabelPos(-16, 6, 0 );
     setLabelPos(-16,-24, 0 );

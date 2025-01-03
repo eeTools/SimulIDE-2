@@ -40,7 +40,7 @@ class SubPackage : public Chip, public Linker
         QString packagePins();
         void setPackagePins( QString pinsStr );
 
-        std::vector<Pin*> getPins() override { std::vector<Pin*> p; return p; } // Used to access wires (we have no wires)
+        QList<Pin*> getPins() override { QList<Pin*> p; return p; } // Used to access wires (we have no wires)
 
         void setEventPin( Pin* pin ) { m_eventPin = pin; }
 

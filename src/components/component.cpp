@@ -95,11 +95,22 @@ new BoolProp<Component>("mainComp","","", this, &Component::isMainComp,&Componen
     }, groupHidden | groupNoCopy } );*/
 
     addPropGroup( { "CompGraphic", {
-new PointProp<Component>("pos"      ,"","", this, &Component::position,  &Component::setPosition ),
-new DoubProp <Component>("rot"      ,"","", this, &Component::getAngle,  &Component::setAngle ),
-new IntProp  <Component>("hflip"    ,"","", this, &Component::hflip,     &Component::setHflip ),
-new IntProp  <Component>("vflip"    ,"","", this, &Component::vflip,     &Component::setVflip ),
-new StrProp  <Component>("label"    ,"","", this, &Component::idLabel,   &Component::setIdLabel ),
+        new PointProp<Component>("pos","",""
+                                , this, &Component::position, &Component::setPosition ),
+
+        new DoubProp <Component>("rot","",""
+                                , this, &Component::getAngle, &Component::setAngle ),
+
+        new IntProp  <Component>("hflip","",""
+                                , this, &Component::hflip,    &Component::setHflip ),
+
+        new IntProp  <Component>("vflip","",""
+                                , this, &Component::vflip,    &Component::setVflip ),
+
+        new StrProp  <Component>("label","",""
+                                , this, &Component::idLabel,  &Component::setIdLabel ),
+
+
 /*new PointProp<Component>("id_pos"   ,"","", this, &Component::getIdPos,  &Component::setIdPos ),
 new IntProp  <Component>("id_rot"   ,"","", this, &Component::getIdRot,  &Component::setIdRot ),
 new BoolProp <Component>("id_show"  ,"","", this, &Component::showId,    &Component::setShowId ),
@@ -225,7 +236,7 @@ void Component::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
                 Component* comp =  qgraphicsitem_cast<Component*>( item );
                 Circuit::self()->addItemChange( comp->getUid(), "Pos", comp->getPropStr("Pos") );
                 m_compMoveList.append( comp );
-                std::vector<Pin*> pins = comp->getPins();
+                QList<Pin*> pins = comp->getPins();
                 for( Pin* pin : pins )
                 {                                     // Connectors attached to selected Component
                     if( !pin ) continue;

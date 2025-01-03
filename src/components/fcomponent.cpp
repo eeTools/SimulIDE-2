@@ -15,6 +15,7 @@
 #include "canvasbase.h"
 #include "module.h"
 #include "m_ioport.h"
+#include "iopin.h"
 #include "mainwindow.h"
 #include "componentlist.h"
 #include "blocklist.h"
@@ -68,6 +69,9 @@ fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
 
         new StrProp<fComponent>("background", tr("Background image"), ""
                                , this, &fComponent::background, &fComponent::setBackground, 0 ),
+
+        new StrProp<fComponent>("invertedpins","",""
+                               , this, &fComponent::invertedPins, &fComponent::setInvertedPins, propHidden ),
     }, groupPkg } );
 }
 fComponent::~fComponent(){}
@@ -354,6 +358,38 @@ void fComponent::setBackground( QString bck )
     }
 
     update();
+}
+
+void fComponent::updatePins()
+{
+    m_pin.clear();
+
+    for( PortBase* port : m_ports )
+    {
+        if( port->portType() != PortBase::portIO ) continue;
+
+        mIoPort* ioPort = static_cast<mIoPort*>(port);
+        for( IoPin* pin : ioPort->getIoPins() )
+        {
+            m_pin << pin;
+            if( m_invertedPins.contains( pin->pinId() ) )
+                pin->setInverted( true );
+        }
+    }
+}
+
+QString fComponent::invertedPins()
+{
+    QString invPins;
+    for( Pin* pin : m_pin )
+        if( pin->inverted() ) invPins += pin->pinId()+",";
+
+    return invPins;
+}
+
+void fComponent::setInvertedPins( QString pins )
+{
+    m_invertedPins = pins;
 }
 
 void fComponent::remove()

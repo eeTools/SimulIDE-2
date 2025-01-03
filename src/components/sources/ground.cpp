@@ -26,9 +26,8 @@ Ground::Ground( QString id )
 {
     m_area = QRect(-6,-1, 12, 9 );
 
-    m_pin.resize(1);
-    Pin* pin = new Pin( 90, QPoint( 0,-8 ), "Pin@"+id, this );
-    m_pin[0] = pin;
+    m_pin << new Pin( 90, QPoint( 0,-8 ), "Pin@"+id, this );
+
     m_out.setAdmitance( 1e9 );
 
     setLabelPos(-16, 8, 0);

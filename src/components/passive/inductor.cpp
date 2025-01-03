@@ -29,12 +29,8 @@ Inductor::Inductor( QString id )
 {
     m_area = QRectF(-10,-6, 20, 12 );
 
-    m_pin.resize(2);
-    m_pin[0] = new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this);
-    m_pin[1] = new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this);
-
-    m_pin[0]->setLength( 4 );
-    m_pin[1]->setLength( 4 );
+    m_pin << new Pin( 180, QPoint(-16, 0 ), "lPin@"+id, this, 4 );
+    m_pin << new Pin( 0,   QPoint( 16, 0 ), "rPin@"+id, this, 4 );
 
     //m_inductance = 1; // H
 

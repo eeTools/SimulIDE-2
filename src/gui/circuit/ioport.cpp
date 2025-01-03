@@ -130,19 +130,19 @@ void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
     m_numPins = pins.toUInt(0,0);
     if( m_numPins )
     {
-        m_ioPins.resize( m_numPins );
+        //m_ioPins.resize( m_numPins );
 
         for( int i=0; i<m_numPins; ++i )
         {
             if( pinMask & 1<<i )
-                m_ioPins[i] = createPin( m_name+QString::number(i)+"@"+compId , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
+                m_ioPins << createPin( m_name+QString::number(i)+"@"+compId , comp );//new IoPin( this, i, m_name+QString::number(i), IoComp );
         }
     }else{
         QStringList pinList = pins.split(",");
         for( QString pinName : pinList )
         {
             IoPin* pin = createPin( m_name+pinName+"@"+compId , comp );//new IoPin( this, i, m_name+pinName, IoComp );
-            m_ioPins.emplace_back( pin );
+            m_ioPins << pin;
             m_numPins++;
         }
     }

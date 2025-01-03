@@ -15,6 +15,8 @@ WireBase::WireBase( QString id, PinBase* startpin )
     m_actLine   = 0;
     m_lastIndex = 0;
 
+    m_wireFlags = 0;
+
     addPropGroup( {"Hidden", {
         new StrProp<WireBase>( "pin0" ,"","", this, &WireBase::startPinId, &WireBase::dummySetter ),
         new StrProp<WireBase>( "pin1" ,"","", this, &WireBase::endPinId,   &WireBase::dummySetter ),

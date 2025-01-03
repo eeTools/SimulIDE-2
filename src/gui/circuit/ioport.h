@@ -42,6 +42,7 @@ class IoPort : public Element
 
         IoPin* getPinN( uint8_t i );
         IoPin* getPin( QString pinName );
+        QList<IoPin*> getIoPins() { return m_ioPins; }
 
         QString name() { return m_name; }
         /// int     size() { return m_numPins; }
@@ -72,7 +73,7 @@ class IoPort : public Element
         pinMode_t m_pinMode;
 
         uint8_t m_numPins;
-        std::vector<IoPin*> m_ioPins;
+        QList<IoPin*> m_ioPins;
 
         uint m_index;
         std::vector<outState_t>* m_outVector;

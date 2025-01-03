@@ -22,6 +22,7 @@ listItem_t IoHook::registerItem(){
 IoHook::IoHook( QString name )
       : PortBase( name )
 {
+    m_portType = portHook;
 }
 IoHook::~IoHook(){}
 

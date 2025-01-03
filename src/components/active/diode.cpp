@@ -29,9 +29,8 @@ Diode::Diode( QString id, bool )
 {
     m_area = QRect(-10, -8, 20, 16 );
 
-    m_pin.resize(2);
-    m_pin[0] = new Pin( 180, QPoint(-16, 0 ), "-nPin@"+id, this );
-    m_pin[1] = new Pin( 0,   QPoint( 16, 0 ), "-nPin@"+id, this );
+    m_pin << new Pin( 180, QPoint(-16, 0 ), "-nPin@"+id, this );
+    m_pin << new Pin( 0,   QPoint( 16, 0 ), "-nPin@"+id, this );
 }
 Diode::~Diode(){}
 

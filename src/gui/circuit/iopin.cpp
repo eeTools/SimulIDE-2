@@ -14,6 +14,7 @@ IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMod
      : Pin( angle, pos, id, parent )
      , PinSource( id )
 {
+    m_pinType = pinIO;
     m_outState = false;
     m_stateZ   = false;
     m_skipStamp = false;
@@ -276,9 +277,14 @@ void IoPin::setOutputImp( double imp )
     }
 }
 
-void IoPin::setInverted( bool invert )
+void IoPin::userInvertPin()
 {
-    bool inverted = false; // m_userInverted ? !invert : invert;
+    setInverted( !m_inverted );
+}
+
+void IoPin::setInverted( bool inverted )
+{
+    //bool inverted = false; // m_userInverted ? !invert : invert;
     if( inverted == m_inverted ) return;
     m_inverted = inverted;
 
@@ -291,12 +297,12 @@ void IoPin::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 {
     if( !m_userInvert ) return;
 
-    /*QMenu* menu = new QMenu();
+    QMenu* menu = new QMenu();
     QAction* editAction = menu->addAction( QIcon(":/invert.png"),QObject::tr("Invert Pin"));
     QObject::connect( editAction, &QAction::triggered,
                       [=](){ userInvertPin(); } );
 
-    menu->exec( event->screenPos() );*/
+    menu->exec( event->screenPos() );
 }
 
 // ---- Script Engine -------------------

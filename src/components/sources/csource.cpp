@@ -35,10 +35,9 @@ Csource::Csource( QString id )
     m_nodes[2] = -1;
     m_nodes[3] = -1;
 
-    m_pin.resize(4);
     // Control Pins
-    m_pin[0] = new Pin( 180, QPoint(-24,-8 ), id+"-cpPin", this);
-    m_pin[1] = new Pin( 180, QPoint(-24, 8 ), id+"-cmPin", this);
+    m_pin << new Pin( 180, QPoint(-24,-8 ), id+"-cpPin", this);
+    m_pin << new Pin( 180, QPoint(-24, 8 ), id+"-cmPin", this);
     m_pin[0]->setFontSize( 9 );
     m_pin[0]->setSpace( 1.7 );
     m_pin[0]->setLabelText("+");
@@ -49,8 +48,8 @@ Csource::Csource( QString id )
     m_pin[1]->setLabelColor( QColor( 0, 0, 0 ) );
 
     // Source Pins
-    m_pin[2] = new Pin(  90, QPoint( 0,-20 ), id+"-s1Pin", this);
-    m_pin[3] = new Pin( 270, QPoint( 0, 20 ), id+"-s2Pin", this);
+    m_pin << new Pin(  90, QPoint( 0,-20 ), id+"-s1Pin", this);
+    m_pin << new Pin( 270, QPoint( 0, 20 ), id+"-s2Pin", this);
     m_pin[2]->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
     m_pin[3]->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
 

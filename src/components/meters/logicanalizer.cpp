@@ -48,17 +48,17 @@ LAnalizer::LAnalizer( QString id )
     m_display->setChannels( 8 );
     m_display->setTracks( 8 );
 
-    m_pin.resize(8);
     m_inPin.resize(8);
     for( int i=0; i<8; ++i )
     {
-        m_pin[i] = m_inPin[i] = new IoPin( 180, QPoint(-80-8,-64+16*i ), "Pin"+QString::number(i)+"@"+id, this, undef_mode );
+        m_inPin[i] = new IoPin( 180, QPoint(-80-8,-64+16*i ), "Pin"+QString::number(i)+"@"+id, this, undef_mode );
+        m_pin << m_inPin[i];
         double admit = m_connectGnd ? m_inputAdmit : 0;
         m_inPin[i]->setInputAdmit( admit );
         LaChannel* ch = new LaChannel( this, id+"Chan"+QString::number(i) );
 
         ch->m_channel = i;
-        ch->setPin( m_pin[i] );
+        ch->setPin( m_inPin[i] );
         ch->m_buffer.resize( m_bufferSize );
         ch->m_time.resize( m_bufferSize );
         m_channel[i] = ch;

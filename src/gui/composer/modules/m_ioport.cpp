@@ -29,6 +29,7 @@ mIoPort::mIoPort( QString name )
        : PortBase( name )
        , IoPort( name )
 {
+    m_portType = portIO;
 }
 mIoPort::~mIoPort(){;}
 
@@ -265,7 +266,8 @@ void mIoPort::setSize(int size )
     {
         IoPin* ioPin = (IoPin*)pin;
         ioPin->setPinMode( pinMode );
-        m_ioPins.emplace_back( ioPin );
+        m_ioPins << ioPin;
     }
     m_numPins = size;
+    m_component->updatePins();
 }

@@ -24,11 +24,10 @@ Meter::Meter( QString id )
     m_graphical = true;
     m_switchPins = false;
 
-    m_pin.resize( 2 );
-    m_pin[0] = new Pin( 270, QPoint(-8, 16), "pPin@"+id, this);
+    m_pin << new Pin( 270, QPoint(-8, 16), "pPin@"+id, this);
     m_pin[0]->setColor( Qt::red );
 
-    m_pin[1] = new Pin( 270, QPoint( 8, 16), "nPin@"+id, this);
+    m_pin << new Pin( 270, QPoint( 8, 16), "nPin@"+id, this);
     //m_outPin->setOutHighV( 0 );
     //m_outPin->setOutState( true );
 

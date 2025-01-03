@@ -53,10 +53,15 @@ class fComponent : public Component, public Element
 
         void setBackground( QString bck ) override;
 
+        QString invertedPins();
+        void setInvertedPins( QString pins );
+
         void addPort( PortBase* port );
+        /// TODO void removePort( PortBase* port );
         QGraphicsProxyWidget* addWidget( QWidget* widget );
 
         void upDateShape();
+        void updatePins();
 
         void remove() override;
 
@@ -74,6 +79,8 @@ class fComponent : public Component, public Element
 
         bool m_startHalf;
         bool m_compChanged;
+
+        QString m_invertedPins;
 
         fShape_t m_shape;
         QString m_shapeStr;

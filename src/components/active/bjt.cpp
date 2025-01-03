@@ -32,10 +32,9 @@ BJT::BJT( QString id )
     m_area =  QRectF(-12,-14, 28, 28 );
     setLabelPos( 18, 0, 0 );
 
-    m_pin.resize( 3 );
-    m_pin[0] = new Pin(  90, QPoint( 8,-16), "PinC@"+id, this );
-    m_pin[1] = new Pin( 270, QPoint( 8, 16), "PinE@"+id, this );
-    m_pin[2] = new Pin( 180, QPoint(-16, 0), "PinB@"+id, this );
+    m_pin << new Pin(  90, QPoint( 8,-16), "PinC@"+id, this );
+    m_pin << new Pin( 270, QPoint( 8, 16), "PinE@"+id, this );
+    m_pin << new Pin( 180, QPoint(-16, 0), "PinB@"+id, this );
 
     Simulator::self()->addToUpdateList( this );
 

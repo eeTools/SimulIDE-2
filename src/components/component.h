@@ -110,7 +110,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         bool isMainComp() { return m_isMainComp; }
         void setMainComp( bool m ) { m_isMainComp = m; }
 
-        virtual std::vector<Pin*> getPins() { return m_pin; }
+        virtual QList<Pin*> getPins() { return m_pin; }
         virtual Pin* getPin( QString pinName ){ return nullptr;}
 
         //QString print();
@@ -226,7 +226,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         QList<Wire*> m_wireMoveList;
         QList<Component*> m_compMoveList;
 
-        std::vector<Pin*> m_pin;
+        QList<Pin*> m_pin;
         QList<PinBase*> m_signalPin;
 
         //QGraphicsItemGroup* m_group;

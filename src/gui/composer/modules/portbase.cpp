@@ -65,7 +65,6 @@ void PortBase::setSize( int size )
         QString id = m_id+"@"+m_component->getUid();
         for( int i=m_size; i<size; ++i )
         {
-            //IoPin* pin = new IoPin( 0, QPoint(0, 0), "Pin"+QString::number(i)+"@"+id, m_component );
             PinBase* pin = addPin( "Pin"+QString::number(i)+"@"+id );
             m_pins.append( pin );
         }

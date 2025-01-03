@@ -78,6 +78,7 @@ class IoPin : public Pin, public PinSource
         void setStateZ( bool z );
         virtual void setPullup( bool up );
 
+
         void setInverted( bool invert ); // override;
 
         virtual void controlPin( bool outCtrl , bool dirCtrl ){;}
@@ -91,6 +92,8 @@ class IoPin : public Pin, public PinSource
 
     protected:
         void contextMenuEvent( QGraphicsSceneContextMenuEvent* event ) override;
+
+        void userInvertPin();
 
         inline void updtState()
         {

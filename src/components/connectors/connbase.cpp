@@ -48,12 +48,12 @@ void ConnBase::createPins( int c )
 {
     int start = m_size;
     m_size = m_size+c;
-    m_pin.resize( m_size*2 );
+    //m_pin.resize( m_size*2 );
     m_sockPins.resize( m_size );
 
     for( int i=start; i<m_size; i++ )
     {
-        m_pin[i] = new Pin( 180, QPoint(-8,-32+8+i*8 ), "pin"+QString::number(i)+"@"+m_id, this );
+        m_pin << new Pin( 180, QPoint(-8,-32+8+i*8 ), "pin"+QString::number(i)+"@"+m_id, this );
         m_sockPins[i] = new Pin( 90, QPoint( 0,-32+8+i*8 ), "pin"+QString::number(i+m_size)+"@"+m_id, this );
         m_sockPins[i]->setFlag( QGraphicsItem::ItemStacksBehindParent, false );
         m_sockPins[i]->setLength( 1 );
@@ -70,9 +70,11 @@ void ConnBase::deletePins( int d )
     {
         deletePin( m_pin[i] );
         deletePin( m_sockPins[i] );
+
+        /// m_pin.takeLast();
     }
     m_size = m_size-d;
-    m_pin.resize( m_size*2 );
+    //m_pin.resize( m_size*2 );
     m_sockPins.resize( m_size );
     
     Circuit::self()->update();
@@ -89,8 +91,8 @@ void ConnBase::setSize( int size )
 
     for( int i=m_size; i<m_size*2; i++ )
     {
-        m_pin[i] = m_sockPins[i-m_size];
-        /// m_pin[i]->setIndex( i );
+        /// m_pin[i] = m_sockPins[i-m_size];
+
     }
     m_connPins.resize( size );
     m_area = QRectF(-4, -28, 8, m_size*8 );

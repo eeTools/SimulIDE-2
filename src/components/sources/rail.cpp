@@ -28,7 +28,7 @@ Rail::Rail( QString id )
 {
     m_area = QRect(-6,-9, 12, 9 );
 
-    m_pin.emplace_back( new Pin( 270, QPoint(0, 8), "Pin@"+id, this ) );
+    m_pin << new Pin( 270, QPoint(0, 8), "Pin@"+id, this );
     m_out.setAdmitance( 1e9 );
 
     setValLabelPos(-6,-20, 0 ); // x, y, rot

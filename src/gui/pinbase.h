@@ -21,6 +21,7 @@ class PinBase : public QGraphicsItem, public Updatable
 
         enum pinType_t{
             pinNormal=0,
+            pinIO,
             pinSocket,
             pinHeader,
             pinNull,
