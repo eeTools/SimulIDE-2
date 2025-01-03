@@ -10,7 +10,7 @@
 #include "element.h"
 
 class Module;
-class PortBase;
+class PortModule;
 class CanvasBase;
 class QGraphicsProxyWidget;
 
@@ -56,8 +56,8 @@ class fComponent : public Component, public Element
         QString invertedPins();
         void setInvertedPins( QString pins );
 
-        void addPort( PortBase* port );
-        /// TODO void removePort( PortBase* port );
+        void addPort( PortModule* port );
+        /// TODO void removePort( PortModule* port );
         QGraphicsProxyWidget* addWidget( QWidget* widget );
 
         void upDateShape();
@@ -89,7 +89,7 @@ class fComponent : public Component, public Element
         QMap<QString, Module*> m_modules;
         QList<Module*> m_activeMod;
 
-        QList<PortBase*> m_ports;
+        QList<PortModule*> m_ports;
 
         QGraphicsScene* m_canvas;
 };

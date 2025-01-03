@@ -3,35 +3,35 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#include "m_iohook.h"
+#include "m_hookport.h"
 #include "hook.h"
 //#include "simulator.h"
 #include "fcomponent.h"
 
 #include "intprop.h"
 
-listItem_t IoHook::registerItem(){
+listItem_t mHookPort::registerItem(){
     return {
         "Hook Port",
         "Ports",
         "hookport.png",
-        "IoHook",
-        [](QString id){ return (CompBase*)new IoHook( id ); } };
+        "mHookPort",
+        [](QString id){ return (CompBase*)new mHookPort( id ); } };
 }
 
-IoHook::IoHook( QString name )
-      : PortBase( name )
+mHookPort::mHookPort( QString name )
+         : PortModule( name )
 {
     m_portType = portHook;
 }
-IoHook::~IoHook(){}
+mHookPort::~mHookPort(){}
 
-void IoHook::setup()
+void mHookPort::setup()
 {
     setPropStr("size", "1");
 }
 
-void IoHook::runStep()
+void mHookPort::runStep()
 {
     if( !m_modChanged ) return;
     m_modChanged = false;
@@ -42,7 +42,7 @@ void IoHook::runStep()
     m_component->voltChanged();
 }
 
-PinBase* IoHook::addPin( QString id )
+PinBase* mHookPort::addPin( QString id )
 {
     Hook* pin = new Hook( 0, QPoint(0, 0), id, hookNone, m_component );
     return pin;

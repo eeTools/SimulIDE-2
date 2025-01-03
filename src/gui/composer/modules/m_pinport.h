@@ -3,18 +3,18 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MIOPORT_H
-#define MIOPORT_H
+#ifndef PINPORT_H
+#define PINPORT_H
 
-#include "portbase.h"
+#include "portmodule.h"
 #include "ioport.h"
 #include "logicfamily.h"
 
-class mIoPort : public PortBase, public IoPort, public LogicFamily
+class mPinPort : public PortModule, public IoPort, public LogicFamily
 {
     public:
-        mIoPort( QString name );
-        virtual ~mIoPort();
+        mPinPort( QString name );
+        virtual ~mPinPort();
 
  static listItem_t registerItem();
 

@@ -3,14 +3,14 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#include "portbase.h"
+#include "portmodule.h"
 #include "pinbase.h"
 #include "fcomponent.h"
 
 #include "intprop.h"
 #include "stringprop.h"
 
-PortBase::PortBase( QString name )
+PortModule::PortModule( QString name )
         : Module( name )
         , m_inputSlot("input" , hookInputInt )
         , m_outSignal("output", hookOutputInt )
@@ -29,31 +29,31 @@ PortBase::PortBase( QString name )
 
     addPropGroup( { "Main",
     {
-        new StrProp<PortBase>("side", "Side", m_sideList.join(",")
-                             , this, &PortBase::side, &PortBase::setSide,0,"enum" ),
+        new StrProp<PortModule>("side", "Side", m_sideList.join(",")
+                             , this, &PortModule::side, &PortModule::setSide,0,"enum" ),
 
-        new IntProp<PortBase>("pos", "Offset", ""
-                             , this, &PortBase::position, &PortBase::setPosition, 0 ),
+        new IntProp<PortModule>("pos", "Offset", ""
+                             , this, &PortModule::position, &PortModule::setPosition, 0 ),
 
-        new IntProp<PortBase>("dir", "Direction", ""
-                             , this, &PortBase::direction, &PortBase::setDirection, 0 ),
+        new IntProp<PortModule>("dir", "Direction", ""
+                             , this, &PortModule::direction, &PortModule::setDirection, 0 ),
 
-        new IntProp<PortBase>("size", "Pins", ""
-                             , this, &PortBase::size, &PortBase::setSize, propSlot ),
+        new IntProp<PortModule>("size", "Pins", ""
+                             , this, &PortModule::size, &PortModule::setSize, propSlot ),
 
-        new StrProp<PortBase>("pinnames", "Pin Names", ""
-                             , this, &PortBase::pinNames, &PortBase::setPinNames,0  ),
+        new StrProp<PortModule>("pinnames", "Pin Names", ""
+                             , this, &PortModule::pinNames, &PortModule::setPinNames,0  ),
     },0} );
 }
-PortBase::~PortBase(){;}
+PortModule::~PortModule(){;}
 
-void PortBase::setComponent( fComponent* c )
+void PortModule::setComponent( fComponent* c )
 {
     Module::setComponent( c );
     m_component->addPort( this );
 }
 
-void PortBase::setSize( int size )
+void PortModule::setSize( int size )
 {
     if     ( size < 1  ) size = 1;
     else if( size > 32 ) size = 32;
@@ -83,7 +83,7 @@ void PortBase::setSize( int size )
     m_component->upDateShape();
 }
 
-void PortBase::setSide( QString side )
+void PortModule::setSide( QString side )
 {
     if( !m_sideList.contains( side )) side = "Left";
     if( side == m_sideStr ) return;
@@ -94,7 +94,7 @@ void PortBase::setSide( QString side )
     m_component->upDateShape();
 }
 
-void PortBase::setPosition( int pos )
+void PortModule::setPosition( int pos )
 {
     if( pos < -1 ) pos = -1;
     //if( m_position == pos ) return;
@@ -102,7 +102,7 @@ void PortBase::setPosition( int pos )
     m_component->upDateShape();
 }
 
-void PortBase::updatePosition( double pos )
+void PortModule::updatePosition( double pos )
 {
     if( m_pins.isEmpty() ) return;
 
@@ -147,7 +147,7 @@ void PortBase::updatePosition( double pos )
     }
 }
 
-void PortBase::setPinNames( QString n )
+void PortModule::setPinNames( QString n )
 {
     //if( m_pinNames == n ) return;
     m_pinNames = n;
@@ -161,7 +161,7 @@ void PortBase::setPinNames( QString n )
     }
 }
 
-void PortBase::remove()
+void PortModule::remove()
 {
     for( PinBase* pin : m_pins ) m_component->deletePin( pin );
 }

@@ -14,7 +14,7 @@
 #include "fcomponent.h"
 #include "canvasbase.h"
 #include "module.h"
-#include "m_ioport.h"
+#include "m_pinport.h"
 #include "iopin.h"
 #include "mainwindow.h"
 #include "componentlist.h"
@@ -215,7 +215,7 @@ void fComponent::setup() // Called from Circuit
     }
 }
 
-void fComponent::addPort( PortBase* port )
+void fComponent::addPort( PortModule* port )
 {
     if( !m_ports.contains( port ) ) m_ports.append( port );
     upDateShape();
@@ -248,16 +248,16 @@ void fComponent::setHeight( int height )
 
 void fComponent::upDateShape()
 {
-    QList<PortBase*> rigPorts;
-    QList<PortBase*> lefPorts;
-    QList<PortBase*> topPorts;
-    QList<PortBase*> botPorts;
+    QList<PortModule*> rigPorts;
+    QList<PortModule*> lefPorts;
+    QList<PortModule*> topPorts;
+    QList<PortModule*> botPorts;
 
     double start = m_startHalf ? 0.5 : 1;
 
     double rSize=start, lSize=start, tSize=start, bSize=start;
 
-    for( PortBase* port : m_ports )
+    for( PortModule* port : m_ports )
     {
         int size = port->size();
 
@@ -298,7 +298,7 @@ void fComponent::upDateShape()
     m_area = QRect( -width/2, -height/2, width, height );
 
     double pos = start;
-    for( PortBase* port : rigPorts )
+    for( PortModule* port : rigPorts )
     {
         int portPos = port->position();
         if( portPos == -1 ) pos = (double)m_height/2;
@@ -307,21 +307,21 @@ void fComponent::upDateShape()
         pos += port->size();
     }
     pos = start;
-    for( PortBase* port : lefPorts )
+    for( PortModule* port : lefPorts )
     {
         pos += port->position();
         port->updatePosition( pos );
         pos += port->size();
     }
     pos = start;
-    for( PortBase* port : topPorts )
+    for( PortModule* port : topPorts )
     {
         pos += port->position();
         port->updatePosition( pos );
         pos += port->size();
     }
     pos = start;
-    for( PortBase* port : botPorts )
+    for( PortModule* port : botPorts )
     {
         pos += port->position();
         port->updatePosition( pos );
@@ -364,11 +364,11 @@ void fComponent::updatePins()
 {
     m_pin.clear();
 
-    for( PortBase* port : m_ports )
+    for( PortModule* port : m_ports )
     {
-        if( port->portType() != PortBase::portIO ) continue;
+        if( port->portType() != PortModule::portIO ) continue;
 
-        mIoPort* ioPort = static_cast<mIoPort*>(port);
+        mPinPort* ioPort = static_cast<mPinPort*>(port);
         for( IoPin* pin : ioPort->getIoPins() )
         {
             m_pin << pin;

@@ -3,17 +3,17 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef IOHOOK_H
-#define IOHOOK_H
+#ifndef HOOKPORT_H
+#define HOOKPORT_H
 
-#include "portbase.h"
+#include "portmodule.h"
 #include "modsignal.h"
 
-class IoHook : public PortBase
+class mHookPort : public PortModule
 {
     public:
-        IoHook( QString name );
-        ~IoHook();
+        mHookPort( QString name );
+        ~mHookPort();
 
  static listItem_t registerItem();
 

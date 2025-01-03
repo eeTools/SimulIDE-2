@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-#include "m_ioport.h"
+#include "m_pinport.h"
 #include "fcomponent.h"
 #include "iopin.h"
 
@@ -14,31 +14,31 @@
 #include "stringprop.h"
 #include "boolprop.h"
 
-#define tr(str) simulideTr("mIoPort",str)
+#define tr(str) simulideTr("mPinPort",str)
 
-listItem_t mIoPort::registerItem(){
+listItem_t mPinPort::registerItem(){
     return {
         "Pin Port",
         "Ports",
         "pinport.png",
         "IoPort",
-        [](QString id){ return (CompBase*)new mIoPort( id ); } };
+        [](QString id){ return (CompBase*)new mPinPort( id ); } };
 }
 
-mIoPort::mIoPort( QString name )
-       : PortBase( name )
+mPinPort::mPinPort( QString name )
+       : PortModule( name )
        , IoPort( name )
 {
     m_portType = portIO;
 }
-mIoPort::~mIoPort(){;}
+mPinPort::~mPinPort(){;}
 
-void mIoPort::setup()
+void mPinPort::setup()
 {
     setPropStr("size", "2");
 }
 
-void mIoPort::initModule()
+void mPinPort::initModule()
 {
     m_modChanged = false;
 
@@ -46,7 +46,7 @@ void mIoPort::initModule()
     if( m_direction == 1 ) setOutState( m_state );
 }
 
-void mIoPort::runStep() // Update outputs
+void mPinPort::runStep() // Update outputs
 {
     if( !m_modChanged ) return;
     m_modChanged = false;
@@ -63,83 +63,83 @@ void mIoPort::runStep() // Update outputs
     }
 }
 
-PinBase* mIoPort::addPin( QString id )
+PinBase* mPinPort::addPin( QString id )
 {
     IoPin* pin = new IoPin( 0, QPoint(0, 0), id, m_component );
     pin->setOutHighV( 5 );
     return pin;
 }
 
-QList<ComProperty*> mIoPort::inputProps()
+QList<ComProperty*> mPinPort::inputProps()
 {
     QList<ComProperty*> props =
     {
-        new StrProp<mIoPort>("Family", tr("Logic Family"), m_families.keys().join(",")
-                            , this, &mIoPort::family, &mIoPort::setFamily, 0,"enum" ),
+        new StrProp<mPinPort>("Family", tr("Logic Family"), m_families.keys().join(",")
+                            , this, &mPinPort::family, &mPinPort::setFamily, 0,"enum" ),
 
-        new DoubProp<mIoPort>("SupplyV", tr("Supply Voltage"), "V"
-                             , this, &mIoPort::supplyV, &mIoPort::setSupplyV ),
+        new DoubProp<mPinPort>("SupplyV", tr("Supply Voltage"), "V"
+                             , this, &mPinPort::supplyV, &mPinPort::setSupplyV ),
 
         //new ComProperty("", " ","","",0),
         new ComProperty( "", tr("Inputs:"),"","",0),
 
-        new DoubProp<mIoPort>("Input_High_V", tr("Low to High Threshold"), "V"
-                             , this, &mIoPort::inpHighV, &mIoPort::setInpHighV ),
+        new DoubProp<mPinPort>("Input_High_V", tr("Low to High Threshold"), "V"
+                             , this, &mPinPort::inpHighV, &mPinPort::setInpHighV ),
 
-        new DoubProp<mIoPort>("Input_Low_V", tr("High to Low Threshold"), "V"
-                             , this, &mIoPort::inpLowV, &mIoPort::setInpLowV ),
+        new DoubProp<mPinPort>("Input_Low_V", tr("High to Low Threshold"), "V"
+                             , this, &mPinPort::inpLowV, &mPinPort::setInpLowV ),
 
-        new DoubProp<mIoPort>("Input_Imped", tr("Input Impedance"), "MΩ"
-                             , this, &mIoPort::inputImp, &mIoPort::setInputImp )
+        new DoubProp<mPinPort>("Input_Imped", tr("Input Impedance"), "MΩ"
+                             , this, &mPinPort::inputImp, &mPinPort::setInputImp )
     };
     return props;
 }
 
-QList<ComProperty*> mIoPort::outputProps()
+QList<ComProperty*> mPinPort::outputProps()
 {
     QList<ComProperty*> props =
     {
         new ComProperty("", tr("Outputs:"),"","",0),
 
-        new DoubProp<mIoPort>("Out_High_V", tr("Output High Voltage"), "V"
-                             , this, &mIoPort::outHighV, &mIoPort::setOutHighV ),
+        new DoubProp<mPinPort>("Out_High_V", tr("Output High Voltage"), "V"
+                             , this, &mPinPort::outHighV, &mPinPort::setOutHighV ),
 
-        new DoubProp<mIoPort>("Out_Low_V", tr("Output Low Voltage"), "V"
-                             , this, &mIoPort::outLowV, &mIoPort::setOutLowV ),
+        new DoubProp<mPinPort>("Out_Low_V", tr("Output Low Voltage"), "V"
+                             , this, &mPinPort::outLowV, &mPinPort::setOutLowV ),
 
-        new DoubProp<mIoPort>("Out_Imped", tr("Output Impedance"), "Ω"
-                             , this, &mIoPort::outImp, &mIoPort::setOutImp )
+        new DoubProp<mPinPort>("Out_Imped", tr("Output Impedance"), "Ω"
+                             , this, &mPinPort::outImp, &mPinPort::setOutImp )
     };
     return props;
 }
 
-/*QList<ComProperty*> mIoPort::outputType()
+/*QList<ComProperty*> mPinPort::outputType()
 {
     return {
-        //new BoolProp<mIoPort>("Inverted", tr("Invert Outputs"), ""
-        //                         , this, &mIoPort::invertOuts, &mIoPort::setInvertOuts, propNoCopy ),
+        //new BoolProp<mPinPort>("Inverted", tr("Invert Outputs"), ""
+        //                         , this, &mPinPort::invertOuts, &mPinPort::setInvertOuts, propNoCopy ),
 
-        new BoolProp<mIoPort>("Open_Collector", tr("Open Drain"), ""
-                                 , this, &mIoPort::openCol, &mIoPort::setOpenCol, propNoCopy )};
+        new BoolProp<mPinPort>("Open_Collector", tr("Open Drain"), ""
+                                 , this, &mPinPort::openCol, &mPinPort::setOpenCol, propNoCopy )};
 }*/
 
-QList<ComProperty*> mIoPort::edgeProps()
+QList<ComProperty*> mPinPort::edgeProps()
 {
     return {
-        new DoubProp<mIoPort>("pd_n"  , tr("Delay Multiplier"), ""
-                             , this, &mIoPort::propSize, &mIoPort::setPropSize ),
+        new DoubProp<mPinPort>("pd_n"  , tr("Delay Multiplier"), ""
+                             , this, &mPinPort::propSize, &mPinPort::setPropSize ),
 
-        new UintProp<mIoPort>("tpd_ps", tr("Family Delay"), "ns"
-                             , this, &mIoPort::propDelay, &mIoPort::setPropDelay ),
+        new UintProp<mPinPort>("tpd_ps", tr("Family Delay"), "ns"
+                             , this, &mPinPort::propDelay, &mPinPort::setPropDelay ),
 
-        new UintProp<mIoPort>("tr_ps" , tr("Rise Time"), "ns"
-                             , this, &mIoPort::riseTime,  &mIoPort::setRiseTime ),
+        new UintProp<mPinPort>("tr_ps" , tr("Rise Time"), "ns"
+                             , this, &mPinPort::riseTime,  &mPinPort::setRiseTime ),
 
-        new UintProp<mIoPort>("tf_ps" , tr("Fall Time"), "ns"
-                             , this, &mIoPort::fallTime,  &mIoPort::setFallTime ) };
+        new UintProp<mPinPort>("tf_ps" , tr("Fall Time"), "ns"
+                             , this, &mPinPort::fallTime,  &mPinPort::setFallTime ) };
 }
 
-void mIoPort::setInpHighV( double volt )
+void mPinPort::setInpHighV( double volt )
 {
     if( volt > m_supplyV ) volt = m_supplyV;
 
@@ -151,7 +151,7 @@ void mIoPort::setInpHighV( double volt )
     LogicFamily::setInpHighV( volt );
 }
 
-void mIoPort::setInpLowV( double volt )
+void mPinPort::setInpLowV( double volt )
 {
     if( volt < 0 ) volt = 0;
     if( m_inLowV == volt ) return;
@@ -161,7 +161,7 @@ void mIoPort::setInpLowV( double volt )
     LogicFamily::setInpLowV( volt );
 }
 
-void mIoPort::setOutHighV( double volt )
+void mPinPort::setOutHighV( double volt )
 {
     if( volt > m_supplyV ) volt = m_supplyV;
 
@@ -172,7 +172,7 @@ void mIoPort::setOutHighV( double volt )
     LogicFamily::setOutHighV( volt );
 }
 
-void mIoPort::setOutLowV( double volt )
+void mPinPort::setOutLowV( double volt )
 {
     if( volt < 0) volt = 0;
 
@@ -183,7 +183,7 @@ void mIoPort::setOutLowV( double volt )
     LogicFamily::setOutLowV( volt );
 }
 
-void mIoPort::setInputImp( double imp )
+void mPinPort::setInputImp( double imp )
 {
     if( imp < 1e-14 ) imp = 1e-14;
 
@@ -195,7 +195,7 @@ void mIoPort::setInputImp( double imp )
     //Simulator::self()->resumeSim();
 }
 
-void mIoPort::setOutImp( double imp )
+void mPinPort::setOutImp( double imp )
 {
     if( imp < 1e-14 ) imp = 1e-14;
 
@@ -207,7 +207,7 @@ void mIoPort::setOutImp( double imp )
     //Simulator::self()->resumeSim();
 }
 
-/*void mIoPort::setInvertOuts( bool invert )
+/*void mPinPort::setInvertOuts( bool invert )
 {
     //if( m_invOutputs == invert ) return;
     m_invOutputs = invert;
@@ -218,7 +218,7 @@ void mIoPort::setOutImp( double imp )
     Simulator::self()->resumeSim();
 }
 
-void mIoPort::setInvertInps( bool invert )
+void mPinPort::setInvertInps( bool invert )
 {
     //if( m_invInputs == invert ) return;
     m_invInputs = invert;
@@ -229,7 +229,7 @@ void mIoPort::setInvertInps( bool invert )
     Simulator::self()->resumeSim();
 }*/
 
-/*void mIoPort::setOpenCol( bool op )
+/*void mPinPort::setOpenCol( bool op )
 {
     if( m_openCol == op ) return;
     m_openCol = op;
@@ -243,21 +243,21 @@ void mIoPort::setInvertInps( bool invert )
     Simulator::self()->resumeSim();
 }*/
 
-void mIoPort::setRiseTime( uint64_t time )
+void mPinPort::setRiseTime( uint64_t time )
 {
     LogicFamily::setRiseTime( time );
     for( IoPin* pin : m_ioPins ) pin->setRiseTime( m_timeLH*1.25 ); // Time for Output voltage to switch from 10% to 90% (1 gate)
 }
 
-void mIoPort::setFallTime( uint64_t time )
+void mPinPort::setFallTime( uint64_t time )
 {
     LogicFamily::setFallTime( time );
     for( IoPin* pin : m_ioPins ) pin->setFallTime( m_timeHL*1.25 ); // Time for Output voltage to switch from 90% to 10% (1 gate)
 }
 
-void mIoPort::setSize(int size )
+void mPinPort::setSize(int size )
 {
-    PortBase::setSize( size );
+    PortModule::setSize( size );
 
     pinMode_t pinMode = m_direction ? output : input;
 

@@ -3,8 +3,8 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef PORTBASE_H
-#define PORTBASE_H
+#ifndef PORTMODULE_H
+#define PORTMODULE_H
 
 #include "module.h"
 #include "modsignal.h"
@@ -18,11 +18,11 @@ enum side_t{
 
 class PinBase;
 
-class PortBase : public Module
+class PortModule : public Module
 {
     public:
-        PortBase( QString name );
-        ~PortBase();
+        PortModule( QString name );
+        ~PortModule();
 
         enum portType_t{
             portIO=0,

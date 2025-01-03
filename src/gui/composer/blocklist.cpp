@@ -29,8 +29,8 @@ BlockList::~BlockList(){}
 #include "m_binaryop.h"
 #include "m_bittoint.h"
 #include "m_inttobit.h"
-#include "m_ioport.h"
-#include "m_iohook.h"
+#include "m_pinport.h"
+#include "m_hookport.h"
 #include "m_delay.h"
 #include "m_wavegen.h"
 #include "m_dial.h"
@@ -41,8 +41,8 @@ BlockList::~BlockList(){}
 void BlockList::registerItems()
 {
     addCategory( tr("Ports"),"Ports","", "" );
-    addItem( mIoPort::registerItem() );
-    addItem( IoHook::registerItem() );
+    addItem( mPinPort::registerItem() );
+    addItem( mHookPort::registerItem() );
     addCategory( tr("Operations"),"Operations","","" );
     addItem( UnaryOp::registerItem() );
     addItem( BinaryOp::registerItem() );
