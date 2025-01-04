@@ -31,12 +31,12 @@ Hook::Hook( int angle, QPoint pos, QString id, hookType_t type, QGraphicsItem* p
 
     m_color[0] = QColor(  50,  50,  50 ); // None
     m_color[1] = QColor( 250, 240, 240 ); // Property
-    m_color[2] = QColor(  50, 150, 255 ); // Input bit
-    m_color[3] = QColor(  50, 255, 100 ); // Input int
-    m_color[4] = QColor( 255, 200,  30 ); // Input doub
-    m_color[5] = QColor(  50, 150, 255 ); // Output bit
-    m_color[6] = QColor(  50, 255, 100 ); // Output int
-    m_color[7] = QColor( 255, 200,  30 ); // Output doub
+    m_color[2] = QColor( 150, 200, 255 ); // Input bit
+    m_color[3] = QColor(   0, 255,   0 ); // Input int
+    m_color[4] = QColor( 255, 200,  50 ); // Input doub
+    m_color[5] = QColor( 150, 200, 255 ); // Output bit
+    m_color[6] = QColor(   0, 255,   0 ); // Output int
+    m_color[7] = QColor( 255, 200,  50 ); // Output doub
 
     setFontSize( 11 );
     setAcceptHoverEvents( true );

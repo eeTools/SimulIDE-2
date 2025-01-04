@@ -29,6 +29,7 @@ BlockList::~BlockList(){}
 #include "m_binaryop.h"
 #include "m_bittoint.h"
 #include "m_inttobit.h"
+#include "m_floatop.h"
 #include "m_pinport.h"
 #include "m_hookport.h"
 #include "m_delay.h"
@@ -46,6 +47,7 @@ void BlockList::registerItems()
     addCategory( tr("Operations"),"Operations","","" );
     addItem( UnaryOp::registerItem() );
     addItem( BinaryOp::registerItem() );
+    addItem( FloatOp::registerItem() );
     addCategory( tr("Converters"),"Converters","","" );
     addItem( BitToInt::registerItem() );
     addItem( IntToBit::registerItem() );

@@ -59,6 +59,8 @@ class ModSlot
         void clear();
         int intData() { return *m_signalInt; }
 
+        double dblData() { return *m_signalDbl; }
+
         //virtual void setValue( double ){;}
         //virtual void setValue( int ){;}
         //virtual void setValue( int, int ){;}
