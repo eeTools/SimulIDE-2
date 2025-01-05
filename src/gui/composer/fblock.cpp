@@ -114,7 +114,7 @@ void FuncBlock::setup()
             QString hookLabel = propId;
             if( propId == "propval") // This is a Property Module
             {
-                PropertyM* pm = (PropertyM*)m_module;
+                mProperty* pm = (mProperty*)m_module;
                 hookLabel = pm->propName();
                 visible = true;
             }

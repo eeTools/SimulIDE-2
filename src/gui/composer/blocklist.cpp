@@ -57,6 +57,6 @@ void BlockList::registerItems()
     addCategory( tr("Other"),"Other","","" );
     addItem( WaveGen::registerItem() );
     addItem( Delay::registerItem() );
-    addItem( PropertyM::registerItem() );
+    addItem( mProperty::registerItem() );
     addItem( mConfig::registerItem() );
 }

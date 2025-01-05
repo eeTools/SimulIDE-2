@@ -26,8 +26,8 @@ listItem_t mPinPort::registerItem(){
 }
 
 mPinPort::mPinPort( QString name )
-       : PortModule( name )
-       , IoPort( name )
+        : PortModule( name )
+        , IoPort( name )
 {
     m_portType = portIO;
 }
