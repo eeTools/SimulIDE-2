@@ -3,18 +3,18 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef PROPERTYM_H
-#define PROPERTYM_H
+#ifndef MPROPERTY_H
+#define MPROPERTY_H
 
 #include "module.h"
 
 class CallBack;
 
-class PropertyM : public Module
+class mProperty : public Module
 {
     public:
-        PropertyM( QString id );
-        ~PropertyM();
+        mProperty( QString id );
+        ~mProperty();
 
         QString propName() { return m_propName; }
         void setPropName( QString n );
@@ -28,8 +28,6 @@ class PropertyM : public Module
         int maxVal() { return m_maxVal; }
         void setMaxVal( int v );
 
-        void addCallBack( CallBack* c );
-
  static listItem_t registerItem();
 
     private:
@@ -39,7 +37,5 @@ class PropertyM : public Module
         int m_value;
         int m_minVal;
         int m_maxVal;
-
-        CallBack* m_outCallback;
 };
 #endif

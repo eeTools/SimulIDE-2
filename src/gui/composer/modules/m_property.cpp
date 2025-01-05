@@ -10,19 +10,18 @@
 #include "intprop.h"
 #include "stringprop.h"
 
-listItem_t PropertyM::registerItem(){
+listItem_t mProperty::registerItem(){
     return {
         "Property",
         "Other",
         "property.png",
         "Property",
-        [](QString id){ return (CompBase*)new PropertyM( id ); } };
+        [](QString id){ return (CompBase*)new mProperty( id ); } };
 }
 
-PropertyM::PropertyM( QString id )
+mProperty::mProperty( QString id )
          : Module( id )
 {
-    m_outCallback = nullptr;
     m_propName = "Value"+id;
     m_value = 0;
     m_minVal = 0;
@@ -30,54 +29,42 @@ PropertyM::PropertyM( QString id )
 
     addPropGroup( { "Main",
     {
-        new StrProp<PropertyM>("name", "Name", ""
-                              , this, &PropertyM::propName, &PropertyM::setPropName,0 ),
+        new StrProp<mProperty>("name", "Name", ""
+                              , this, &mProperty::propName, &mProperty::setPropName,0 ),
 
-        new IntProp<PropertyM>("min", "Minimum", ""
-                              , this, &PropertyM::minVal, &PropertyM::setMinVal, 0 ),
+        new IntProp<mProperty>("min", "Minimum", ""
+                              , this, &mProperty::minVal, &mProperty::setMinVal, 0 ),
 
-        new IntProp<PropertyM>("max", "Maximum", ""
-                              , this, &PropertyM::maxVal, &PropertyM::setMaxVal, 0 ),
+        new IntProp<mProperty>("max", "Maximum", ""
+                              , this, &mProperty::maxVal, &mProperty::setMaxVal, 0 ),
 
-        new IntProp<PropertyM>("propval", "Value", ""
-                              , this, &PropertyM::value, &PropertyM::setValue, propSignal )
+        new IntProp<mProperty>("propval", "Value", ""
+                              , this, &mProperty::value, &mProperty::setValue, propSignal )
     },0} );
 }
-PropertyM::~PropertyM(){}
+mProperty::~mProperty(){}
 
-void PropertyM::setPropName( QString n )
+void mProperty::setPropName( QString n )
 {
     if( m_funcBlock ) m_funcBlock->renamePropHooks( m_propName, n );
     m_propName = n;
 }
 
-void PropertyM::setValue( int val )
+void mProperty::setValue( int val )
 {
     if( val < m_minVal ) val = m_minVal;
     if( val > m_maxVal ) val = m_maxVal;
     m_value = val;
-
-    CallBack* cb = m_outCallback;  /// TODO: Maibe not needed
-    while( cb ){
-        cb->call( val );
-        cb = cb->next;
-    }
 }
 
-void PropertyM::setMinVal( int v )
+void mProperty::setMinVal( int v )
 {
     m_minVal = v;
     setValue( m_value );
 }
 
-void PropertyM::setMaxVal( int v )
+void mProperty::setMaxVal( int v )
 {
     m_maxVal = v;
     setValue( m_value );
-}
-
-void PropertyM::addCallBack( CallBack* c ) /// TODO: Maibe not needed
-{
-    c->next = m_outCallback;
-    m_outCallback = c;
 }
