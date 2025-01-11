@@ -38,12 +38,15 @@ BlockList::~BlockList(){}
 #include "m_button.h"
 #include "m_property.h"
 #include "m_config.h"
+#include "m_currsource.h"
 
 void BlockList::registerItems()
 {
     addCategory( tr("Ports"),"Ports","", "" );
     addItem( mPinPort::registerItem() );
     addItem( mHookPort::registerItem() );
+    addCategory( tr("Sources"),"Sources","", "" );
+    addItem( mCurrentSource::registerItem() );
     addCategory( tr("Operations"),"Operations","","" );
     addItem( UnaryOp::registerItem() );
     addItem( BinaryOp::registerItem() );

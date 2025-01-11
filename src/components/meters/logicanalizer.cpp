@@ -51,10 +51,10 @@ LAnalizer::LAnalizer( QString id )
     m_inPin.resize(8);
     for( int i=0; i<8; ++i )
     {
-        m_inPin[i] = new IoPin( 180, QPoint(-80-8,-64+16*i ), "Pin"+QString::number(i)+"@"+id, this, undef_mode );
+        m_inPin[i] = new InputPin( 180, QPoint(-80-8,-64+16*i ), "Pin"+QString::number(i)+"@"+id, this );
         m_pin << m_inPin[i];
-        double admit = m_connectGnd ? m_inputAdmit : 0;
-        m_inPin[i]->setInputAdmit( admit );
+        double imped = m_connectGnd ? m_inputImped : 0;
+        m_inPin[i]->setInputImp( imped );
         LaChannel* ch = new LaChannel( this, id+"Chan"+QString::number(i) );
 
         ch->m_channel = i;
@@ -163,11 +163,8 @@ void LAnalizer::updateStep()
 
     if( m_changed ){
         m_changed = false;
-        double admit = m_connectGnd ? m_inputAdmit : 0;
-        for( IoPin* pin : m_inPin ){
-            pin->setInputAdmit( admit );
-            /// pin->stampAdmitance( admit );
-        }
+        double imped = m_connectGnd ? m_inputImped : 0;
+        for( IoPin* pin : m_inPin ) pin->setInputImp( imped );
     }
 }
 

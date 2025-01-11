@@ -47,8 +47,8 @@ Capacitor::~Capacitor(){}
 
 void Capacitor::initialize()
 {
-    m_nodes[0] = m_pin[0]->getNode();
-    m_nodes[1] = m_pin[1]->getNode();
+    m_node0 = m_pin[0]->getNode();
+    m_node1 = m_pin[1]->getNode();
 }
 
 void Capacitor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )

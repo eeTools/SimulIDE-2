@@ -8,7 +8,6 @@
 #include "plotdisplay.h"
 #include "datawidget.h"
 #include "simulator.h"
-#include "e-pin.h"
 #include "utils.h"
 
 OscopeChannel::OscopeChannel( Oscope* oscope, QString id )
@@ -133,8 +132,8 @@ void OscopeChannel::voltChanged()
         if( ++m_subStep > m_subSample ) m_subStep = 0;
         else return;
     }*/
-    double data = m_kcl->getVoltage( m_nodes[0] );
-    if( m_nodes[1] >= 0 ) data -= m_kcl->getVoltage( m_nodes[1] );
+    double data = m_kcl->getVoltage( m_node );
+    if( m_refNode >= 0 ) data -= m_kcl->getVoltage( m_refNode );
     double delta = data-m_lastValue;
     if( delta == 0 ) return;
 

@@ -9,6 +9,8 @@
 #include "component.h"
 #include "pinsource.h"
 
+class IoPin;
+
 class Ground : public Component
 {
     public:
@@ -17,12 +19,10 @@ class Ground : public Component
 
  static listItem_t registerItem();
 
-        void initialize() override;
-
         void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
 
     private:
-        PinSource m_out;
+        IoPin* m_out;
 };
 
 #endif

@@ -27,7 +27,7 @@ PlotBase::PlotBase( QString id )
     m_bufferSize = 600000;
 
     m_connectGnd = true;
-    m_inputAdmit = 1e-7;
+    m_inputImped = 1e-7;
 
     //m_doTest = false;
     m_testTime = 0;
@@ -203,10 +203,9 @@ void PlotBase::setConnectGnd( bool c )
 
 void PlotBase::setInputImped( double i )
 {
-    double admit = 1/i;
-    if( m_inputAdmit == admit ) return;
-    if( admit  < 0 ) return;
-    m_inputAdmit = admit;
+    if( m_inputImped == i ) return;
+    if( i  < 0 ) return;
+    m_inputImped = i;
     m_changed = true;
     if( !Simulator::self()->isRunning() ) updateStep();
 }

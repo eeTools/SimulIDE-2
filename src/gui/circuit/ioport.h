@@ -31,12 +31,12 @@ class IoPort : public Element
 
         void scheduleState( uint32_t val, uint64_t time );
         void setOutState( uint32_t val );
-        void setOutStatFast( uint32_t val );
+        //void setOutStatFast( uint32_t val );
         uint32_t getInpState();
 
         ///void setDirection( uint32_t val );
-        void setPinMode( pinMode_t mode );
-        void setPinMode( uint mode ) { setPinMode( (pinMode_t) mode ); }
+        //void setPinMode( pinMode_t mode );
+        //void setPinMode( uint mode ) { setPinMode( (pinMode_t) mode ); }
 
         //void changeCallBack( eElement* el, bool ch );
 
@@ -69,8 +69,6 @@ class IoPort : public Element
         uint m_pinState;
         uint m_nextState;
         //uint m_pinDirection;
-
-        pinMode_t m_pinMode;
 
         uint8_t m_numPins;
         QList<IoPin*> m_ioPins;

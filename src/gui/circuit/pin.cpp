@@ -19,13 +19,13 @@
 
 Pin::Pin( int angle, QPoint pos, QString id, Component* parent, int length )
    : PinBase( angle, pos, parent, length )
-   , ePin( id )
 {
     m_area = QRect(-3, -3, 11, 6);
 
     m_component = parent;
-    m_pinState  = undef_state;
-    m_pinType   = pinNormal;
+    m_pinAnim = no_anim;
+    m_pinType = pinNormal;
+    m_voltage = 0;
 
     m_conPin = nullptr;
     m_dataChannel = nullptr;
@@ -77,7 +77,7 @@ void Pin::registerPinsW( int enode, int n )     // Called by component, calls co
     m_blocked = true;
 
     if( !(m_wireFlags & wireBus) ){
-        m_enode = enode;
+        m_node = enode;
         Simulator::self()->addToPinList( m_id );
     }
     if( m_conPin ) m_conPin->registerEnode( enode, n ); // Call pin at other side of Connector
@@ -91,7 +91,7 @@ void Pin::registerEnode( int enode, int n )     // Called by m_conPin
     m_blocked = true;
 
     if( !(m_wireFlags & wireBus) ){
-        m_enode = enode;
+        m_node = enode;
         Simulator::self()->addToPinList( m_id );
     }
     m_component->registerEnode( enode, n );
@@ -213,7 +213,7 @@ void Pin::paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
 
     if     ( m_unused  ) pen.setColor( QColor( 75, 120, 170 ));
     else if( m_wireFlags & wireBus ) pen.setColor( Qt::darkGreen );
-    else if( m_animate ) pen.setColor( m_color[m_pinState] );
+    else if( m_animate ) pen.setColor( m_color[m_pinAnim] );
 
     painter->setPen(pen);
     if( m_length > 1 ) painter->drawLine( 0, 0, m_length-1, 0);
@@ -232,14 +232,14 @@ void Pin::paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
     {
         pen.setWidthF( 1.5 );
         painter->setPen(pen);
-        if( m_pinState >= input_low ) // Draw Input arrow
+        if( m_pinAnim >= input_low ) // Draw Input arrow
         {
             painter->drawLine( 2, 0, 0, 2);
             painter->drawLine( 0,-2, 2, 0);
         }else{
-            if( m_pinState >= out_low ) // Draw lower half Output arrow
+            if( m_pinAnim >= out_low ) // Draw lower half Output arrow
             painter->drawLine( 0, 0, 2, 2);
-            if( m_pinState >= driven_low )
+            if( m_pinAnim >= driven_low )
             painter->drawLine( 2,-2, 0, 0);// Draw upper half Output arrow
         }
 }   }

@@ -9,6 +9,8 @@
 #include "component.h"
 #include "pinsource.h"
 
+class IoPin;
+
 class Rail : public Component
 {
     public:
@@ -28,7 +30,7 @@ class Rail : public Component
     private:
         double m_voltage;
 
-        PinSource m_out;
+        IoPin* m_out;
 };
 
 #endif

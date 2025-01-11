@@ -51,7 +51,7 @@ void Clocked::updateClock()
 
     m_clkState = Clock_Low;
 
-    bool clock = m_clkPin->getInpState(); // Clock pin volt.
+    bool clock = m_clkPin->getLogicState(); // Clock pin volt.
 
     if( m_trigger == InEnable )
     {

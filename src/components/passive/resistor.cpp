@@ -34,15 +34,16 @@ Resistor::Resistor( QString id )
     setLabelPos(-16,-24, 0 );
 
     addPropGroup( { tr("Main"), {
-new DoubProp<Resistor>( "Resist", tr("Resistance"), "Ω", this, &Resistor::getResistance, &Resistor::setResistance )
+        new DoubProp<Resistor>( "Resist", tr("Resistance"), "Ω"
+                              , this, &Resistor::getResistance, &Resistor::setResistance )
     }, 0 } );
 }
 Resistor::~Resistor(){}
 
 void Resistor::initialize()
 {
-    m_nodes[0] = m_pin[0]->getNode();
-    m_nodes[1] = m_pin[1]->getNode();
+    Resistance::m_node0 = m_pin[0]->getNode();
+    Resistance::m_node1 = m_pin[1]->getNode();
 }
 
 void Resistor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )

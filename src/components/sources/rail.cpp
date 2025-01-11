@@ -6,8 +6,8 @@
 #include <QPainter>
 
 #include "rail.h"
+#include "iopin.h"
 #include "simulator.h"
-#include "pin.h"
 
 #include "doubleprop.h"
 
@@ -20,16 +20,16 @@ listItem_t Rail::registerItem(){
         "rail.png",
         "Rail",
         [](QString id){ return (CompBase*)new Rail( id ); } };
-};
+}
 
 Rail::Rail( QString id )
     : Component( id )
-    , m_out("outSour@"+id )
 {
     m_area = QRect(-6,-9, 12, 9 );
 
-    m_pin << new Pin( 270, QPoint(0, 8), "Pin@"+id, this );
-    m_out.setAdmitance( 1e9 );
+    m_out = new OutputPin( 270, QPoint(0, 8), "Pin@"+id, this );
+    m_pin << m_out;
+    m_out->setOutputImp( 1e-9 );
 
     setValLabelPos(-6,-20, 0 ); // x, y, rot
     setLabelPos(8,-10, 0);
@@ -48,8 +48,7 @@ Rail::~Rail() { }
 
 void Rail::initialize()
 {
-    m_out.setNode( m_pin[0]->getNode() );
-    m_out.setVoltage( m_voltage );
+    m_out->setVoltage( m_voltage );
     m_changed = true;
 }
 
@@ -57,7 +56,7 @@ void Rail::updateStep()
 {
     if( !m_changed ) return;
     m_changed = false;
-    m_out.updtVoltage( m_voltage );
+    m_out->setVoltage( m_voltage );
 }
 
 void Rail::setVoltage( double v )

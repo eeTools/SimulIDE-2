@@ -7,7 +7,7 @@
 #define ELEMENT_H
 
 #include <QString>
-#include <vector>
+//#include <vector>
 
 class Node;
 class Kcl;
@@ -25,8 +25,6 @@ class Element
 
         QString getId() { return m_elId; }
 
-        /// void addNode( int n ) { m_nodes.emplace_back(n);}
-
         Element* next;
 
  static constexpr double cero_doub = 1e-14;
@@ -36,8 +34,6 @@ class Element
         QString m_elId;
 
         Kcl* m_kcl;
-
-        std::vector<int> m_nodes;
 };
 
 #endif

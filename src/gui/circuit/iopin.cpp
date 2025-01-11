@@ -10,87 +10,47 @@
 #include "simulator.h"
 #include "circuit.h"
 
-IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, pinMode_t mode )
+IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup )
      : Pin( angle, pos, id, parent )
-     , PinSource( id )
+     , m_outSource("out@"+id, &m_node )
+     , m_inpSource("inp@"+id, &m_node )
+     , m_pulSource("pul@"+id, &m_node )
 {
     m_pinType = pinIO;
+    m_pinAnim = no_anim;
     m_outState = false;
-    m_stateZ   = false;
-    m_skipStamp = false;
-    m_userInvert = true;
+    m_logicState = false;
 
-    m_inpHighV = 2.5;
-    m_inpLowV  = 2.5;
-    m_outHighV = cero_doub;
-    m_outLowV  = cero_doub;
-    m_voltage  = cero_doub;
+    m_inpHiVolt = 2.5;
+    m_inpLoVolt = 2.5;
+    m_outHiVolt = 5;
+    m_outLoVolt = 0;
+    m_voltage   = 0;
 
-    m_vddAdmit = 0;
-    m_gndAdmit = cero_doub;
-    m_vddAdmEx = 0;
-    m_gndAdmEx = 0;
-
-    m_inputImp = high_imp;
-    m_openImp  = 100/cero_doub;
-    m_outputImp = 40;
-    m_admitance = 1/cero_doub;
+    m_inputAdmit  = 1e6;
+    m_outputAdmit = 40;
+    m_pullupAdmit = 1e4;
 
     m_steps = 0;
     m_timeRis = 3750; // picoseconds
     m_timeFal = 3750;
 
-    m_pinMode = undef_mode;
-    setPinMode( mode );
+    m_outSource.setAdmitance(-1 );
+    m_inpSource.setAdmitance(-1 );
+    if( pullup ) m_pulSource.setAdmitance( m_pullupAdmit );
+    else         m_pulSource.setAdmitance(-1 );
+
     animate( Circuit::self()->animate() );
 }
 IoPin::~IoPin(){}
 
-void IoPin::stampAdmit()
-{
-    m_step = 0;
-    m_steps = Simulator::self()->slopeSteps();
-
-    m_inpState  = false;
-    //m_outState  = false;
-    m_nextState = false;
-
-    m_nodes[0] = m_enode;
-
-    if( m_skipStamp ) return;
-
-    setPinMode( m_pinMode );
-    //stampAll();
-    updateStep();
-
-    PinSource::stampAdmit();
-}
-
-void IoPin::updateStep()
-{
-    if( m_unused ) return;
-
-    if( m_stateZ ) m_pinState = undef_state;
-    else{
-        bool state = getInpState();
-        if( m_inverted ) state = !state;
-        switch( m_pinMode ) // Pin colors in animation
-        {
-            case undef_mode: m_pinState = undef_state; break;
-            case input:  m_pinState = state? input_high : input_low; break;
-            case openCo:{
-                    pinState_t low = m_outState ? driven_low : open_low;
-                    m_pinState = state? open_high  : low ;
-                }break;
-            case output:
-            case source: m_pinState = state? out_high : out_low; break;
-        }
-    }
-    update();
-}
-
 /*void IoPin::runEvent()
 {
+    if( m_direction != pinOutput )
+    {
+        m_step = 0;
+        return;
+    }
     if( m_step == m_steps )
     {
         m_step = 0;
@@ -118,185 +78,39 @@ void IoPin::updateStep()
 
 void IoPin::scheduleState( bool state, uint64_t time )
 {
-    if( m_nextState == state ) return;
-    m_nextState = state;
-
-    /*if( m_step )
+    if( time )
     {
-        Simulator::self()->cancelEvents( this );
-        m_step = m_steps-m_step;
+        ;///Simulator::self()->addEvent( time, this );
     }
-    if     ( time )    Simulator::self()->addEvent( time, this );
-    else if( m_steps ) IoPin::runEvent();
-    else               IoPin::setOutState( m_nextState );*/
+    else IoPin::setOutState( m_nextState );
 }
 
-void IoPin::startLH()
-{
-    m_step = 0;
-    updtVoltage( m_outLowV+(m_outLowV+m_outHighV)/100 );
-
-}
-void IoPin::startHL()
-{
-    m_step = 0;
-    updtVoltage( m_outHighV-(m_outLowV+m_outHighV)/100 );
-}
-
-void IoPin::setPinMode( pinMode_t mode )
-{
-    //if( m_pinMode == mode ) return;
-    m_pinMode = mode;
-
-    switch( mode )
-    {
-        case undef_mode:
-            return;
-        case input:
-            m_vddAdmit = 0;
-            m_gndAdmit = 1/m_inputImp;
-            break;
-        case output:
-            m_vddAdmit = 1/m_outputImp;
-            m_gndAdmit = cero_doub;
-            //m_admitance = 1/m_outputImp;
-            /// updtAdmitance( m_admitance );
-            break;
-        case openCo:
-            m_vddAdmit = cero_doub;
-            m_gndAdmit = 1/m_outputImp;
-            break;
-        case source:
-            m_vddAdmit = 1/cero_doub;
-            m_gndAdmit = cero_doub;
-            m_outState = true;
-            break;
-    }
-    if( m_pinMode > input ) IoPin::setOutState( m_outState );
-    else                    updtState();
-
-    if( !Simulator::self()->isRunning() ) IoPin::updateStep();
-}
-
-/*void IoPin::updtState()
-{
-    //if( m_pinMode > openCo ) return;
-
-    double vddAdmit = m_vddAdmit + m_vddAdmEx;
-    double gndAdmit = m_gndAdmit + m_gndAdmEx;
-    m_admitance         = vddAdmit+gndAdmit;
-
-    m_voltage = m_outHighV*vddAdmit/m_admitance;
-    stampAll();
-}*/
-
-bool IoPin::getInpState()
+bool IoPin::getLogicState()
 {
     double volt = getVoltage();
 
-    if     ( volt > m_inpHighV ) m_inpState = true;
-    else if( volt < m_inpLowV )  m_inpState = false;
+    bool logicState = m_inverted ? !m_logicState : m_logicState;
 
-    return m_inverted ? !m_inpState : m_inpState;
-}
+    if     ( volt > m_inpHiVolt ) logicState = true;
+    else if( volt < m_inpLoVolt ) logicState = false;
 
-void IoPin::setOutState( bool high ) // Set Output to Hight or Low
-{
-    m_outState = m_nextState = high;
-    if( m_pinMode < openCo || m_stateZ ) return;
+    m_logicState = m_inverted ? !logicState : logicState;
 
-    if( m_inverted ) high = !high;
-
-    if( m_pinMode == openCo )
-    {
-        m_gndAdmit = high ? 1/1e8 : 1/m_outputImp;
-        updtState();
-    }else{
-        double voltage = high ? m_outHighV : m_outLowV;
-        updtVoltage( voltage );
-}   }
-
-void IoPin::setStateZ( bool z )
-{
-    m_stateZ = z;
-    if( z ){
-        m_voltage = m_outLowV;
-        setImpedance( m_openImp );
-    }else {
-        pinMode_t pm = m_pinMode; // Force old pinMode
-        m_pinMode = undef_mode;
-        setPinMode( pm );
-}   }
-
-double IoPin::getVoltage()
-{
-    if     ( m_enode >= 0 )      return m_kcl->getVoltage( m_enode );//m_enode->getVolt();
-    else if( m_pinMode > input ) return m_voltage;
-    else{
-        double vddAdmit = m_vddAdmit + m_vddAdmEx;
-        double voltage = m_outHighV*vddAdmit/m_admitance;
-        return voltage;
-    }
-    return 0;
-}
-
-void IoPin::setPullup( bool up )
-{
-    if( up ) m_vddAdmEx = 1/1e5; // Activate pullup
-    else     m_vddAdmEx = 0;     // Deactivate pullup
-
-    if( m_pinMode < output ) updtState();
-}
-
-void IoPin::setImpedance( double imp )
-{
-    updtAdmitance( 1/imp );
-}
-
-void IoPin::setInputImp( double imp )
-{
-    m_inputImp = imp;
-    if( m_pinMode == input )
-    {
-        //m_gndAdmit = 1/m_inputImp;
-        //updtState();
-        m_admitance = 1/m_inputImp;
-        updtAdmitance( m_admitance );
-    }
-}
-
-void IoPin::setOutputImp( double imp )
-{
-    m_outputImp = imp;
-    if( m_pinMode == output )
-    {
-        //m_vddAdmit = 1/m_outputImp;
-        //updtState();
-        m_admitance = 1/m_outputImp;
-        updtAdmitance( m_admitance );
-    }
-}
-
-void IoPin::userInvertPin()
-{
-    setInverted( !m_inverted );
+    return m_logicState;
 }
 
 void IoPin::setInverted( bool inverted )
 {
-    //bool inverted = false; // m_userInverted ? !invert : invert;
     if( inverted == m_inverted ) return;
     m_inverted = inverted;
 
-    if( m_pinMode > input ) setOutState( m_outState );
-    else                    updtAdmitance( m_admitance );
+    //if( m_pinMode > input ) setOutState( m_outState );
+    //else                    updtAdmitance( m_admitance );
     update();
 }
 
 void IoPin::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
 {
-    if( !m_userInvert ) return;
-
     QMenu* menu = new QMenu();
     QAction* editAction = menu->addAction( QIcon(":/invert.png"),QObject::tr("Invert Pin"));
     QObject::connect( editAction, &QAction::triggered,
@@ -312,14 +126,14 @@ QStringList IoPin::registerScript( asIScriptEngine* engine )
     QStringList memberList;
     engine->RegisterObjectType("IoPin", 0, asOBJ_REF | asOBJ_NOCOUNT );
 
-    memberList << "setPinMode( uint mode )";
+    /*memberList << "setPinMode( uint mode )";
     engine->RegisterObjectMethod("IoPin", "void setPinMode(uint m)"
                                    , asMETHODPR( IoPin, setPinMode, (uint), void)
-                                   , asCALL_THISCALL );
+                                   , asCALL_THISCALL );*/
 
     memberList << "getInpState()";
     engine->RegisterObjectMethod("IoPin", "bool getInpState()"
-                                   , asMETHODPR( IoPin, getInpState, (), bool)
+                                   , asMETHODPR( IoPin, getLogicState, (), bool)
                                    , asCALL_THISCALL );
 
     memberList << "void setOutState( bool state )";
@@ -327,15 +141,15 @@ QStringList IoPin::registerScript( asIScriptEngine* engine )
                                    , asMETHODPR( IoPin, setOutState, (bool), void)
                                    , asCALL_THISCALL );
 
-    memberList << "setStateZ( bool state )";
+    /*memberList << "setStateZ( bool state )";
     engine->RegisterObjectMethod("IoPin", "void setStateZ( bool z )"
                                    , asMETHODPR( IoPin, setStateZ, (bool), void)
-                                   , asCALL_THISCALL );
+                                   , asCALL_THISCALL );*/
 
-    memberList << "setOutStatFast( bool state )";
+    /*memberList << "setOutStatFast( bool state )";
     engine->RegisterObjectMethod("IoPin", "void setOutStatFast(bool s)"
                                    , asMETHODPR( IoPin, setOutStatFast, (bool), void)
-                                   , asCALL_THISCALL );
+                                   , asCALL_THISCALL );*/
 
     memberList << "scheduleState( bool state, uint64 time )";
     engine->RegisterObjectMethod("IoPin", "void scheduleState( bool state, uint64 time )"
@@ -352,10 +166,10 @@ QStringList IoPin::registerScript( asIScriptEngine* engine )
                                    , asMETHODPR( IoPin, setVoltage, (double), void)
                                    , asCALL_THISCALL );
 
-    memberList << "setImpedance( double impedance )";
+    /*memberList << "setImpedance( double impedance )";
     engine->RegisterObjectMethod("IoPin", "void setImpedance( double imp )"
                                    , asMETHODPR( IoPin, setImpedance, (double), void)
-                                   , asCALL_THISCALL );
+                                   , asCALL_THISCALL );*/
 /*
     memberList << "changeCallBack( eElement@ e, bool call )";
     engine->RegisterObjectMethod("IoPin", "void changeCallBack(eElement@ p, bool s)"
@@ -363,4 +177,163 @@ QStringList IoPin::registerScript( asIScriptEngine* engine )
                                    , asCALL_THISCALL );
 */
     return memberList;
+}
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+InputPin::InputPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup )
+        : IoPin( angle, pos, id, parent, pullup )
+{
+    m_inpSource.setAdmitance( m_inputAdmit );
+}
+InputPin::~InputPin(){}
+
+void InputPin::updateStep()
+{
+    m_pinAnim = getPinAnim( this );
+    update();
+}
+
+pinAnim_t InputPin::getPinAnim( IoPin* pin )
+{
+    return pin->getLogicState()? input_high : input_low;
+}
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+OutputPin::OutputPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup )
+         : IoPin( angle, pos, id, parent, pullup )
+         , m_slopeEvent( this, &OutputPin::runStep )
+{
+    m_outSource.setAdmitance( m_outputAdmit );
+    m_pulSource.setAdmitance(-1 );
+}
+OutputPin::~OutputPin(){}
+
+void OutputPin::updateStep()
+{
+    m_pinAnim = getPinAnim( this );
+    update();
+}
+
+pinAnim_t OutputPin::getPinAnim( IoPin* pin )
+{
+    return pin->getLogicState()? out_high : out_low;
+}
+
+void OutputPin::runStep()
+{
+    if( m_step == m_steps )
+    {
+        m_step = 0;
+        IoPin::setOutState( m_nextState );
+    }else{
+        bool nextState = m_inverted ? !m_nextState : m_nextState;
+
+        double delta = m_step;
+        if( m_step == 0 ) delta = 1e-5;
+        if( nextState ) setVoltage( m_outLoVolt+delta*(m_outHiVolt-m_outLoVolt)/m_steps ); // L to H
+        else            setVoltage( m_outHiVolt-delta*(m_outHiVolt-m_outLoVolt)/m_steps ); // H to L
+
+        int time = nextState ? m_timeRis : m_timeFal;
+        Simulator::self()->addEvent( time/m_steps, &m_slopeEvent );
+        m_step++;
+    }
+}
+
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+BidirPin::BidirPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup )
+        : OutputPin( angle, pos, id, parent, pullup )
+{
+    m_outSource.setAdmitance( m_outputAdmit );
+    m_inpSource.setAdmitance( m_inputAdmit );
+}
+BidirPin::~BidirPin(){}
+
+void BidirPin::updateStep()
+{
+    if( m_direction == pinInput ) m_pinAnim = InputPin::getPinAnim( this );
+    else                          m_pinAnim = OutputPin::getPinAnim( this );
+
+    update();
+}
+
+void BidirPin::setDirection( pinDirection_t d )
+{
+    if( m_direction == d ) return;
+    m_direction = d;
+
+    if( m_direction == pinInput )
+    {
+        m_outSource.setAdmitance( 0 );
+        m_inpSource.setAdmitance( m_inputAdmit );
+        m_nextState = m_outState;
+    }else{
+        m_inpSource.setAdmitance( 0 );
+        m_outSource.setAdmitance( m_outputAdmit );
+        OutputPin::setOutState( m_nextState );
+    }
+}
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+OpenColPin::OpenColPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup )
+          : IoPin( angle, pos, id, parent, pullup )
+          , m_slopeEvent( this, &OpenColPin::runStep )
+{
+    m_outSource.setAdmitance( m_outputAdmit );
+}
+OpenColPin::~OpenColPin(){}
+
+void OpenColPin::updateStep()
+{
+    bool state = getLogicState();
+
+    pinAnim_t lowAnim = m_outState ? driven_low : open_low;
+    m_pinAnim = state? open_high : lowAnim ;
+    update();
+}
+
+void OpenColPin::runStep()
+{
+    if( m_step == m_steps )
+    {
+        m_step = 0;
+        IoPin::setOutState( m_nextState );
+    }else{
+        bool nextState = m_inverted ? !m_nextState : m_nextState;
+
+        double step = nextState ? m_step : m_steps-m_step;
+        double delta = qPow( 1e4*step/m_steps, 2 );
+        m_outSource.updtAdmitance( m_outputAdmit+1/delta );
+
+        int time = nextState ? m_timeRis : m_timeFal;
+        Simulator::self()->addEvent( time/m_steps, &m_slopeEvent );
+        m_step++;
+    }
+}
+
+void OpenColPin::setOutState( bool state ) // Set Output to Hight or Low
+{
+    if( m_steps )
+    {
+        if( m_nextState == state ) return;
+        if( m_step ) m_step = m_steps-m_step;
+
+        m_nextState = state;
+        runStep();
+        return;
+    }
+    if( m_outState == state ) return;
+    m_outState = state;
+    if( m_inverted ) state = !state;
+
+    double admit = state ? 0 : m_outputAdmit;
+    m_outSource.updtAdmitance( admit );
 }

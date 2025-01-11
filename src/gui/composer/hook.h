@@ -22,9 +22,6 @@ class Hook : public PinBase
 
         int type() const override { return UserType + 4; }
 
-        QString pinId() override { return m_id; }
-        void setPinId( QString id ) override { m_id = id; }
-
         QColor getColor() override { return m_color[m_hookType]; }
 
         WireBase* wire() override { return nullptr; } // We can have more than 1 wire.
@@ -38,8 +35,6 @@ class Hook : public PinBase
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
-
-        QString m_id;
 
         hookType_t m_hookType;
 

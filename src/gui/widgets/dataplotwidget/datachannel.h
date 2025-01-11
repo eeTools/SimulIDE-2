@@ -68,6 +68,8 @@ class DataChannel : public Element, public Updatable
         uint64_t m_risEdge;
         uint64_t m_period;
 
+        int m_node;
+        int m_refNode;
         int m_channel;
         int m_bufferCounter;
 

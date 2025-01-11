@@ -32,7 +32,8 @@ class PinBase : public QGraphicsItem, public Updatable
         QRectF boundingRect() const override { return m_area; }
         void setBoundingRect( QRect area ) { m_area = area; }
 
-        virtual QString pinId() { return ""; }
+        QString pinId() { return m_id; }
+        void setPinId( QString id ) { m_id = id; }
         
         bool unused() { return m_unused; }
         void setUnused( bool unused );
@@ -70,12 +71,9 @@ class PinBase : public QGraphicsItem, public Updatable
         void setSpace( double s );
         double space() { return m_space; }
 
-        virtual void setPinId( QString id ) {;}
         void setVisible( bool visible );
 
         virtual QColor getColor(){ return m_color[0]; }
-
-        void moveBy( int dx, int dy );
 
         void setPinType( pinType_t ty ) { m_pinType = ty; }
         pinType_t pinType() { return m_pinType; }
@@ -83,10 +81,13 @@ class PinBase : public QGraphicsItem, public Updatable
         void warning( bool w );
         virtual void animate( bool an );
 
+        void moveBy( int dx, int dy );
         virtual void isMoved();
         void flip( int h, int v );
 
     protected:
+        QString m_id;
+
         pinType_t  m_pinType;
 
         int m_angle;
@@ -107,8 +108,6 @@ class PinBase : public QGraphicsItem, public Updatable
 
         double  m_opCount; // Used by blinking Pin
 
-        QString m_labelText;
-        
         QColor m_color[8];
         QRectF m_area;
 
@@ -116,6 +115,7 @@ class PinBase : public QGraphicsItem, public Updatable
 
         PinBase* m_conPin;  // Pin at the other side of wire
 
+        QString m_labelText;
         QGraphicsSimpleTextItem m_label;
 };
 

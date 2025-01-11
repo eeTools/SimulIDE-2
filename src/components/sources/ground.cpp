@@ -22,23 +22,16 @@ listItem_t Ground::registerItem(){
 
 Ground::Ground( QString id )
       : Component( id )
-      , m_out( id+"-outSour" )
 {
     m_area = QRect(-6,-1, 12, 9 );
 
-    m_pin << new Pin( 90, QPoint( 0,-8 ), "Pin@"+id, this );
-
-    m_out.setAdmitance( 1e9 );
+    m_out = new IoPin( 90, QPoint( 0,-8 ), "Pin@"+id, this );
+    m_pin << m_out;
+    m_out->setOutputImp( 1e-9 );
 
     setLabelPos(-16, 8, 0);
 }
 Ground::~Ground() {}
-
-
-void Ground::initialize()
-{
-    m_out.setNode( m_pin[0]->getNode() );
-}
 
 void Ground::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {

@@ -102,7 +102,7 @@ void LaChannel::voltChanged()
         }
     }else*/
     {
-        double volt = m_kcl->getVoltage( m_nodes[0] );
+        double volt = m_kcl->getVoltage( m_node );
 
         if( volt > m_analizer->thresholdR() ) // High
         {

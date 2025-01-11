@@ -82,7 +82,7 @@ void IoPort::setOutState( uint32_t val )
     }
 }
 
-void IoPort::setOutStatFast( uint32_t val )
+/*void IoPort::setOutStatFast( uint32_t val )
 {
     uint32_t changed = m_pinState ^ val; // See which Pins have actually changed
     if( changed == 0 ) return;
@@ -92,12 +92,12 @@ void IoPort::setOutStatFast( uint32_t val )
         uint32_t flag = 1<<i;
         if( changed & flag ) m_ioPins[i]->setOutStatFast( (val & flag) > 0 ); // Pin changed
     }
-}
+}*/
 
 uint32_t IoPort::getInpState()
 {
     uint32_t data = 0;
-    for( int i=0; i<m_numPins; ++i ) if( m_ioPins[i]->getInpState() ) data += (1 << i);
+    for( int i=0; i<m_numPins; ++i ) if( m_ioPins[i]->getLogicState() ) data += (1 << i);
     return data;
 }
 
@@ -112,12 +112,12 @@ uint32_t IoPort::getInpState()
         if( changed & flag ) m_ioPins[i]->setPinMode( ((val & flag) > 0) ? output : input ); // Pin changed
 }   }*/
 
-void IoPort::setPinMode( pinMode_t mode )
+/*void IoPort::setPinMode( pinMode_t mode )
 {
     if( m_pinMode == mode ) return;
     m_pinMode = mode;
     for( IoPin* pin : m_ioPins ) pin->setPinMode( mode );
-}
+}*/
 
 /*void IoPort::changeCallBack( eElement* el, bool ch )
 {
@@ -150,7 +150,7 @@ void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
 
 IoPin* IoPort::createPin( QString id, Component* comp )
 {
-    IoPin* pin = new IoPin( 0, QPoint(0,0), id, comp, input );
+    IoPin* pin = new IoPin( 0, QPoint(0,0), id, comp );
     pin->setOutHighV( 5 );
     return pin;
 }
@@ -205,10 +205,10 @@ QStringList IoPort::registerScript( asIScriptEngine* engine )
     QStringList memberList;
     engine->RegisterObjectType("IoPort", 0, asOBJ_REF | asOBJ_NOCOUNT );
 
-    memberList << "setPinMode( uint mode )";
+    /*memberList << "setPinMode( uint mode )";
     engine->RegisterObjectMethod("IoPort", "void setPinMode(uint m)"
                                    , asMETHODPR( IoPort, setPinMode, (uint), void)
-                                   , asCALL_THISCALL );
+                                   , asCALL_THISCALL );*/
 
     memberList << "getInpState()";
     engine->RegisterObjectMethod("IoPort", "uint getInpState()"

@@ -37,7 +37,7 @@ class PlotBase : public Component//, public ScriptBase
         bool connectGnd() { return m_connectGnd; }
         void setConnectGnd( bool c );
 
-        double inputImped(){ return 1/m_inputAdmit; }
+        double inputImped(){ return 1/m_inputImped; }
         void setInputImped( double i );
 
         //bool doTest() { return m_doTest; }
@@ -135,7 +135,7 @@ class PlotBase : public Component//, public ScriptBase
         QString m_exportFile;
 
         bool m_connectGnd;
-        double m_inputAdmit;
+        double m_inputImped;
 
         std::vector<IoPin*> m_inPin;
 

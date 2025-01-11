@@ -334,7 +334,7 @@ Pin* SubCircuit::addPin( QString id, QString type, QString label, int, int xpos,
         m_pinTunnels.insert( pId, tunnel );
 
         Pin* pin = tunnel->getPin();
-        pin->setId( pId );
+        pin->setPinId( pId );
         pin->setInverted( type == "inverted" || type == "inv" );
         addSignalPin( pin );
 

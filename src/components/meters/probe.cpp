@@ -42,9 +42,9 @@ Probe::Probe( QString id )
     m_voltTrig = 2.5;
     m_voltIn = 0;
 
-    m_inputPin = new IoPin( 180, QPoint(-22,0), "inPin@"+id, this, undef_mode );
+    m_inputPin = new IoPin( 180, QPoint(-22,0), "inPin@"+id, this );
     m_inputPin->setBoundingRect( QRect(-1, -1, 2, 2) );
-    m_inputPin->setImpedance( 1e9 );
+    m_inputPin->setInputImp( 1e9 );
     m_pin << m_inputPin;
 
     setValLabelPos( 16, 0, 45 ); // x, y, rot
@@ -112,7 +112,7 @@ void Probe::voltChanged()
 {
     if( !m_pauseState ) return;
 
-    bool state = m_inputPin->getInpState();
+    bool state = m_inputPin->getLogicState();
     if( m_state == state ) return;
     m_state = state;
     CircuitWidget::self()->pauseCirc();
@@ -181,6 +181,7 @@ QPainterPath Probe::shape() const
     path.addEllipse( m_area );
     return path;
 }
+
 void Probe::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
     Component::paint( p, o, w );

@@ -259,13 +259,11 @@ void mPinPort::setSize(int size )
 {
     PortModule::setSize( size );
 
-    pinMode_t pinMode = m_direction ? output : input;
-
     m_ioPins.clear();
     for( PinBase* pin : m_pins )
     {
         IoPin* ioPin = (IoPin*)pin;
-        ioPin->setPinMode( pinMode );
+        ioPin->setDirection( (pinDirection_t)m_direction );
         m_ioPins << ioPin;
     }
     m_numPins = size;

@@ -48,14 +48,12 @@ Oscope::Oscope( QString id )
 
     m_inPin.resize(5);
 
-
-
     for( int i=0; i<4; i++ )
     {
-        m_inPin[i] = new IoPin( 180, QPoint(-80-8,-48+32*i ), "inPin"+QString::number(i)+"@"+id, this, input );
+        m_inPin[i] = new InputPin( 180, QPoint(-80-8,-48+32*i ), "inPin"+QString::number(i)+"@"+id, this );
         m_pin << m_inPin[i];
-        double admit = m_connectGnd ? m_inputAdmit : 0;
-        m_inPin[i]->setInputAdmit( admit );
+        double imped = m_connectGnd ? m_inputImped : 0;
+        m_inPin[i]->setInputImp( imped );
         m_channel[i] = new OscopeChannel( this, id+"Chan"+QString::number(i) );
         m_channel[i]->m_channel = i;
         m_channel[i]->m_pin = m_pin[i];
@@ -73,7 +71,7 @@ Oscope::Oscope( QString id )
         setVoltDiv( i, 1 );
         setVoltPos( i, 0 );
     }
-    m_inPin[4] = new IoPin( 180, QPoint(-80-8, 64 ), "refPin@"+id, this, input );
+    m_inPin[4] = new InputPin( 180, QPoint(-80-8, 64 ), "refPin@"+id, this );
     m_pin << m_inPin[4];
 
     setFilter( 0.1 );
@@ -159,11 +157,8 @@ void Oscope::updateStep()
 
     if( m_changed ){
         m_changed = false;
-        double admit = m_connectGnd ? m_inputAdmit : 0;
-        for( IoPin* pin : m_inPin ){
-            pin->setInputAdmit( admit );
-            /// pin->stampAdmitance( admit );
-        }
+        double imped = m_connectGnd ? m_inputImped : 0;
+        for( IoPin* pin : m_inPin ) pin->setInputImp( imped );
     }
 }
 
