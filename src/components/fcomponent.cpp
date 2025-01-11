@@ -131,7 +131,7 @@ void fComponent::setup() // Called from Circuit
         }
 
         QString uid = properties.takeFirst().value;
-        QString newUid = uid;
+        //QString newUid = uid;
 
         if( type == "FuncWire" )
         {

@@ -11,9 +11,9 @@
 #include "stringprop.h"
 
 PortModule::PortModule( QString name )
-        : Module( name )
-        , m_inputSlot("input" , hookInputInt )
-        , m_outSignal("output", hookOutputInt )
+          : Module( name )
+          , m_inputSlot("input" , hookInputInt )
+          , m_outSignal("output", hookOutputInt )
 {
     m_outSignal.setIntData( &m_state );
     m_slots.emplace_back( &m_inputSlot );

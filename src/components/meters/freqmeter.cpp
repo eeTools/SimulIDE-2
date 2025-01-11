@@ -52,7 +52,7 @@ FreqMeter::FreqMeter( QString id )
     //FreqMeter::initialize();
 
     addPropGroup( { tr("Main"), {
-new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
+        new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
                        , this, &FreqMeter::filter, &FreqMeter::setFilter ),
     },0 } );
 }
