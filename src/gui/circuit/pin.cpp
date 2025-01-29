@@ -25,19 +25,21 @@ Pin::Pin( int angle, QPoint pos, QString id, Component* parent, int length )
     m_component = parent;
     m_pinAnim = no_anim;
     m_pinType = pinNormal;
+    m_inverted = false;
     m_voltage = 0;
+    m_node = -1;
 
     m_conPin = nullptr;
     m_dataChannel = nullptr;
     
     m_color[0] = Qt::black;
     m_color[1] = QColor( 100, 100, 250 );
-    m_color[2] = QColor( 0, 0, 180 );;
-    m_color[3] = QColor( 60, 120, 60 );
-    m_color[4] = QColor( 0, 0, 180 );
-    m_color[5] = QColor( 180, 0, 0 );
+    m_color[2] = QColor(   0,   0, 180 );
+    m_color[3] = QColor(  60, 120,  60 );
+    m_color[4] = QColor(   0,   0, 180 );
+    m_color[5] = QColor( 180,   0,   0 );
     m_color[6] = QColor( 100, 100, 250 );
-    m_color[7] = QColor( 250, 120, 0 );
+    m_color[7] = QColor( 250, 120,   0 );
 
     Circuit::self()->addPin( this, id );
     Pin::animate( Circuit::self()->animate() );

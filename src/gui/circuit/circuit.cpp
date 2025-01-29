@@ -59,8 +59,8 @@ Circuit::Circuit( int width, int height, CircuitView* parent )
     connect( &m_bckpTimer, &QTimer::timeout,
                      this, &Circuit::saveBackup );
 
-    qDebug() << endl << "-------------------------------------------------";
-    qDebug() << "                   NEW CIRCUIT                   "<<endl;
+    qDebug() << Qt::endl << "-------------------------------------------------";
+    qDebug() << "                   NEW CIRCUIT                   "<< Qt::endl;
 }
 
 Circuit::~Circuit()
@@ -118,7 +118,7 @@ void Circuit::loadStrDoc( QString &doc )
 
     QList<Linker*>    linkList;   // Linked  Component list
     QList<Component*> compList;   // Pasting Component list
-    QList<WireBase*>     connList;   // Pasting Connector list
+    QList<WireBase*>  wireList;   // Pasting Connector list
     QList<Node*>      nodeList;   // Pasting node list
 
     m_circRev = 0;
@@ -206,7 +206,7 @@ void Circuit::loadStrDoc( QString &doc )
                 }
                 Wire* wire = new Wire( uid, startpin, endpin );
                 wire->setPointList( pointList );
-                connList.append( wire );
+                wireList.append( wire );
             }
             else if( !m_pasting /*&& !m_undo && !m_redo*/ )// Start or End pin not found
             {
@@ -299,12 +299,12 @@ void Circuit::loadStrDoc( QString &doc )
 
         for( Component* comp : compList ){ comp->setSelected( true ); comp->move( m_deltaMove ); }
         for( Node*      node : nodeList ){ node->setSelected( true ); node->move( m_deltaMove ); }
-        for( WireBase*  wire : connList ){ wire->select( true )     ; wire->move( m_deltaMove ); }
+        for( WireBase*  wire : wireList ){ wire->select( true )     ; wire->move( m_deltaMove ); }
     }
     else for( Component* comp : compList ) { comp->moveSignal(); }
 
     m_nodeList += nodeList;
-    m_wireList += connList;
+    m_wireList += wireList;
     m_compList += compList;
 
     if( !m_undo && !m_redo ) // Take care about unconnected Joints

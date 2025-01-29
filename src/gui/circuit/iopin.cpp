@@ -35,10 +35,7 @@ IoPin::IoPin( int angle, const QPoint pos, QString id, Component* parent, bool p
     m_timeRis = 3750; // picoseconds
     m_timeFal = 3750;
 
-    m_outSource.setAdmitance(-1 );
-    m_inpSource.setAdmitance(-1 );
     if( pullup ) m_pulSource.setAdmitance( m_pullupAdmit );
-    else         m_pulSource.setAdmitance(-1 );
 
     animate( Circuit::self()->animate() );
 }

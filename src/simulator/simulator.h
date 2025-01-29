@@ -67,8 +67,8 @@ class Simulator : public QObject, public Kcl
         void  setSlopeSteps( int steps ) { m_slopeSteps = steps; }
         int slopeSteps( ) { return m_slopeSteps; }
 
-        void  setMaxNlSteps( uint32_t steps ) { m_maxNlstp = steps; }
-        uint32_t maxNlSteps( ) { return m_maxNlstp; }
+        void  setMaxNlSteps( uint32_t steps ) { m_maxNlStep = steps; }
+        uint32_t maxNlSteps( ) { return m_maxNlStep; }
         
         bool isRunning() { return (m_state >= SIM_STARTING); }
         bool isPaused()  { return (m_state == SIM_PAUSED); }
@@ -134,12 +134,12 @@ class Simulator : public QObject, public Kcl
         int m_error;
         int m_warning;
         int m_timerId;
-        int m_timerTick_ms;
+        int m_timer_ms;
         int m_slopeSteps;
 
         uint64_t m_fps;
         uint32_t m_NLstep;
-        uint32_t m_maxNlstp;
+        uint32_t m_maxNlStep;
 
         uint64_t m_reactStep;
         uint64_t m_psPerSec;

@@ -43,6 +43,7 @@ class PropDialog;
 class CompBase
 {
     friend class PropDialog;
+
     public:
         CompBase( QString id );
         virtual ~CompBase();

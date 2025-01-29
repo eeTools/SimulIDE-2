@@ -30,12 +30,12 @@ Simulator::Simulator( QObject* parent )
     m_state = SIM_STOPPED;
     m_fps = 20;
     m_timerId   = 0;
-    m_timerTick_ms = 50;   // 50 ms default
+    m_timer_ms  = 50;   // 50 ms default
     m_psPerSec  = 1e12;
     m_stepSize  = 1e6;
     m_stepsPS   = 1e6;
     m_reactStep = 1e6;
-    m_maxNlstp  = 100000;
+    m_maxNlStep  = 100000;
     m_slopeSteps = 0;
 
     m_errors[0] = "";
@@ -46,7 +46,8 @@ Simulator::Simulator( QObject* parent )
     m_warnings[1] = "NonLinear Not Converging";
     m_warnings[2] = "Probably Circuit Error";  // Warning if matrix diagonal element = 0.
     m_warnings[100] = "AVR crashed !!!";
-
+    //qDebug() << "sizeof( std::vector<double*>) " << sizeof( std::vector<double*>); // 24
+    //qDebug() << "sizeof( DataCell) " << sizeof( DataCell); // 40
     //resetSim();
     //CircuitWidget::self()->setMsg( " "+tr("Stopped")+" ", 1 );
 
@@ -57,7 +58,7 @@ Simulator::~Simulator()
     m_CircuitFuture.waitForFinished();
 }
 
-void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (50 ms, 20 Hz max)
+void Simulator::timerEvent( QTimerEvent* e )  //update at m_timer_ms rate (50 ms, 20 Hz max)
 {
     e->accept();
 
@@ -91,7 +92,7 @@ void Simulator::timerEvent( QTimerEvent* e )  //update at m_timerTick_ms rate (5
     for( Updatable* el : m_updateList ) el->updateStep();
 
     // Calculate Simulation Load
-    double timer_ns = m_timerTick_ms*1e6;
+    double timer_ns = m_timer_ms*1e6;
     uint64_t simLoop = 0;
     if( m_loopTime > m_refTime ) simLoop = m_loopTime-m_refTime;
     m_simLoad = (m_simLoad+100*simLoop/timer_ns)/2;
@@ -244,7 +245,7 @@ void Simulator::startSim( bool paused )
               << "\nSpeed:" << (double)m_psPerSec  << "\tps per Sec"
               << "\nFPS:  " <<         m_fps       << "\tFrames per Sec"
               << "\nFrame:" << (double)m_psPF      << "\tps per Frame"
-              << "\nNonLi:" << (double)m_maxNlstp  << "\tMax Iterations"
+              << "\nNonLi:" << (double)m_maxNlStep  << "\tMax Iterations"
               << "\nReact:" << (double)m_reactStep << "\tps Reactive step";
 
     qDebug() << "\n    Simulation Running... \n";
@@ -259,7 +260,7 @@ void Simulator::startSim( bool paused )
     if( m_timerId != 0 ) this->killTimer( m_timerId );               // Stop Timer
     m_refTime  = m_RefTimer.nsecsElapsed();
     m_loopTime = m_refTime;
-    m_timerId = this->startTimer( m_timerTick_ms, Qt::PreciseTimer ); // Init Timer
+    m_timerId = this->startTimer( m_timer_ms, Qt::PreciseTimer ); // Init Timer
 }
 
 void Simulator::stopSim()
@@ -320,7 +321,7 @@ void Simulator::setPsPerSec( uint64_t psPs )
         m_psPF = 1;
         fps = psPs;
     }
-    m_timerTick_ms = 1000/fps;  // in ms
+    m_timer_ms = 1000/fps;  // in ms
 
     InfoWidget::self()->setTargetSpeed( 100*m_psPerSec/1e12 );
 }

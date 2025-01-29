@@ -83,7 +83,7 @@ void BinaryOp::runStep()
 
 void BinaryOp::updateOutput()
 {
-    int out;
+    int out = 0;
 
     switch( m_binOpType ) {
         case AND: out = m_inputA & m_inputB; break;

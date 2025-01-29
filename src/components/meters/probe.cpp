@@ -42,7 +42,7 @@ Probe::Probe( QString id )
     m_voltTrig = 2.5;
     m_voltIn = 0;
 
-    m_inputPin = new IoPin( 180, QPoint(-22,0), "inPin@"+id, this );
+    m_inputPin = new InputPin( 180, QPoint(-22,0), "inPin@"+id, this );
     m_inputPin->setBoundingRect( QRect(-1, -1, 2, 2) );
     m_inputPin->setInputImp( 1e9 );
     m_pin << m_inputPin;

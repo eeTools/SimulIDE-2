@@ -68,7 +68,7 @@ class fComponent : public Component, public Element
  static QString getShapes();
 
     protected:
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private:
 

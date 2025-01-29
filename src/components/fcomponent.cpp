@@ -195,6 +195,8 @@ void fComponent::setup() // Called from Circuit
         }
         else   // Create Module
         {
+            /// Module* module = BlockList::self()->createModule( type, uid, properties )
+            ///
             module = (Module*)BlockList::self()->createItem( type, uid );
             if( module ){
                 module->setComponent( this );

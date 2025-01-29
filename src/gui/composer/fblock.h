@@ -45,13 +45,12 @@ class FuncBlock : public QGraphicsItem
 
         void setPropStr( QString name, QString value );
 
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
-
     protected slots:
         virtual void slotProperties();
         void showToggled( QString propId, bool checked );
 
     protected:
+        void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;
         void mouseMoveEvent( QGraphicsSceneMouseEvent* event ) override;
         void mouseReleaseEvent( QGraphicsSceneMouseEvent* event ) override;
@@ -68,14 +67,14 @@ class FuncBlock : public QGraphicsItem
         QString m_type;
         QString m_id;
 
-        QRectF  m_area;
-        QRectF  m_bodyArea;
-        QRectF  m_headArea;
-        QRectF  m_PropArea;
+        QRectF m_area;
+        QRectF m_bodyArea;
+        QRectF m_headArea;
+        QRectF m_PropArea;
 
-        QColor  m_color;
-        QColor  m_hColor;
-        QColor  m_pColor;
+        QColor m_color;
+        QColor m_hColor;
+        QColor m_pColor;
 
         QFont m_font;
 
@@ -89,7 +88,7 @@ class FuncBlock : public QGraphicsItem
         QList<Hook*> m_propSignals;
         QMap<QString, Hook*> m_propSignalMap;
 
-        Module* m_module;
+        Module* m_module;  /// TODO: split Module into GUI and functional parts
 
         PropDialog* m_propDialog;
 };
