@@ -38,10 +38,7 @@ void Kcl::createCells()
     for( int i=0; i<m_size; ++i )  // Create cell matrix
     {
         cv_vector admitVector( m_size );
-        admitVector.at(i).add = true;
         m_admiMatrix.emplace_back( admitVector );
-
-        m_coefVector.at(i).add = true;
     }
 }
 
@@ -242,37 +239,46 @@ void Kcl::factorMatrix( int group ) // Factor matrix into Lower/Upper triangular
     if( n == 1 ) // Single node
     {
         DataCell* ac = ap[0][0];
-        if( ac->changed ) ac->updateVal();  // Recalculate total admitance
+        if( ac->changed ) ac->addTotal();  // Recalculate total admitance
         av[0][0] = ac->total;
         return;
     }
 
     int row,col,k;
 
-    for( col=0; col<n; ++col )                  // Crout's method: loop through columns
+    for( col=0; col<n; ++col )                 // Crout's method: loop through columns
     {
-        for( row=0; row<col; ++row )            // Upper triangular elements
+        for( row=0; row<col; ++row )           // Upper triangular elements
         {
             DataCell* ac = ap[row][col];
-            if( ac->changed ) ac->updateVal();  // Recalculate total admitance
+            if( ac->changed ) ac->subTotal();  // Recalculate total admitance
 
             double q = ac->total;
             for( k=0; k<row; ++k ) q -= av[row][k]*av[k][col];
             av[row][col] = q;
         }
-        for( row=col; row<n; ++row )            // Lower triangular elements
+        row = col;                             // Diagonal elements
+        DataCell* ac = ap[row][col];
+        if( ac->changed ) ac->addTotal();      // Recalculate total admitance
+
+        double div = ac->total;                // Reused in normalization
+        for( k=0; k<col; ++k ) div -= av[row][k]*av[k][col];
+        av[row][col] = div;
+        row++;
+
+        for( ; row<n; ++row )                  // Lower triangular elements
         {
             DataCell* ac = ap[row][col];
-            if( ac->changed ) ac->updateVal();  // Recalculate total admitance
+            if( ac->changed ) ac->subTotal();  // Recalculate total admitance
 
             double q = ac->total;
             for( k=0; k<col; ++k ) q -= av[row][k]*av[k][col];
             av[row][col] = q;
         }
-        if( col != n-1 )                        // Normalize column respect to diagonal
+        if( col != n-1 && div != 0 )           // Normalize column respect to diagonal
         {
-            double div = av[col][col];
-            if( div == 0 ) continue;
+            //double div = av[col][col];
+            //if( div == 0 ) continue;
             for( row=col+1; row<n; ++row ) av[row][col] /= div;
         }
     }
@@ -298,7 +304,7 @@ void Kcl::luSolve( int group ) // Solve the system to get voltages for each node
         double admit = av[0][0];
 
         DataCell* bc = bp[0];
-        if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
+        if( bc->changed ) bc->addTotal();   // Recalculate total current for this node
         double current = bc->total;
 
         double volt = current/admit;
@@ -320,7 +326,7 @@ void Kcl::luSolve( int group ) // Solve the system to get voltages for each node
         for( i=0; i<n; ++i )
         {
             DataCell* bc = bp[i];
-            if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
+            if( bc->changed ) bc->addTotal();   // Recalculate total current for this node
             tot = bc->total;
             if( tot != 0 ){ b[i] = tot; break; } // First nonzero b element
         }
@@ -329,7 +335,7 @@ void Kcl::luSolve( int group ) // Solve the system to get voltages for each node
         for( ; i<n; ++i )
         {
             DataCell* bc = bp[i];
-            if( bc->changed ) bc->updateVal();   // Recalculate total current for this node
+            if( bc->changed ) bc->addTotal();   // Recalculate total current for this node
             tot = bc->total;
 
             dv_vector& avRow = av.at(i);

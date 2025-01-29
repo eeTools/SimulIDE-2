@@ -18,7 +18,6 @@ class Kcl
     {               // Total admitance is the actual value in Admitance matrix used to solve circuit
       public:
         DataCell(){
-            add     = false;
             changed = false;
             total   = 0;
         }
@@ -26,14 +25,17 @@ class Kcl
         std::vector<double*> values;  // Admitance vector
         double total;                 // Total admitance
 
-        void updateVal(){             // Recalculate total admitance value for this matrix cell
+        void addTotal(){             // Recalculate total admitance value for diagonal cell
             total = 0;
-            if( add ) for( double* d : values ) total += *d; // Diagonals use positive values
-            else      for( double* d : values ) total -= *d; // Non diagonal use negative values
+            for( double* d : values ) total += *d; // Diagonals use positive values
+            changed = false;
+        }
+        void subTotal(){             // Recalculate total admitance value for this matrix cell
+            total = 0;
+            for( double* d : values ) total -= *d; // Non diagonal use negative values
             changed = false;
         }
 
-        bool add;
         bool changed;
     };
 
