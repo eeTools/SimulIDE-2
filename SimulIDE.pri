@@ -59,6 +59,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/simulator/elements/active \
     $$PWD/src/simulator/elements/outputs \
     $$PWD/src/simulator/elements/passive \
+    $$PWD/src/simulator/elements/fmodules \
     $$PWD/src/microsim \
     $$PWD/src/microsim/cores \
     $$PWD/src/microsim/cores/avr \
