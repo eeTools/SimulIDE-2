@@ -20,11 +20,11 @@ listItem_t mCurrentSource::registerItem(){
         "Sources",
         "gate.png",
         "mCurrentSource",
-        [](QString id){ return (CompBase*)new mCurrentSource( id ); } };
+        [](int id){ return (CompBase*)new mCurrentSource( id ); } };
 }
 
-mCurrentSource::mCurrentSource( QString name )
-              : Module( name )
+mCurrentSource::mCurrentSource( int id )
+              : Module( id )
               , m_inputSlot("input", hookInputDoub )
 {
     m_slots.emplace_back( &m_inputSlot );

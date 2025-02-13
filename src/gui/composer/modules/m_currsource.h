@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MCURRENTSOURCE_H
-#define MCURRENTSOURCE_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -14,7 +13,7 @@ class Pin;
 class mCurrentSource : public Module
 {
     public:
-        mCurrentSource( QString name );
+        mCurrentSource( int id );
         ~mCurrentSource();
 
  static listItem_t registerItem();
@@ -38,4 +37,3 @@ class mCurrentSource : public Module
 
         ModSlot   m_inputSlot;
 };
-#endif

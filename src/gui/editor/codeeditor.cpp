@@ -41,7 +41,7 @@ QList<CodeEditor*> CodeEditor::m_documents;
 
 CodeEditor::CodeEditor( QWidget* parent, OutPanelText* outPane )
           : QPlainTextEdit( parent )
-          , CompBase("")
+          , CompBase(-1)
 {
     m_documents.append( this );
 
@@ -388,7 +388,7 @@ void CodeEditor::setFile( QString filePath )
 {
     if( m_file == filePath ) return;
     m_file = filePath;
-    m_id = getFileName( m_file );
+    /// m_id = getFileName( m_file );
 
     m_numLines = document()->blockCount();
 

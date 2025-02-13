@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PROBE_H
-#define PROBE_H
+#pragma once
 
 #include "component.h"
 #include "element.h"
@@ -14,7 +13,7 @@ class IoPin;
 class Probe : public Component, public Element
 {
     public:
-        Probe( QString id );
+        Probe( int id );
         ~Probe();
 
  static listItem_t registerItem();
@@ -53,5 +52,3 @@ class Probe : public Component, public Element
 
         IoPin* m_inputPin;
 };
-
-#endif

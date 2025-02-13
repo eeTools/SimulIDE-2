@@ -11,7 +11,7 @@
 #include "pin.h"
 
 DataChannel::DataChannel( PlotBase* plotBase, QString id )
-           : Element( id  )
+           : Element()
            , Updatable()
 {
     m_plotBase = plotBase;

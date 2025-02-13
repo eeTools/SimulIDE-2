@@ -21,7 +21,7 @@
 
 Compiler::Compiler( CodeEditor* editor, OutPanelText* outPane )
         : QObject( editor )
-        , CompBase("")
+        , CompBase(-1)
         , m_compProcess( this )
 {
     m_editor = editor;
@@ -96,7 +96,7 @@ void Compiler::loadCompiler( QString file )
     QString inclPath = "";
 
     m_compName = compiler.attribute( "name" );
-    m_id = m_compName;
+    /// m_id = m_compName;
 
     m_compilerType = compiler.attribute( "type" );
 

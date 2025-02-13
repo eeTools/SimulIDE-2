@@ -10,8 +10,8 @@
 #include "intprop.h"
 #include "stringprop.h"
 
-PortModule::PortModule( QString name )
-          : Module( name )
+PortModule::PortModule( int id )
+          : Module( id )
           , m_inputSlot("input" , hookInputInt )
           , m_outSignal("output", hookOutputInt )
 {

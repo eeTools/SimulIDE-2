@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef CIRCUIT_H
-#define CIRCUIT_H
+#pragma once
 
 #include <QTimer>
 
@@ -65,14 +64,14 @@ class Circuit : public CanvasBase
         void loadCircuit( QString filePath );
         bool saveCircuit( QString filePath );
 
-        Component* createItem( QString name, QString id, bool map=true );
+        Component* createItem( QString name, int id, bool map=true );
 
         void addComponent( Component* comp );
 
         QList<Component*>* compList() { return &m_compList; }
 
         Component* getCompById( QString id );
-        QString origId( QString name ) { return m_idMap.value( name ); } // used by Shield
+        //QString origId( QString name ) { return m_idMap.value( name ); } // used by Shield
 
         SubPackage* getBoard() { return m_board; }
         void setBoard( SubPackage* b ) { m_board = b; }
@@ -91,7 +90,7 @@ class Circuit : public CanvasBase
         QString circuitToString();
         //QString circuitToComp( QString category, QString iconData, QString compType );
 
-        WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin ) override;
+        WireBase* newWire( int id, PinBase* startPin, PinBase* endPin ) override;
 
         bool isComp() { return m_creCompDialog != nullptr; }
         QString category() { return m_category; }
@@ -169,5 +168,3 @@ class Circuit : public CanvasBase
 
         QList<Component*> m_oldComps;
 };
-
-#endif

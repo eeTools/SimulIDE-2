@@ -16,10 +16,10 @@ listItem_t Socket::registerItem(){
         "Connectors",
         "socket.png",
         "Socket",
-        [](QString id){ return (CompBase*)new Socket( id ); } };
+        [](int id){ return (CompBase*)new Socket( id ); } };
 }
 
-Socket::Socket( QString id )
+Socket::Socket( int id )
       : ConnBase( id )
 {
     setZValue(-2 );

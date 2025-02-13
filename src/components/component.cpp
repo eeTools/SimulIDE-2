@@ -28,7 +28,7 @@
 int  Component::m_error = 0;
 bool Component::m_boardMode = false;
 
-Component::Component( QString id )
+Component::Component( int id )
          : CompBase( id )
          , QGraphicsItem()
 {

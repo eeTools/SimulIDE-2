@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef DELAY_H
-#define DELAY_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -13,7 +12,7 @@
 class Delay : public Module
 {
     public:
-        Delay( QString name );
+        Delay( int id );
         ~Delay();
 
  static listItem_t registerItem();
@@ -39,4 +38,3 @@ class Delay : public Module
         ModSlot   m_inputSlot;
         ModSignal m_outSignal;
 };
-#endif

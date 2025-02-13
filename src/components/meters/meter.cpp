@@ -15,9 +15,9 @@
 
 #include "boolprop.h"
 
-Meter::Meter( QString id )
+Meter::Meter( int id )
      : Component( id )
-     , Resistance( id )
+     , Resistance()
      , m_display( this )
 {
     m_area = QRectF(-24,-24, 50, 32 );

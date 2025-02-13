@@ -21,7 +21,7 @@ class FuncBlock : public QGraphicsItem
     Q_INTERFACES( QGraphicsItem )
 
     public:
-        FuncBlock( fComponent* fComp, QString type, QString id );
+        FuncBlock( fComponent* fComp, QString type, int id );
         ~FuncBlock();
 
         enum { Type = UserType + 10 };
@@ -37,7 +37,7 @@ class FuncBlock : public QGraphicsItem
 
         QString toString();
 
-        QString uid() { return m_id; }
+        int uid() { return m_id; }
 
         Module* module() { return m_module; }
 
@@ -65,7 +65,7 @@ class FuncBlock : public QGraphicsItem
         bool m_moving;
 
         QString m_type;
-        QString m_id;
+        int m_id;
 
         QRectF m_area;
         QRectF m_bodyArea;

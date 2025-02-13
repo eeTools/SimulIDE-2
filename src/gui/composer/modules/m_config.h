@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MCONFIG_H
-#define MCONFIG_H
+#pragma once
 
 #include "module.h"
 #include "updatable.h"
@@ -14,7 +13,7 @@
 class mConfig : public Module, public Updatable
 {
     public:
-        mConfig( QString name );
+        mConfig( int id );
         ~mConfig();
 
  static listItem_t registerItem();
@@ -41,4 +40,3 @@ class mConfig : public Module, public Updatable
 
          ModSlot m_inputSlot;
 };
-#endif

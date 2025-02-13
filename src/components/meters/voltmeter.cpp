@@ -14,10 +14,10 @@ listItem_t VoltMeter::registerItem(){
         "Meters",
         "voltmeter.png",
         "VoltMeter",
-        [](QString id){ return (CompBase*)new VoltMeter( id ); } };
+        [](int id){ return (CompBase*)new VoltMeter( id ); } };
 }
 
-VoltMeter::VoltMeter( QString id )
+VoltMeter::VoltMeter( int id )
          : Meter( id )
 {
     m_unit = "V";

@@ -23,7 +23,7 @@ class Module : public CompBase
     friend class fComponent;
 
     public:
-        Module( QString id );
+        Module( int id );
         ~Module();
 
         virtual void setComponent( fComponent* c ) { m_component = c; }

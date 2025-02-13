@@ -19,9 +19,9 @@
 #include "mainwindow.h"
 #include "circuit.h"
 #include "circuitwidget.h"
-#include "chip.h"
+//#include "chip.h"
 #include "utils.h"
-#include "subcircuit.h"
+//#include "subcircuit.h"
 /// #include "mcu.h"
 
 ComponentList* ComponentList::m_pSelf = nullptr;
@@ -375,8 +375,8 @@ void ComponentList::writeSettings()
 #include "rail.h"
 #include "resistor.h"
 #include "socket.h"
-#include "subcircuit.h"
-#include "subpackage.h"
+//#include "subcircuit.h"
+//#include "subpackage.h"
 #include "tunnel.h"
 #include "voltmeter.h"
 //#include "wavegen.h"
@@ -656,7 +656,7 @@ void ComponentList::registerItems()
     //addItem( Line::registerItem() );
 
     addCategory( tr("Other"),"Other", "", "" );
-    addItem( SubPackage::registerItem() );
+    //addItem( SubPackage::registerItem() );
     //addItem( TestUnit::registerItem() );
     //addItem( Dial::registerItem() );
 }

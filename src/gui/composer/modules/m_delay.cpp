@@ -17,11 +17,11 @@ listItem_t Delay::registerItem(){
         "Other",
         "delay.png",
         "Delay",
-        [](QString id){ return (CompBase*)new Delay( id ); } };
+        [](int id){ return (CompBase*)new Delay( id ); } };
 }
 
-Delay::Delay( QString name )
-     : Module( name )
+Delay::Delay( int id )
+     : Module( id )
      , m_inputSlot("input", hookInputInt )
      , m_outSignal("output", hookOutputInt )
 {

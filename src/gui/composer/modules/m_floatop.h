@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef FLOATOP_H
-#define FLOATOP_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -12,7 +11,7 @@
 class FloatOp : public Module
 {
 public:
-    FloatOp( QString name );
+    FloatOp( int id );
     ~FloatOp();
 
     enum floatOpType_t{
@@ -48,4 +47,3 @@ private:
     ModSlot   m_inSlotB;
     ModSignal m_outSignal;
 };
-#endif

@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef PINPORT_H
-#define PINPORT_H
+#pragma once
 
 #include "portmodule.h"
 #include "ioport.h"
@@ -13,7 +12,7 @@
 class mPinPort : public PortModule, public IoPort, public LogicFamily
 {
     public:
-        mPinPort( QString name );
+        mPinPort( int id );
         virtual ~mPinPort();
 
  static listItem_t registerItem();
@@ -46,4 +45,3 @@ class mPinPort : public PortModule, public IoPort, public LogicFamily
         PinBase* addPin( QString id ) override;
 
 };
-#endif

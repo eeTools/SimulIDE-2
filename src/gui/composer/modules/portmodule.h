@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef PORTMODULE_H
-#define PORTMODULE_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -21,7 +20,7 @@ class PinBase;
 class PortModule : public Module
 {
     public:
-        PortModule( QString name );
+        PortModule( int id );
         ~PortModule();
 
         enum portType_t{
@@ -76,5 +75,3 @@ class PortModule : public Module
 
         QList<PinBase*> m_pins;
 };
-
-#endif

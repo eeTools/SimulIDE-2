@@ -12,7 +12,7 @@ class Bjt : public Element
 {
     public:
 
-        Bjt( QString id );
+        Bjt();
         virtual ~Bjt();
 
         void stampAdmit() override;

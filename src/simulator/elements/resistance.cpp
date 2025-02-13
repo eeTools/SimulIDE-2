@@ -6,8 +6,8 @@
 #include "resistance.h"
 #include "kcl.h"
 
-Resistance::Resistance( QString id )
-          : Element( id )
+Resistance::Resistance()
+          : Element()
 {
     m_node0 = -1;
     m_node1 = -1;

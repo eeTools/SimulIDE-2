@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef BITTOINT_H
-#define BITTOINT_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -12,7 +11,7 @@
 class BitToInt : public Module
 {
     public:
-        BitToInt( QString name );
+        BitToInt( int id );
         ~BitToInt();
 
  static listItem_t registerItem();
@@ -30,4 +29,3 @@ class BitToInt : public Module
 
         ModSignal m_outSignal;
 };
-#endif

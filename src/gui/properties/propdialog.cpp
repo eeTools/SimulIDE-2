@@ -43,7 +43,7 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
     m_minH  = 100*m_scale;
 
     QString title = isComp ? "Uid: " : "";
-    this->setWindowTitle( title+comp->getUid() );
+    this->setWindowTitle( title+QString::number( comp->getUid() ) );
     type->setText( "Type: "+comp->itemType() );
     if( isComp ) labelBox->setText( comp->getPropStr("label") );
     else{

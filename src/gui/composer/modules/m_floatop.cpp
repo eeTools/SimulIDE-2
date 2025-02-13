@@ -20,11 +20,11 @@ listItem_t FloatOp::registerItem(){
             "Operations",
             "gate.png",
             "FloatOp",
-            [](QString id){ return (CompBase*)new FloatOp( id ); } };
+            [](int id){ return (CompBase*)new FloatOp( id ); } };
 }
 
-FloatOp::FloatOp( QString name )
-    : Module( name )
+FloatOp::FloatOp( int id )
+    : Module( id )
     , m_inSlotA("inputA", hookInputDoub )
     , m_inSlotB("inputB", hookInputDoub )
     , m_outSignal("output", hookOutputDoub )

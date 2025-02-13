@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef RAIL_H
-#define RAIL_H
+#pragma once
 
 #include "component.h"
 #include "pinsource.h"
@@ -14,7 +13,7 @@ class IoPin;
 class Rail : public Component
 {
     public:
-        Rail( QString id );
+        Rail( int id );
         ~Rail();
 
  static listItem_t registerItem();
@@ -32,5 +31,3 @@ class Rail : public Component
 
         IoPin* m_out;
 };
-
-#endif

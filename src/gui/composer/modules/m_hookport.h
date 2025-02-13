@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef HOOKPORT_H
-#define HOOKPORT_H
+#pragma once
 
 #include "portmodule.h"
 #include "modsignal.h"
@@ -12,7 +11,7 @@
 class mHookPort : public PortModule
 {
     public:
-        mHookPort( QString name );
+        mHookPort( int id );
         ~mHookPort();
 
  static listItem_t registerItem();
@@ -24,4 +23,3 @@ class mHookPort : public PortModule
     protected:
         PinBase* addPin( QString id ) override;
 };
-#endif

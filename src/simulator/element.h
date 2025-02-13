@@ -15,7 +15,7 @@ class Kcl;
 class Element
 {
     public:
-        Element( QString id );
+        Element();
         ~Element();
 
         //virtual void reset(){;}
@@ -23,7 +23,7 @@ class Element
         virtual void stampCurrent(){;}
         virtual void voltChanged(){;}
 
-        QString getId() { return m_elId; }
+        //QString getId() { return m_elId; }
 
         Element* next;
 
@@ -31,7 +31,7 @@ class Element
  static constexpr double high_imp  = 1e14;
 
     protected:
-        QString m_elId;
+        //QString m_elId;
 
         Kcl* m_kcl;
 };

@@ -33,7 +33,7 @@ ListBase::ListBase( QWidget* parent )
 }
 ListBase::~ListBase(){}
 
-CompBase* ListBase::createItem( QString type, QString id )
+CompBase* ListBase::createItem( QString type, int id )
 {
     if( !m_componentFactory.contains( type ) ) return nullptr;
 

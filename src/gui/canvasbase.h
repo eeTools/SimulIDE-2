@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef CANVASBASE_H
-#define CANVASBASE_H
+#pragma once
 
 #include <QGraphicsScene>
 #include <QSet>
@@ -30,8 +29,8 @@ class CanvasBase : public QGraphicsScene
             QString value;
         };
 
-        QString newSceneId() { return QString::number(++m_seqNumber); }
-        QString newWireId()  { return QString::number(++m_conNumber); }
+        int newSceneId() { return ++m_seqNumber; }
+        int newWireId()  { return ++m_conNumber; }
 
         virtual void removeItems(){;}
         virtual void clearCanvas();
@@ -45,8 +44,8 @@ class CanvasBase : public QGraphicsScene
         void removeWire( WireBase* wire );
         void deleteNewWire();
         WireBase* getNewWire() { return m_newWire; }
-        WireBase* createWire( QList<prop_t> properties, QString newUid );
-        virtual WireBase* newWire( QString id, PinBase* startPin, PinBase* endPin )=0;
+        WireBase* createWire(QList<prop_t> properties, int newUid );
+        virtual WireBase* newWire( int id, PinBase* startPin, PinBase* endPin )=0;
 
         QList<WireBase*>* wireList()  { return &m_wireList; }
 
@@ -58,7 +57,7 @@ class CanvasBase : public QGraphicsScene
         bool pasting() { return m_pasting; }
         bool isBusy()  { return m_busy || m_pasting | m_deleting; }
 
-        QHash<QString, CompBase*>* compMap() { return &m_compMap;}
+        QMap<int, CompBase*>* compMap() { return &m_compMap;}
 
         virtual QString toString(){ return "";}
 
@@ -67,8 +66,8 @@ class CanvasBase : public QGraphicsScene
         void setChanged();
         void saveChanges();
         void removeLastUndo();
-        void addItemChange(  QString item, QString property, QString undoVal );
-        void saveItemChange( QString item, QString property, QString undoVal );
+        void addItemChange(  int item, QString property, QString undoVal );
+        void saveItemChange( int item, QString property, QString undoVal );
         void beginChangeBatch();
         void endChangeBatch();
         void cancelUndoStep();               // Revert changes done
@@ -118,14 +117,14 @@ class CanvasBase : public QGraphicsScene
 
         QMap<QString, PinBase*> m_pinMap;   // Pin Id to PinBase*
         QMap<QString, PinBase*> m_LdPinMap; // Pin Id to PinBase* while loading/pasting/importing
-        QMap<QString, QString>  m_idMap;    // Component seqNumber to new seqNumber (pasting)
+        QMap<int, int>  m_idMap;    // Component seqNumber to new seqNumber (pasting)
 
         QList<WireBase*> m_wireList;  // Wire list
         QList<Node*>  m_nodeList;  // Node list
 
         //--- Undo/Redo ----------------------------------
         struct itemChange{      // Component Change to be performed by Undo/Redo to complete a Circuit change
-            QString component;  // Component name
+            int     component;  // Component id
             QString property;   // Property name
             QString undoValue;  // Property value for Undo step
             QString redoValue;  // Property value for Redo step
@@ -150,12 +149,10 @@ class CanvasBase : public QGraphicsScene
         canvasChange m_canvasChange;
         QList<canvasChange> m_undoStack;
 
-        QHash<QString, CompBase*> m_compMap;  // Component Id to Component*, used in UNDO/REDO
+        QMap<int, CompBase*> m_compMap;  // Component Id to Component*, used in UNDO/REDO
 
         QList<CompBase*>  m_removedComps; // removed component list;
         QList<WireBase*>  m_oldWires;
         QList<Node*>      m_oldNodes;
         QMap<CompBase*, QString> m_compStrMap;
 };
-#endif
-

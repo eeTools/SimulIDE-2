@@ -236,10 +236,7 @@ bool WireLine::connectToWire( QPoint point1 )
 
     if( !Circuit::self()->getNewWire() ) Circuit::self()->beginUndoStep(); // A new Connector started here
 
-    QString type = "Node";
-    QString id = type +"-"+ Circuit::self()->newSceneId();
-
-    Node* node = new Node( id );     // Now add the Node
+    Node* node = new Node( Circuit::self()->newSceneId() );     // Now add the Node
     node->setPos( point1.x(), point1.y());
     Circuit::self()->addNode( node );
 

@@ -13,10 +13,10 @@ listItem_t AmpMeter::registerItem(){
         "Meters",
         "ampmeter.png",
         "AmpMeter",
-        [](QString id){ return (CompBase*)new AmpMeter( id ); } };
+        [](int id){ return (CompBase*)new AmpMeter( id ); } };
 }
 
-AmpMeter::AmpMeter( QString id )
+AmpMeter::AmpMeter( int id )
         : Meter( id )
 {
     m_unit = "A";

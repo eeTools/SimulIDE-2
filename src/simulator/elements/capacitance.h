@@ -14,7 +14,7 @@
 class Capacitance : public Resistance
 {
     public:
-        Capacitance( QString id );
+        Capacitance();
         ~Capacitance();
 
         virtual void stampAdmit() override;

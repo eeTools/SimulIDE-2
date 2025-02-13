@@ -17,11 +17,11 @@ listItem_t BitToInt::registerItem(){
         "Converters",
         "gate.png",
         "BitToInt",
-        [](QString id){ return (CompBase*)new BitToInt( id ); } };
+        [](int id){ return (CompBase*)new BitToInt( id ); } };
 }
 
-BitToInt::BitToInt( QString name )
-        : Module( name )
+BitToInt::BitToInt( int id )
+        : Module( id )
         , m_outSignal("output", hookOutputInt )
 {
     m_outSignal.setIntData( &m_output );

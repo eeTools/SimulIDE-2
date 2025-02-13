@@ -6,8 +6,8 @@
 #include "fet.h"
 #include "node.h"
 
-Fet::Fet( QString id )
-   : Resistance( id )
+Fet::Fet()
+   : Resistance()
 {
 
 }

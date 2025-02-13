@@ -20,20 +20,17 @@ listItem_t UnaryOp::registerItem(){
         "Operations",
         "gate.png",
         "UnaryOp",
-        [](QString id){ return (CompBase*)new UnaryOp( id ); } };
+        [](int id){ return (CompBase*)new UnaryOp( id ); } };
 }
 
-UnaryOp::UnaryOp( QString name )
-       : Clocked( name )
+UnaryOp::UnaryOp( int id )
+       : Clocked( id )
        , m_inputSlot("input", hookInputInt )
        , m_outSignal("output", hookOutputInt )
 {
-    m_outSignal.setIntData( &m_output );
-
     m_slots.emplace_back( &m_inputSlot );
     m_signals.emplace_back( &m_outSignal );
 
-    m_bits = 0;
     setSize( 2 );
 
     m_unOpList = QStringList() <<"AND"<<"OR"<<"XOR"<<"NOT"
@@ -64,60 +61,10 @@ UnaryOp::UnaryOp( QString name )
 }
 UnaryOp::~UnaryOp(){}
 
-void UnaryOp::initModule()
-{
-    m_input = 0;
-    m_output = 0;
-}
-
-void UnaryOp::runStep()
-{
-    if( !m_modChanged ) return;
-    m_modChanged = false;
-
-    m_input = m_inputSlot.intData() & m_mask;
-
-    updateOutput();
-}
-
-void UnaryOp::updateOutput()
-{
-    int out = 0;
-    int bits = 0;
-    if( m_unOpType < 3 ) for( int i=0; i<m_bits; ++i ) if( m_input & 1<<i ) bits++; // Logic ops
-
-    switch( m_unOpType ) {
-        case AND: out = bits == m_bits; break;
-        case  OR: out = bits  > 0;      break;
-        case XOR: out = bits == 1;      break;
-        case NOT: out = !m_input;       break;
-        case INC: out = m_input+1;      break;
-        case DEC: out = m_input-1;      break;
-        case RTL: out = m_input<<1;     break;
-        case RTR: out = m_input>>1;     break;
-        case DTB: out = dtb();          break;
-        case BTD: out = 1<<m_input;     break;
-    }
-
-    if( m_output == out ) return;
-    m_output = out;
-    m_outSignal.changed();
-}
-
-int UnaryOp::dtb()
-{
-    int i = m_bits;
-    for( ; i>=0; --i ) if( m_input & 1<<i ) break ;
-    return i;
-}
-
 void UnaryOp::setTypeStr( QString type )
 {
     if( !m_unOpList.contains( type )) type = "AND";
-    int t = m_unOpList.indexOf( type );
-
     m_unOpStr = type;
-    m_unOpType = (unOpType_t)t;
 }
 
 void UnaryOp::setSize( int bits )
@@ -126,6 +73,5 @@ void UnaryOp::setSize( int bits )
     else if( bits > 32 ) bits = 32;
 
     m_bits = bits;
-    m_mask = pow( 2, m_bits )-1;
 }
 

@@ -20,7 +20,7 @@ class fComponent;
 class ListItem : public CompBase // Used for item list properties
 {
     public:
-        ListItem() : CompBase("item") {;}
+        ListItem() : CompBase(-1) {;}
 
         QString label() { return m_label; }
         void setLabel( QString l ) { m_label = l; }

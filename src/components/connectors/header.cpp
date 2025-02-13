@@ -15,10 +15,10 @@ listItem_t Header::registerItem(){
         "Connectors",
         "header.png",
         "Header",
-        [](QString id){ return (CompBase*)new Header( id ); } };
+        [](int id){ return (CompBase*)new Header( id ); } };
 }
 
-Header::Header( QString id )
+Header::Header( int id )
       : ConnBase( id )
 {
     this->setZValue(-1 );

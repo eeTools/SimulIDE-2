@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef WIRE_H
-#define WIRE_H
+#pragma once
 
 #include "wirebase.h"
 
@@ -15,7 +14,7 @@ class Wire : public WireBase
     friend class WireLine;
 
     public:
-        Wire( QString id, PinBase* startpin, PinBase* endpin=nullptr );
+        Wire( int id, PinBase* startpin, PinBase* endpin=nullptr );
         ~Wire();
 
         void setPointListStr( QString pl ) override;
@@ -50,5 +49,3 @@ class Wire : public WireBase
 
         QList<WireLine*> m_wireLineList;
 };
-
-#endif

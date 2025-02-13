@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef FREQMETER_H
-#define FREQMETER_H
+#pragma once
 
 #include "component.h"
 #include "element.h"
@@ -12,7 +11,7 @@
 class FreqMeter : public Component, public Element
 {
     public:
-        FreqMeter( QString id );
+        FreqMeter( int id );
         ~FreqMeter();
 
  static listItem_t registerItem();
@@ -45,5 +44,3 @@ class FreqMeter : public Component, public Element
         
         QGraphicsSimpleTextItem m_display;
 };
-
-#endif

@@ -3,9 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef LINKAGE_H
-#define LINKAGE_H
-
+#pragma once
 #include <QGraphicsItem>
 
 #include "wirebase.h"
@@ -17,7 +15,7 @@ class FuncWire : public WireBase, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        FuncWire( QString id, PinBase* startpin, PinBase* endpin=nullptr );
+        FuncWire( int id, PinBase* startpin, PinBase* endpin=nullptr );
         ~FuncWire();
 
         int type() const override { return UserType + 2; } // QGraphicsItem type
@@ -64,5 +62,3 @@ class FuncWire : public WireBase, public QGraphicsItem
 
         QPainterPath m_path;
 };
-
-#endif

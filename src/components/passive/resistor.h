@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef RESISTOR_H
-#define RESISTOR_H
+#pragma once
 
 #include "component.h"
 #include "resistance.h"
@@ -12,7 +11,7 @@
 class Resistor : public Component, public Resistance
 {
     public:
-        Resistor( QString id );
+        Resistor( int id );
         ~Resistor();
 
  static listItem_t registerItem();
@@ -21,5 +20,3 @@ class Resistor : public Component, public Resistance
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 };
-
-#endif

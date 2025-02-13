@@ -67,7 +67,7 @@ void ComposerWidget::createPackage()
 {
     m_packageView.clear();
 
-    m_fComp = new fComponent("","0", Canvas::self() );
+    m_fComp = new fComponent("",0, Canvas::self() );
     m_fComp->setPos(-4,-4 );
 
     Canvas::self()->addItem( m_fComp );

@@ -19,8 +19,8 @@
 #include "wireline.h"
 #include "node.h"
 #include "utils.h"
-#include "subcircuit.h"
-#include "subpackage.h"
+///#include "subcircuit.h"
+///#include "subpackage.h"
 #include "fcomponent.h"
 //#include "mcu.h"
 #include "simulator.h"
@@ -159,17 +159,17 @@ void Circuit::loadStrDoc( QString &doc )
             QString startpinid, endpinid;
             QStringList pointList;
 
-            QString uid;
+            int uid = -1;
             for( propStr_t prop : properties )
             {
                 if     ( prop.name == "pin0" ) startpinid = prop.value.toString();
                 else if( prop.name == "pin1" ) endpinid   = prop.value.toString();
                 else if( prop.name == "pList") pointList  = prop.value.toString().split(",");
-                else if( prop.name == "uid"  ) uid        = prop.value.toString();
+                else if( prop.name == "uid"  ) uid        = prop.value.toInt();
             }
             if( m_pasting )
             {
-                uid = ""; // force new Uid
+                uid = -1; // force new Uid
                 startpinid = replaceId( startpinid );
                 endpinid   = replaceId( endpinid );
             }
@@ -199,10 +199,9 @@ void Circuit::loadStrDoc( QString &doc )
 
             if( startpin && endpin )    // Create Connector
             {
-                if( uid.isEmpty() ) uid = newWireId();
+                if( uid == -1 ) uid = newWireId();
                 else{
-                    int number = uid.split("-").last().toInt();
-                    if( number > m_conNumber ) m_conNumber = number; // Adjust Connector counter: m_conNumber
+                    if( uid > m_conNumber ) m_conNumber = uid; // Adjust Connector counter: m_conNumber
                 }
                 Wire* wire = new Wire( uid, startpin, endpin );
                 wire->setPointList( pointList );
@@ -218,16 +217,14 @@ void Circuit::loadStrDoc( QString &doc )
         {
             propStr_t circId = properties.takeFirst();
             if( circId.name != "uid") continue; /// ERROR
-            QString uid = circId.value.toString();
-            QString newUid;
+            int uid = circId.value.toInt();
+            int newUid = uid;
 
             if( m_pasting ) // Create new id
             {
                 newUid = newSceneId();
-
-                m_idMap[getSeqNumber( uid )] = newUid; // Map simu id to new id
+                m_idMap[uid] = newUid; // Map simu id to new id
             }
-            else newUid = uid;
 
             if( type == "Node")
             {
@@ -255,7 +252,7 @@ void Circuit::loadStrDoc( QString &doc )
                 comp->loadProperties( properties );
                 comp->setup();
 
-                if( m_pasting ) comp->setIdLabel( newUid );
+                /// if( m_pasting ) comp->setIdLabel( newUid );
                 comp->updtLabelPos();
                 comp->updtValLabelPos();
 
@@ -268,8 +265,7 @@ void Circuit::loadStrDoc( QString &doc )
                     if( l->hasLinks() ) linkList.append( l );
                 }
             }
-            int number = newUid.split("-").last().toInt();
-            if( number > m_seqNumber ) m_seqNumber = number; // Adjust item counter: m_seqNumber
+            if( newUid > m_seqNumber ) m_seqNumber = newUid; // Adjust item counter: m_seqNumber
         }
 
 
@@ -350,7 +346,7 @@ QString Circuit::circuitHeader()
 
 QString Circuit::circuitToString()
 {
-    if( m_board && m_board->m_boardMode ) m_board->setBoardMode( false );
+    /// if( m_board && m_board->m_boardMode ) m_board->setBoardMode( false );
 
     QString circuit = circuitHeader();
     for( Component* comp : m_compList ) circuit += comp->toString();
@@ -358,7 +354,7 @@ QString Circuit::circuitToString()
     for( WireBase*  wire : m_wireList ) circuit += wire->toString();
     circuit += "\n";
 
-    if( m_board && m_board->m_boardMode ) m_board->setBoardMode( true );
+    ///if( m_board && m_board->m_boardMode ) m_board->setBoardMode( true );
     return circuit;
 }
 
@@ -423,7 +419,7 @@ void Circuit::importCircuit()
     paste( QPointF(0,0) );
 }
 
-Component* Circuit::createItem( QString type, QString id, bool map )
+Component* Circuit::createItem( QString type, int id, bool map )
 {
     CompBase* comp = ComponentList::self()->createItem( type, id );
 
@@ -601,11 +597,11 @@ void Circuit::restoreState()
     m_busy = false;
     deleteRemoved();                      // Delete Removed Components;
     for( WireBase* con : m_wireList ) {
-        if( m_board && m_board->m_boardMode ) con->setVisib( false );
-        else{
+        //if( m_board && m_board->m_boardMode ) con->setVisib( false );
+        //else{
             con->startPin()->isMoved();
             con->endPin()->isMoved();
-        }
+        //}
     }
     update();
 }
@@ -846,7 +842,7 @@ void Circuit::dropEvent( QGraphicsSceneDragDropEvent* event )
     else CircuitWidget::self()->loadCirc( id );
 }
 
-WireBase* Circuit::newWire( QString id, PinBase* startPin, PinBase* endPin )
+WireBase* Circuit::newWire( int id, PinBase* startPin, PinBase* endPin )
 {
     Wire* wire = new Wire( id, startPin, endPin );
     QPoint p1 = startPin->scenePos().toPoint();

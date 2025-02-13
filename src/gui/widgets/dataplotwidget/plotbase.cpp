@@ -19,7 +19,7 @@
 
 #define tr(str) simulideTr("PlotBase",str)
 
-PlotBase::PlotBase( QString id )
+PlotBase::PlotBase( int id )
         : Component( id )
         //, ScriptBase( id )
 {
@@ -68,7 +68,7 @@ PlotBase::PlotBase( QString id )
 
     m_timeStep = 1000;
     m_autoExport = false;
-    m_exportFile = changeExt( Circuit::self()->getFilePath(), "_"+id+".vcd" );
+    m_exportFile = changeExt( Circuit::self()->getFilePath(), "_"+QString::number( id )+".vcd" );
 
     addPropGroup( { tr("Main"), {
         new IntProp <PlotBase>("Basic_X",tr("Screen Width"), "_px"

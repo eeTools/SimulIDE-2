@@ -3,20 +3,17 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef AMPMETER_H
-#define AMPMETER_H
+#pragma once
 
 #include "meter.h"
 
 class AmpMeter : public Meter
 {
     public:
-        AmpMeter( QString id );
+        AmpMeter( int id );
         ~AmpMeter();
 
  static listItem_t registerItem();
 
         void updateStep() override;
 };
-
-#endif

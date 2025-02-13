@@ -11,7 +11,7 @@
 class Inductance : public Resistance
 {
     public:
-        Inductance( QString id );
+        Inductance();
         ~Inductance();
 
         virtual void stampAdmit() override;

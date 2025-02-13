@@ -12,9 +12,9 @@
 
 #define tr(str) simulideTr("ConnBase",str)
 
-ConnBase::ConnBase( QString id )
+ConnBase::ConnBase( int id )
         : Component( id )
-        , Element( id )
+        , Element()
 {
     m_graphical = true;
     //this->setZValue(-1 );

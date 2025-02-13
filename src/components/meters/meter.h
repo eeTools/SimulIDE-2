@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef METER_H
-#define METER_H
+#pragma once
 
 #include "resistance.h"
 #include "component.h"
@@ -14,7 +13,7 @@ class IoPin;
 class Meter : public Component, public Resistance
 {
     public:
-        Meter( QString id );
+        Meter( int id );
         ~Meter();
 
         bool swithchPins() { return m_switchPins; }
@@ -35,5 +34,3 @@ class Meter : public Component, public Resistance
         //IoPin* m_outPin;
         QGraphicsSimpleTextItem m_display;
 };
-
-#endif

@@ -21,12 +21,12 @@ listItem_t FreqMeter::registerItem(){
         "Meters",
         "frequencimeter.png",
         "FreqMeter",
-        [](QString id){ return (CompBase*)new FreqMeter( id ); } };
+        [](int id){ return (CompBase*)new FreqMeter( id ); } };
 }
 
-FreqMeter::FreqMeter( QString id )
+FreqMeter::FreqMeter( int id )
          : Component( id )
-         , Element( id )
+         , Element()
          , m_display( this )
 {
     m_area = QRectF( -32, -10, 85, 20 );

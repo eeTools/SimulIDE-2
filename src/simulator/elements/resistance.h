@@ -3,15 +3,14 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef RESISTANCE_H
-#define RESISTANCE_H
+#pragma once
 
 #include "element.h"
 
 class Resistance : public Element
 {
     public:
-        Resistance( QString id );
+        Resistance();
         ~Resistance();
 
         virtual void stampAdmit() override;
@@ -29,5 +28,3 @@ class Resistance : public Element
         int m_node1;
         int m_nodeGroup;
 };
-
-#endif

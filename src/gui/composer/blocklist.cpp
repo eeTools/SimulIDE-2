@@ -63,3 +63,15 @@ void BlockList::registerItems()
     addItem( mProperty::registerItem() );
     addItem( mConfig::registerItem() );
 }
+
+fModule* BlockList::createModule( QString type, QString uid, fComponent* fComp, QList<prop_t> properties )
+{
+    if( !m_componentFactory.contains( type ) ) return nullptr;
+
+    //listItem_t item = m_componentFactory.value( type );
+    fModule* fMod = nullptr; // = static_cast<fModule*>( item.construct( uid ) );
+
+    //if( type == "" )
+
+    return fMod;
+}

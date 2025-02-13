@@ -15,6 +15,11 @@
 class TreeItem;
 class QDomNode;
 
+struct prop_t{
+    QString name;
+    QString value;
+};
+
 class ListBase : public QTreeWidget
 {
     public:
@@ -24,7 +29,7 @@ class ListBase : public QTreeWidget
         QString getDataFile( QString compName ) { return m_dataFileList.value( compName ); }
         QString getFileDir( QString compName ) { return m_dirFileList.value( compName ); }
 
-        CompBase* createItem( QString type, QString id );
+        CompBase* createItem( QString type, int id );
 
         TreeItem* getCategory( QString category );
         QStringList getCategories(){ return m_categories.keys(); }

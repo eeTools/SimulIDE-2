@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
 #include "component.h"
 #include "pin.h"
@@ -14,7 +13,7 @@ class Node : public Component
     public:
         QRectF boundingRect() const override { return QRect(-4,-4, 8, 8 ); }
 
-        Node( QString id );
+        Node(int id );
         ~Node();
 
         Pin* getPin( int pin ) const { return m_pin[pin]; }
@@ -37,4 +36,3 @@ class Node : public Component
         bool m_isBus;
         bool m_blocked;
 };
-#endif

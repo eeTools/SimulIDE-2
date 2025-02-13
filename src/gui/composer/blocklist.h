@@ -10,11 +10,16 @@
 
 #include "listbase.h"
 
+class fModule;
+class fComponent;
+
 class BlockList : public ListBase
 {
     public:
         BlockList( QWidget* parent );
         ~BlockList();
+
+        fModule* createModule( QString type, QString uid, fComponent* fComp, QList<prop_t> properties );
 
  static BlockList* self() { return m_pSelf; }
 

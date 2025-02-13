@@ -7,9 +7,9 @@
 #include "simulator.h"
 //#include "kcl.h"
 
-Element::Element( QString id )
+Element::Element()
 {
-    m_elId = id;
+    //m_elId = id;
     m_kcl = Kcl::self();
 
     Simulator::self()->addElement( this );

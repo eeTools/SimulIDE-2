@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MPROPERTY_H
-#define MPROPERTY_H
+#pragma once
 
 #include "module.h"
 
@@ -13,7 +12,7 @@ class CallBack;
 class mProperty : public Module
 {
     public:
-        mProperty( QString id );
+        mProperty( int id );
         ~mProperty();
 
         QString propName() { return m_propName; }
@@ -38,4 +37,3 @@ class mProperty : public Module
         int m_minVal;
         int m_maxVal;
 };
-#endif

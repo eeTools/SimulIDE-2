@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef DIODE_H
-#define DIODE_H
+#pragma once
 
 #include "pn.h"
 #include "component.h"
@@ -12,7 +11,7 @@
 class Diode : public Component, public PN
 {
     public:
-        Diode( QString id, bool zener=false );
+        Diode( int id, bool zener=false );
         ~Diode();
 
  static listItem_t registerItem();
@@ -21,5 +20,3 @@ class Diode : public Component, public PN
 
     private:
 };
-
-#endif

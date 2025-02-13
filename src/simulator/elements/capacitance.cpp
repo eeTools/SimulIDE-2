@@ -9,8 +9,8 @@
 #include "capacitance.h"
 #include "simulator.h"
 
-Capacitance::Capacitance( QString id )
-           : Resistance( id )
+Capacitance::Capacitance()
+           : Resistance()
            , m_event( this, &Capacitance::runStep )
 {
     m_initVolt = 0;

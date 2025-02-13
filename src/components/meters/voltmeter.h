@@ -3,20 +3,17 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef VOLTMETER_H
-#define VOLTMETER_H
+#pragma once
 
 #include "meter.h"
 
 class VoltMeter : public Meter
 {
     public:
-        VoltMeter( QString id );
+        VoltMeter( int id );
         ~VoltMeter();
 
  static listItem_t registerItem();
 
         void updateStep() override;
 };
-
-#endif

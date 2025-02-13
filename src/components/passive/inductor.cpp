@@ -20,12 +20,12 @@ listItem_t Inductor::registerItem(){
         "Reactive",
         "inductor.png",
         "Inductor",
-        [](QString id){ return (CompBase*)new Inductor( id ); } };
+        [](int id){ return (CompBase*)new Inductor( id ); } };
 }
 
-Inductor::Inductor( QString id )
+Inductor::Inductor( int id )
         : Component( id )
-        , Inductance( id )
+        , Inductance()
 {
     m_area = QRectF(-10,-6, 20, 12 );
 

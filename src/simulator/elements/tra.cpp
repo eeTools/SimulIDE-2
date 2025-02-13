@@ -7,8 +7,8 @@
 #include "node.h"
 
 
-Bjt::Bjt( QString id )
-   : Element( id )
+Bjt::Bjt()
+   : Element()
 {
 
 }

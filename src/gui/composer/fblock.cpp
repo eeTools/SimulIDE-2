@@ -29,7 +29,7 @@
 #define HOOK_HEIGHT 8
 #define HEAD_HEIGHT 16
 
-FuncBlock::FuncBlock( fComponent* fComp, QString type, QString id )
+FuncBlock::FuncBlock( fComponent* fComp, QString type, int id )
          : QGraphicsItem()
 {
     m_id = id;

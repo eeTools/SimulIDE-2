@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PLOTBASE_H
-#define PLOTBASE_H
+#pragma once
 
 #include "component.h"
 //#include "scriptbase.h"
@@ -17,7 +16,7 @@ class QGraphicsProxyWidget;
 class PlotBase : public Component//, public ScriptBase
 {
     public:
-        PlotBase( QString id );
+        PlotBase( int id );
         ~PlotBase();
 
         virtual bool setPropStr( QString prop, QString val ) override;
@@ -150,5 +149,3 @@ class PlotBase : public Component//, public ScriptBase
 
         QGraphicsProxyWidget* m_proxy;
 };
-
-#endif

@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
@@ -27,7 +26,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
     public:
         QRectF boundingRect() const override { return QRectF( m_area.x()-2, m_area.y()-2, m_area.width()+4, m_area.height()+4 ); }
 
-        Component( QString id );
+        Component( int id );
         ~Component();
 
         virtual void setup() override;
@@ -231,7 +230,3 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
 
         //QGraphicsItemGroup* m_group;
 };
-
-typedef Component* (*createItemPtr)( QString type, QString id );
-
-#endif

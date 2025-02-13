@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef GROUND_H
-#define GROUND_H
+#pragma once
 
 #include "component.h"
 #include "pinsource.h"
@@ -14,7 +13,7 @@ class IoPin;
 class Ground : public Component
 {
     public:
-        Ground( QString id );
+        Ground( int id );
         ~Ground();
 
  static listItem_t registerItem();
@@ -24,5 +23,3 @@ class Ground : public Component
     private:
         IoPin* m_out;
 };
-
-#endif

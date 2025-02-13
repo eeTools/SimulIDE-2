@@ -17,10 +17,10 @@ listItem_t Ground::registerItem(){
         "Sources",
         "ground.png",
         "Ground",
-        [](QString id){ return (CompBase*)new Ground( id ); } };
+        [](int id){ return (CompBase*)new Ground( id ); } };
 };
 
-Ground::Ground( QString id )
+Ground::Ground( int id )
       : Component( id )
 {
     m_area = QRect(-6,-1, 12, 9 );

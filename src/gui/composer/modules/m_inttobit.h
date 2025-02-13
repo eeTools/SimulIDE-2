@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef INTTOBIT_H
-#define INTTOBIT_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -12,7 +11,7 @@
 class IntToBit : public Module
 {
     public:
-        IntToBit( QString name );
+        IntToBit( int id );
         ~IntToBit();
 
  static listItem_t registerItem();
@@ -33,4 +32,3 @@ class IntToBit : public Module
 
         ModSlot m_inputSlot;
 };
-#endif

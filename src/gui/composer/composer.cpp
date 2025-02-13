@@ -99,12 +99,12 @@ void Composer::loadStrDoc( QString doc )
             return;
         }
 
-        QString uid = properties.takeFirst().value;
-        QString newUid = uid;
+        int uid = properties.takeFirst().value.toInt();
+        //QString newUid = uid;
 
         if( type == "FuncWire" )
         {
-            WireBase* wire = createWire( properties, newUid );
+            WireBase* wire = createWire( properties, uid );
             if( wire ) m_wireList.append( wire );
         }
         else if( type == "Package" || type == "Component" )
@@ -122,10 +122,10 @@ void Composer::loadStrDoc( QString doc )
     }
 }
 
-FuncBlock* Composer::createBlock( QString type, QString id )
+FuncBlock* Composer::createBlock( QString type, int id )
 {
     fComponent* fComp = ComposerWidget::self()->package();
-    if( id.isEmpty() ) id = newSceneId();
+    if( id == -1 ) id = newSceneId();
     FuncBlock* fb = new FuncBlock( fComp, type, id );
     QGraphicsScene::addItem( fb );
     m_blockList.insert( fb );
@@ -146,7 +146,7 @@ void Composer::removeBlock( FuncBlock* fb )
     return nullptr;
 }*/
 
-WireBase* Composer::newWire( QString id, PinBase* startPin, PinBase* endPin )
+WireBase* Composer::newWire( int id, PinBase* startPin, PinBase* endPin )
 {
     return new FuncWire( id, startPin, endPin );
 }

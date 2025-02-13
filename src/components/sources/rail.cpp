@@ -19,10 +19,10 @@ listItem_t Rail::registerItem(){
         "Sources",
         "rail.png",
         "Rail",
-        [](QString id){ return (CompBase*)new Rail( id ); } };
+        [](int id){ return (CompBase*)new Rail( id ); } };
 }
 
-Rail::Rail( QString id )
+Rail::Rail( int id )
     : Component( id )
 {
     m_area = QRect(-6,-9, 12, 9 );

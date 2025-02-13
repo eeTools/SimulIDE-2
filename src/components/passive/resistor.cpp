@@ -18,12 +18,12 @@ listItem_t Resistor::registerItem(){
         "Resistors",
         "resistor.png",
         "Resistor",
-        [](QString id){ return (CompBase*)new Resistor( id ); } };
+        [](int id){ return (CompBase*)new Resistor( id ); } };
 }
 
-Resistor::Resistor( QString id )
+Resistor::Resistor( int id )
         : Component( id )
-        , Resistance( id )
+        , Resistance()
 {
     m_area = QRectF(-11,-4.5, 22, 9 );
 

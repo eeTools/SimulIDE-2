@@ -20,12 +20,12 @@ listItem_t Diode::registerItem(){
         "Rectifiers",
         "diode.png",
         "Diode",
-        [](QString id){ return (CompBase*)new Diode( id ); } };
+        [](int id){ return (CompBase*)new Diode( id ); } };
 }
 
-Diode::Diode( QString id, bool )
+Diode::Diode( int id, bool )
      : Component( id )
-     , PN( id )
+     , PN()
 {
     m_area = QRect(-10, -8, 20, 16 );
 

@@ -66,7 +66,7 @@ void CanvasBase::clearCanvas()
     m_deleting = false;
 }
 
-WireBase* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
+WireBase* CanvasBase::createWire( QList<prop_t> properties, int newUid )
 {
     WireBase*    wire = nullptr;
     PinBase* startpin = nullptr;
@@ -117,10 +117,9 @@ WireBase* CanvasBase::createWire( QList<prop_t> properties, QString newUid )
 
     if( startpin && endpin )    // Create Wire
     {
-        if( newUid.isEmpty() ) newUid = newWireId();
+        if( newUid == 0 ) newUid = newWireId();
         else{
-            int number = newUid.toInt();
-            if( number > m_conNumber ) m_conNumber = number; // Adjust Wire counter: m_conNumber
+            if( newUid > m_conNumber ) m_conNumber = newUid; // Adjust Wire counter: m_conNumber
         }
         wire = newWire( newUid, startpin, endpin );
         wire->setPointList( pointList );
@@ -152,7 +151,9 @@ bool CanvasBase::saveStrDoc( QString fileName, QString doc )
 QString CanvasBase::replaceId( QString pinName )
 {
     QStringList words = pinName.split("@");
-    words.replace( 1, m_idMap.value( words.at( 1 ) ) ); // Replace component uid
+    int compId = words.at( 1 ).toInt();
+    QString newIdStr = QString::number( m_idMap.value( compId ) );
+    words.replace( 1, newIdStr ); // Replace component uid
     return words.join("@");
 }
 
@@ -406,14 +407,14 @@ void CanvasBase::saveChanges()
     /// qDebug() << "Circuit::saveChanges ---------------------------"<<m_undoIndex<<m_undoStack.size()<<endl;
 }
 
-void CanvasBase::saveItemChange( QString component, QString property, QString undoVal )
+void CanvasBase::saveItemChange( int component, QString property, QString undoVal )
 {
     clearCircChanges();
     addItemChange( component, property, undoVal );
     saveChanges();
 }
 
-void CanvasBase::addItemChange( QString component, QString property, QString undoVal )
+void CanvasBase::addItemChange( int component, QString property, QString undoVal )
 {
     if( m_loading || m_deleting ) return;                      /// qDebug() << "Circuit::addCompChange      " << component << property;// << value;
     itemChange cChange{ component, property, undoVal, "" };

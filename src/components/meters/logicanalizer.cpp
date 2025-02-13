@@ -28,10 +28,10 @@ listItem_t LAnalizer::registerItem(){
         "Meters",
         "lanalizer.png",
         "LAnalizer",
-        [](QString id){ return (CompBase*)new LAnalizer( id ); } };
+        [](int id){ return (CompBase*)new LAnalizer( id ); } };
 }
 
-LAnalizer::LAnalizer( QString id )
+LAnalizer::LAnalizer( int id )
          : PlotBase( id )
 {
     m_numChannels = 8;

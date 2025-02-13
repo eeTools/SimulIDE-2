@@ -24,11 +24,11 @@ listItem_t mDial::registerItem(){
         "Controls",
         "dial.png",
         "mDial",
-        [](QString id){ return (CompBase*)new mDial( id ); } };
+        [](int id){ return (CompBase*)new mDial( id ); } };
 }
 
-mDial::mDial( QString name )
-     : Module( name )
+mDial::mDial( int id )
+     : Module( id )
      , m_outSignal("output", hookOutputInt )
 {
     m_outSignal.setIntData( &m_output );

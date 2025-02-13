@@ -27,12 +27,12 @@ listItem_t Probe::registerItem(){
         "Meters",
         "probe.png",
         "Probe",
-        [](QString id){ return (CompBase*)new Probe( id ); } };
+        [](int id){ return (CompBase*)new Probe( id ); } };
 }
 
-Probe::Probe( QString id )
+Probe::Probe( int id )
      : Component( id )
-     , Element( id )
+     , Element()
 {
     setZValue( 200 );
     m_area = QRect(-12,-8, 20, 16 );

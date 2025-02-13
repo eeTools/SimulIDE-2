@@ -8,18 +8,17 @@
 #include "propdialog.h"
 #include "comproperty.h"
 
-#include "stringprop.h"
+#include "intprop.h"
 
-CompBase::CompBase( QString id )
+CompBase::CompBase( int id )
 {
-    m_id   = id;
-    //m_type = type;
+    m_id = id;
 
     m_propDialog = nullptr;
 
     addPropGroup( { "CompBase", {
         //new StrProp <Component>("itemtype","","", this, &Component::itemType,  &Component::setItemType ),
-        new StrProp <CompBase>("uid","","", this, &CompBase::getUid, &CompBase::setUid ),
+        new IntProp <CompBase>("uid","","", this, &CompBase::getUid, &CompBase::setUid ),
     }, groupHidden | groupNoCopy } );
 }
 CompBase::~CompBase()

@@ -6,8 +6,8 @@
 #include "inductance.h"
 #include "node.h"
 
-Inductance::Inductance( QString id )
-          : Resistance( id )
+Inductance::Inductance()
+          : Resistance()
 {
 }
 Inductance::~Inductance(){}

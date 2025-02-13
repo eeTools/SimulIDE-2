@@ -14,7 +14,7 @@
 #include "doubleprop.h"
 #include "pointprop.h"
 
-Node::Node( QString id )
+Node::Node( int id )
     : Component( id )
 {
     setZValue( 101 );
@@ -100,7 +100,7 @@ void Node::joinConns( int c0, int c1 )
 
     if( pin1->conPin() != pin0 )
     {
-        Wire* wire = new Wire( "Wire-"+Circuit::self()->newWireId() , pin0->conPin() );
+        Wire* wire = new Wire( Circuit::self()->newWireId() , pin0->conPin() );
         Circuit::self()->wireList()->append( wire );
 
         QStringList list0 = wire0->pointList();

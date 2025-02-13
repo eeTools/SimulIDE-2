@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef INDUCTOR_H
-#define INDUCTOR_H
+#pragma once
 
 #include "component.h"
 #include "inductance.h"
@@ -12,7 +11,7 @@
 class Inductor : public Component, public Inductance
 {
     public:
-        Inductor( QString id );
+        Inductor( int id );
         ~Inductor();
 
  static listItem_t registerItem();
@@ -22,5 +21,3 @@ class Inductor : public Component, public Inductance
     protected:
 
 };
-
-#endif

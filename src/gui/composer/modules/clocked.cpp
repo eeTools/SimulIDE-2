@@ -9,8 +9,8 @@
 
 QStringList Clocked::m_triggerStr = {"None","Clock","Enable"};
 
-Clocked::Clocked( QString name )
-       : Module( name )
+Clocked::Clocked( int id )
+       : Module( id )
        , m_clockSlot("clock", hookInputBit )
 {
     m_clock   = false;

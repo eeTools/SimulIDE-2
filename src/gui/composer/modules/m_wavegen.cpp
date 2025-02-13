@@ -11,11 +11,11 @@ listItem_t WaveGen::registerItem(){
         "Other",
         "wavegen.png",
         "WaveGen",
-        [](QString id){ return (CompBase*)new WaveGen( id ); } };
+        [](int id){ return (CompBase*)new WaveGen( id ); } };
 }
 
-WaveGen::WaveGen( QString name )
-       : Module( name )
+WaveGen::WaveGen( int id )
+       : Module( id )
        , m_outSignal("output", hookOutputDoub )
 {
     m_waveType = SINE;

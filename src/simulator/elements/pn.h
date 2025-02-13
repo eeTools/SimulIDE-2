@@ -11,7 +11,7 @@
 class PN : public Resistance
 {
     public:
-        PN( QString id );
+        PN();
         ~PN();
 
         virtual void stampAdmit() override;

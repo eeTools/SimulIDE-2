@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef CAPACITOR_H
-#define CAPACITOR_H
+#pragma once
 
 #include "component.h"
 #include "capacitance.h"
@@ -12,7 +11,7 @@
 class Capacitor : public Component, public Capacitance
 {
     public:
-        Capacitor( QString id );
+        Capacitor( int id );
         ~Capacitor();
 
  static listItem_t registerItem();
@@ -21,5 +20,3 @@ class Capacitor : public Component, public Capacitance
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 };
-
-#endif

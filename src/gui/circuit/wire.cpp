@@ -13,7 +13,7 @@
 #include "pin.h"
 #include "utils.h"
 
-Wire::Wire( QString id, PinBase* startpin, PinBase* endpin )
+Wire::Wire( int id, PinBase* startpin, PinBase* endpin )
     : WireBase( id, startpin )
 {
     m_type = "Wire";
@@ -345,12 +345,10 @@ void Wire::splitCon( int index, PinBase* pin0, PinBase* pin2 )
 {
     if( !m_endPin ) return;
 
-    QString id = "Wire-"+Circuit::self()->newWireId();
-    Wire* wire0 = new Wire( id, m_startPin );
+    Wire* wire0 = new Wire( Circuit::self()->newWireId(), m_startPin );
     Circuit::self()->wireList()->append( wire0 );
 
-    id = "Wire-"+Circuit::self()->newWireId();
-    Wire* wire1 = new Wire( id, pin2 );
+    Wire* wire1 = new Wire( Circuit::self()->newWireId(), pin2 );
     Circuit::self()->wireList()->append( wire1 );
 
     disconnectLines( index-1, index );

@@ -8,7 +8,7 @@
 
 #include "stringprop.h"
 
-WireBase::WireBase( QString id, PinBase* startpin )
+WireBase::WireBase( int id, PinBase* startpin )
         : CompBase( id )
 {
     m_startPin  = startpin;

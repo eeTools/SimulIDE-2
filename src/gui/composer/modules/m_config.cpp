@@ -19,11 +19,11 @@ listItem_t mConfig::registerItem(){
         "Other",
         "config.png",
         "mConfig",
-        [](QString id){ return (CompBase*)new mConfig( id ); } };
+        [](int id){ return (CompBase*)new mConfig( id ); } };
 }
 
-mConfig::mConfig( QString name )
-       : Module( name )
+mConfig::mConfig( int id )
+       : Module( id )
        , m_inputSlot("input", hookInputInt )
 {
     m_slots.emplace_back( &m_inputSlot );

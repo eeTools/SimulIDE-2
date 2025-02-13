@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef LANALIZER_H
-#define LANALIZER_H
+#pragma once
 
 #include "plotbase.h"
 
@@ -20,7 +19,7 @@ struct sample_t{
 class LAnalizer : public PlotBase
 {
     public:
-        LAnalizer( QString id );
+        LAnalizer( int id );
         ~LAnalizer();
 
  static listItem_t registerItem();
@@ -77,5 +76,3 @@ class LAnalizer : public PlotBase
         LaWidget*  m_laWidget;
         DataLaWidget* m_dataWidget;
 };
-
-#endif

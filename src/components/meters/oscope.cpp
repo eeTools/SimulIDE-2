@@ -27,10 +27,10 @@ listItem_t Oscope::registerItem(){
         "Meters",
         "oscope.png",
         "Oscope",
-        [](QString id){ return (CompBase*)new Oscope( id ); } };
+        [](int id){ return (CompBase*)new Oscope( id ); } };
 }
 
-Oscope::Oscope( QString id )
+Oscope::Oscope( int id )
       : PlotBase( id )
 {
     m_numChannels = 4;

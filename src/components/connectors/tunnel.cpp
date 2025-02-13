@@ -27,10 +27,10 @@ listItem_t Tunnel::registerItem(){
         "Connectors",
         "tunnel.png",
         "Tunnel",
-        [](QString id){ return (CompBase*)new Tunnel( id ); } };
+        [](int id){ return (CompBase*)new Tunnel( id ); } };
 }
 
-Tunnel::Tunnel( QString id )
+Tunnel::Tunnel( int id )
       : Component( id )
 {
     m_size = 20;

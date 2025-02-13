@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef WAVEGEN_H
-#define WAVEGEN_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -12,7 +11,7 @@
 class WaveGen : public Module
 {
     public:
-        WaveGen( QString name );
+        WaveGen( int id );
         ~WaveGen();
 
         enum waveType{
@@ -38,4 +37,3 @@ class WaveGen : public Module
         waveType m_waveType;
         QStringList m_waveList;
 };
-#endif

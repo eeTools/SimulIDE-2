@@ -21,12 +21,12 @@ listItem_t Mosfet::registerItem(){
         "Transistors",
         "mosfet.png",
         "Mosfet",
-        [](QString id){ return (CompBase*)new Mosfet( id ); } };
+        [](int id){ return (CompBase*)new Mosfet( id ); } };
 }
 
-Mosfet::Mosfet( QString id )
+Mosfet::Mosfet( int id )
       : Component( id )
-      , Fet( id )
+      , Fet()
 {
     m_area = QRectF(-12, -14, 28, 28 );
     setLabelPos( 18, 0, 0 );

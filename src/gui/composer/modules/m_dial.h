@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MDIAL_H
-#define MDIAL_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -15,7 +14,7 @@ class QGraphicsProxyWidget;
 class mDial : public Module
 {
     public:
-        mDial( QString name );
+        mDial( int id );
         ~mDial();
 
  static listItem_t registerItem();
@@ -72,4 +71,3 @@ class mDial : public Module
         DialWidget* m_dialW;
         QGraphicsProxyWidget* m_proxy;
 };
-#endif

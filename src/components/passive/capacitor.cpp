@@ -18,13 +18,13 @@ listItem_t Capacitor::registerItem(){
         "Reactive",
         "capacitor.png",
         "Capacitor",
-        [](QString id){ return (CompBase*)new Capacitor( id ); } };
+        [](int id){ return (CompBase*)new Capacitor( id ); } };
 
 };
 
-Capacitor::Capacitor( QString id )
+Capacitor::Capacitor( int id )
          : Component( id )
-         , Capacitance( id )
+         , Capacitance()
 {
     m_area = QRectF(-10,-8, 20, 16 );
 

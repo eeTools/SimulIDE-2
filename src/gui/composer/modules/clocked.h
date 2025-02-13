@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef ECLOCKEDDEVICE_H
-#define ECLOCKEDDEVICE_H
+#pragma once
 
 #include "module.h"
 #include "modsignal.h"
@@ -28,7 +27,7 @@ class IoPin;
 class Clocked : public Module
 {
     public:
-        Clocked( QString name );
+        Clocked( int id );
         ~Clocked();
 
         /// virtual void stamp() override;
@@ -63,5 +62,3 @@ class Clocked : public Module
 
  static QStringList m_triggerStr;
 };
-
-#endif

@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef OSCOPE_H
-#define OSCOPE_H
+#pragma once
 
 #include "plotbase.h"
 
@@ -15,7 +14,7 @@ class DataWidget;
 class Oscope : public PlotBase
 {
     public:
-        Oscope( QString id );
+        Oscope( int id );
         ~Oscope();
 
  static listItem_t registerItem();
@@ -78,5 +77,3 @@ class Oscope : public PlotBase
         OscWidget*  m_oscWidget;
         DataWidget* m_dataWidget;
 };
-
-#endif

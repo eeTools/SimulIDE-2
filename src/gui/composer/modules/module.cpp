@@ -10,7 +10,7 @@
 //#include "m_delay.h"
 //#include "iopin.h"
 
-Module::Module( QString id )
+Module::Module( int id )
       : CompBase( id )
 {
     //m_name = name;

@@ -17,11 +17,11 @@ listItem_t IntToBit::registerItem(){
         "Converters",
         "gate.png",
         "IntToBit",
-        [](QString id){ return (CompBase*)new IntToBit( id ); } };
+        [](int id){ return (CompBase*)new IntToBit( id ); } };
 }
 
-IntToBit::IntToBit( QString name )
-        : Module( name )
+IntToBit::IntToBit( int id )
+        : Module( id )
         , m_inputSlot("input", hookInputInt )
 {
     m_slots.emplace_back( &m_inputSlot );

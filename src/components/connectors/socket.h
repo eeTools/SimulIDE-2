@@ -3,15 +3,14 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#pragma once
 
 #include "connbase.h"
 
 class Socket : public ConnBase
 {
     public:
-        Socket( QString id );
+        Socket( int id );
         ~Socket();
 
  static listItem_t registerItem();
@@ -23,5 +22,3 @@ class Socket : public ConnBase
     private:
         void updatePixmap() override;
 };
-
-#endif

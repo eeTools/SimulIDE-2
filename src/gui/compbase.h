@@ -35,7 +35,7 @@ struct listItem_t{
     QString category;
     QString icon;
     QString type;
-    CompBase* (*construct)(QString);
+    CompBase* (*construct)(int);
 };
 
 class PropDialog;
@@ -45,7 +45,7 @@ class CompBase
     friend class PropDialog;
 
     public:
-        CompBase( QString id );
+        CompBase( int id );
         virtual ~CompBase();
 
         void addPropGroup( propGroup pg, bool list=true );
@@ -63,18 +63,18 @@ class CompBase
 
         virtual QString toString();
 
-        QString getUid() { return m_id; }
-        void setUid( QString uid ) { m_id = uid; }
+        int getUid() { return m_id; }
+        void setUid( int uid ) { m_id = uid; }
 
         QString itemType()  { return m_type; }
         void setItemType( QString t ) { m_type = t; }
 
-        virtual bool isHidden() { return false;}
+        virtual bool isHidden() { return false; }
 
         virtual void setup(){;} // Called after all properties are set
 
     protected:
-        QString m_id;
+        int m_id;
         QString m_type;
         QString m_help;
 

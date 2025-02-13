@@ -38,12 +38,14 @@ void Linker::setLinks( QString links )
 void Linker::createLinks( QList<Component*>* compList )
 {
     QStringList components = m_linkedStr.split(",");
-    for( QString uid : components )
+    for( QString uidStr : components )
     {
-        if( uid.isEmpty() ) continue;
+        if( uidStr.isEmpty() ) continue;
+
+        int uid = uidStr.toInt();
 
         for( Component* comp : *compList )
-            if( comp->getUid().contains( uid ) )
+            if( comp->getUid() == uid )
             {
                 if( comp->setLinkedTo( this ) ) m_linkedComp.append( comp );
                 break;

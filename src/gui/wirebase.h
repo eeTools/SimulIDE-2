@@ -18,7 +18,7 @@ class PinBase;
 class WireBase : public CompBase
 {
     public:
-        WireBase( QString id, PinBase* startpin );
+        WireBase( int id, PinBase* startpin );
         ~WireBase();
 
         void dummySetter( QString ) {;}

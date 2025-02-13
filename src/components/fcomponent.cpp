@@ -12,8 +12,9 @@
 #include <QMap>
 
 #include "fcomponent.h"
+#include "fmodule.h"
 #include "canvasbase.h"
-#include "module.h"
+//#include "module.h"
 #include "m_pinport.h"
 #include "iopin.h"
 #include "mainwindow.h"
@@ -34,15 +35,15 @@ QString fComponent::getShapes() { return m_shapes.join(",")+";"
                                  +tr("None")+","+tr("Rectangle")+","+tr("Triangle")+","+tr("Diamond")+","+tr("Ellipse")+","
                                  +tr("And")+","+tr("Or")+","+tr("Xor");}
 
-fComponent::fComponent( QString type, QString id, QGraphicsScene* canvas )
+fComponent::fComponent( QString type, int id, QGraphicsScene* canvas )
           : Component( id )
-          , Element( id )
+          , Element()
 {
     m_canvas = canvas;
     m_type   = type;
     m_width  = 4;
     m_height = 4;
-    m_minWidth = 4;
+    m_minWidth  = 4;
     m_minHeight = 4;
     m_startHalf = false;
     m_compChanged = false;
@@ -78,7 +79,7 @@ fComponent::~fComponent(){}
 
 void fComponent::initialize()
 {
-    for( Module* module : m_modules.values() ) module->initModule();
+    for( fModule* module : m_modules.values() ) module->initModule();
 }
 
 void fComponent::voltChanged()
@@ -86,17 +87,17 @@ void fComponent::voltChanged()
     while( m_compChanged )
     {
         m_compChanged = false;
-        for( Module* module : m_activeMod )  /// TODO: optimize list
+        for( fModule* module : m_activeMod )  /// TODO: optimize list
             module->runStep();
     }
 }
 
 void fComponent::setup() // Called from Circuit
 {
-    struct prop_t{
+    /*struct prop_t{
         QString name;
         QString value;
-    };
+    };*/
 
     QString filePath = ComponentList::self()->getDataFile( m_type );
     if( filePath.isEmpty() )
@@ -111,7 +112,7 @@ void fComponent::setup() // Called from Circuit
     QStringList docLines = doc.split("\n");
     docLines.removeAll("");
 
-    Module* module;
+    //Module* module;
 
     for( QString line : docLines )
     {
@@ -136,39 +137,46 @@ void fComponent::setup() // Called from Circuit
         if( type == "FuncWire" )
         {
             QString signalStr;
-            Module* signalModule = nullptr;
-            Module* slotModule   = nullptr;
-            ModSlot* slot = nullptr;
+            fModule* signalModule = nullptr;
+            fModule* slotModule   = nullptr;
+            //ModSlot* slot = nullptr;
 
             for( prop_t prop : properties )
             {
                 if( prop.name == "pin0" )
                 {
                     QStringList words = prop.value.split("@");
-                    signalModule = m_modules.value( words.takeLast() );
+                    QString modUid = words.takeLast() ;
+                    signalModule = m_modules.value( modUid );
                     signalStr = words.join("@").remove("Signal");
+ qDebug() << "fComponent::setup  signalStr " << signalStr ;
                 }
                 else if( prop.name == "pin1" )
                 {
                     QStringList words = prop.value.split("@");
-                    slotModule = m_modules.value( words.takeLast() );
+                    QString modUid = words.takeLast() ;
+                    slotModule = m_modules.value( modUid );
                     QString slotStr = words.join("@").remove("Slot");
-                    slot = slotModule->getSlot( slotStr );
-
+                    //slot = slotModule->getSlot( slotStr );
+ qDebug() << "fComponent::setup  slotStr " << slotStr ;
                     if( signalStr.isEmpty() )
                     {
                         qDebug() << "fComponent::setup Error creating Connection " << uid;
                     }
-                    else if( slot ) // Create connetion Signal->Slot
+                    else if( slotModule) // Create connetion Signal->Slot
                     {
-                        signalModule->connect( signalStr, slot, &slotModule->m_modChanged, &m_compChanged );
+                        int slotId = slotStr.toInt();
+                        slotModule->connectSignal( signalModule, slotId );
+                        //signalModule->connect( signalStr, slot, &slotModule->m_modChanged, &m_compChanged );
                     }
                     else           // Must be a property
                     {
+                        /*
                         ComProperty* signalPrp = myProperties.value( signalStr );
                         ComProperty* slotPrp   = slotModule->getProperty( slotStr );
                         if( signalPrp && slotPrp ) signalPrp->addCallBack( slotPrp );
                         else                       qDebug() << "fComponent::setup Error creating Property Connection " << uid << signalStr << slotStr;
+                        */
                     }
                 }
             }
@@ -195,18 +203,18 @@ void fComponent::setup() // Called from Circuit
         }
         else   // Create Module
         {
-            /// Module* module = BlockList::self()->createModule( type, uid, properties )
+            fModule* fmodule = BlockList::self()->createModule( type, uid, this, properties );
             ///
-            module = (Module*)BlockList::self()->createItem( type, uid );
-            if( module ){
+            //module = (Module*)BlockList::self()->createItem( type, uid );
+            /*if( module ){
                 module->setComponent( this );
-                m_modules.insert( uid, module );
-                m_activeMod.append( module );
+                m_modules.insert( uid, fmodule );
+                m_activeMod.append( fmodule );
 
                 for( prop_t prop : properties )
                     module->setPropStr( prop.name, prop.value );
             }
-            else qDebug() << "fComponent::setup Error creating Module" << uid;
+            else qDebug() << "fComponent::setup Error creating Module" << uid;*/
         }
     }
 
@@ -374,8 +382,8 @@ void fComponent::updatePins()
         for( IoPin* pin : ioPort->getIoPins() )
         {
             m_pin << pin;
-            if( m_invertedPins.contains( pin->pinId() ) )
-                pin->setInverted( true );
+            //if( m_invertedPins.contains( pin->pinId() ) )
+            //    pin->setInverted( true );
         }
     }
 }
@@ -396,7 +404,7 @@ void fComponent::setInvertedPins( QString pins )
 
 void fComponent::remove()
 {
-    for( Module* module : m_modules )
+    for( fModule* module : m_modules )
     {
         module->remove();
         delete module;

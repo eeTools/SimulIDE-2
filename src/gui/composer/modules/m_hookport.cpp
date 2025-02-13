@@ -16,11 +16,11 @@ listItem_t mHookPort::registerItem(){
         "Ports",
         "hookport.png",
         "mHookPort",
-        [](QString id){ return (CompBase*)new mHookPort( id ); } };
+        [](int id){ return (CompBase*)new mHookPort( id ); } };
 }
 
-mHookPort::mHookPort( QString name )
-         : PortModule( name )
+mHookPort::mHookPort( int id )
+         : PortModule( id )
 {
     m_portType = portHook;
 }

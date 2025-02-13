@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef BJT_H
-#define BJT_H
+#pragma once
 
 #include "tra.h"
 #include "component.h"
@@ -12,7 +11,7 @@
 class BJT : public Component, public Bjt
 {
     public:
-        BJT( QString id );
+        BJT( int id );
         ~BJT();
 
  static listItem_t registerItem();
@@ -21,5 +20,3 @@ class BJT : public Component, public Bjt
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
 };
-
-#endif

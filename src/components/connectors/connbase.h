@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef CONNBASE_H
-#define CONNBASE_H
+#pragma once
 
 #include "component.h"
 #include "element.h"
@@ -13,7 +12,7 @@
 class ConnBase : public Component, public Element
 {
     public:
-        ConnBase( QString id );
+        ConnBase( int id );
         ~ConnBase();
 
         int  size() { return m_size; }
@@ -42,5 +41,3 @@ class ConnBase : public Component, public Element
 
         QPixmap m_pinPixmap;
 };
-
-#endif

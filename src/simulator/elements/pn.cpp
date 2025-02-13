@@ -6,8 +6,8 @@
 #include "pn.h"
 #include "node.h"
 
-PN::PN( QString id )
-     : Resistance( id )
+PN::PN()
+  : Resistance()
 {
 
 }

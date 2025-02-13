@@ -16,10 +16,10 @@ listItem_t mProperty::registerItem(){
         "Other",
         "property.png",
         "Property",
-        [](QString id){ return (CompBase*)new mProperty( id ); } };
+        [](int id){ return (CompBase*)new mProperty( id ); } };
 }
 
-mProperty::mProperty( QString id )
+mProperty::mProperty( int id )
          : Module( id )
 {
     m_propName = "Value"+id;

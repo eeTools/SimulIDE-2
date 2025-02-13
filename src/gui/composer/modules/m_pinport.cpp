@@ -22,12 +22,12 @@ listItem_t mPinPort::registerItem(){
         "Ports",
         "pinport.png",
         "IoPort",
-        [](QString id){ return (CompBase*)new mPinPort( id ); } };
+        [](int id){ return (CompBase*)new mPinPort( id ); } };
 }
 
-mPinPort::mPinPort( QString name )
-        : PortModule( name )
-        , IoPort( name )
+mPinPort::mPinPort( int id )
+        : PortModule( id )
+        , IoPort( "" )
 {
     m_portType = portIO;
 }

@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef MBUTTON_H
-#define MBUTTON_H
+#pragma once
 
 #include "module.h"
 #include "updatable.h"
@@ -16,7 +15,7 @@ class QGraphicsProxyWidget;
 class mButton : public Module, public Updatable
 {
     public:
-        mButton( QString name );
+        mButton( int id );
         ~mButton();
 
  static listItem_t registerItem();
@@ -51,4 +50,3 @@ class mButton : public Module, public Updatable
         CustomButton* m_button;
         QGraphicsProxyWidget* m_proxy;
 };
-#endif

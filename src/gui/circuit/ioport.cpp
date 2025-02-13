@@ -11,7 +11,7 @@
 #include "simulator.h"
 
 IoPort::IoPort( QString name )
-      : Element( name )
+      : Element()
 {
     m_name = name;
     m_shortName = "P"+ name.right(1);
@@ -126,7 +126,7 @@ uint32_t IoPort::getInpState()
 
 void IoPort::createPins( Component* comp, QString pins, uint32_t pinMask )
 {
-    QString compId = comp->getUid();
+    QString compId = QString::number(comp->getUid());
     m_numPins = pins.toUInt(0,0);
     if( m_numPins )
     {

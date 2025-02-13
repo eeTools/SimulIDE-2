@@ -25,11 +25,11 @@ listItem_t mButton::registerItem(){
         "Controls",
         "button.png",
         "mButton",
-        [](QString id){ return (CompBase*)new mButton( id ); } };
+        [](int id){ return (CompBase*)new mButton( id ); } };
 }
 
-mButton::mButton( QString name )
-       : Module( name )
+mButton::mButton( int id )
+       : Module( id )
        , m_outSignal("output", hookOutputInt )
 {
     m_outSignal.setIntData( &m_output );

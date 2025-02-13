@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef TUNNEL_H
-#define TUNNEL_H
+#pragma once
 
 #include "component.h"
 
@@ -13,7 +12,7 @@ class Pin;
 class Tunnel : public Component
 {
     public:
-        Tunnel( QString id );
+        Tunnel( int id );
         ~Tunnel();
 
  static listItem_t registerItem();
@@ -71,5 +70,3 @@ class Tunnel : public Component
 
  static QHash<QString, QList<Tunnel*>*> m_tunnels;
 };
-
-#endif

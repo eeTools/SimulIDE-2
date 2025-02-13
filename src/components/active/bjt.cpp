@@ -22,12 +22,12 @@ listItem_t BJT::registerItem(){
         "Transistors",
         "bjt.png",
         "BJT",
-        [](QString id){ return (CompBase*)new BJT( id ); } };
+        [](int id){ return (CompBase*)new BJT( id ); } };
 }
 
-BJT::BJT( QString id )
+BJT::BJT( int id )
    : Component( id )
-   , Bjt( id )
+   , Bjt()
 {
     m_area =  QRectF(-12,-14, 28, 28 );
     setLabelPos( 18, 0, 0 );

@@ -19,7 +19,7 @@
 #include "componentlist.h"
 #include "mainwindow.h"
 #include "component.h"
-#include "subcircuit.h"
+///#include "subcircuit.h"
 #include "utils.h"
 /// #include "e-diode.h"
 #include "linker.h"

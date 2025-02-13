@@ -9,7 +9,7 @@
 #include "component.h"
 #include "element.h"
 
-class Module;
+class fModule;
 class PortModule;
 class CanvasBase;
 class QGraphicsProxyWidget;
@@ -28,7 +28,7 @@ enum fShape_t{
 class fComponent : public Component, public Element
 {
     public:
-        fComponent( QString type, QString id, QGraphicsScene* canvas );
+        fComponent( QString type, int id, QGraphicsScene* canvas );
         ~fComponent();
 
         void setup() override;
@@ -86,8 +86,8 @@ class fComponent : public Component, public Element
         QString m_shapeStr;
  static QStringList m_shapes;
 
-        QMap<QString, Module*> m_modules;
-        QList<Module*> m_activeMod;
+        QMap<QString, fModule*> m_modules;
+        QList<fModule*> m_activeMod;
 
         QList<PortModule*> m_ports;
 

@@ -6,7 +6,7 @@
 #include "pinsource.h"
 
 PinSource::PinSource( QString id, int* node )
-         : Element( id )
+         : Element()
 {
     m_node = node;
     m_admitance = -1;

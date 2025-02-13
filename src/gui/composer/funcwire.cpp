@@ -15,7 +15,7 @@
 
 #define tr(str) simulideTr("FuncWire",str)
 
-FuncWire::FuncWire( QString id, PinBase* startpin, PinBase* endpin )
+FuncWire::FuncWire( int id, PinBase* startpin, PinBase* endpin )
         : WireBase( id, startpin )
         , QGraphicsItem()
 {
