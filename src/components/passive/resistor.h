@@ -8,7 +8,7 @@
 #include "component.h"
 #include "resistance.h"
 
-class Resistor : public Component, public Resistance
+class Resistor : public Component
 {
     public:
         Resistor( int id );
@@ -18,5 +18,14 @@ class Resistor : public Component, public Resistance
 
         void initialize() override;
 
+        void setResistance( double r );
+
+        void setValue( const uint8_t idInt, const value_t &val ) override;
+
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
+
+        uint8_t m_resistProp;
+        double  m_resistVal;
+
+        Resistance m_resistance;
 };

@@ -23,10 +23,7 @@
 #include "propdialog.h"
 #include "utils.h"
 
-#include "intfprop.h"
-#include "intprop.h"
-#include "boolprop.h"
-#include "stringprop.h"
+//#include "intfprop.h"
 
 #define tr(str) simulideTr("fComponent",str)
 
@@ -51,29 +48,16 @@ fComponent::fComponent( QString type, int id, QGraphicsScene* canvas )
 
     m_area = QRect(-m_width*8/2,-m_height*8/2, m_width*8, m_height*8 );
 
-    addPropGroup( { tr("Package"),
+    /*addPropGroup( { tr("Package"),
     {
-        new BoolProp<fComponent>("starthalf", tr("Start at half Cell"),""
-                                , this, &fComponent::startHalf, &fComponent::setStartHalf ),
-
-        new IntProp<fComponent>("width", tr("Width"), ""
-                               , this, &fComponent::width, &fComponent::setWidth, 0 ),
-
-        new IntProp<fComponent>("height", tr("Height"), ""
-                               , this, &fComponent::height, &fComponent::setHeight, 0 ),
-
-        new StrProp<fComponent>("shape", tr("Shape"), fComponent::getShapes()
-                               , this, &fComponent::shapeStr, &fComponent::setShapeStr, 0, "enum" ),
-
-        new StrProp<fComponent>("color", tr("Color"), ""
-                               , this, &fComponent::colorStr, &fComponent::setColorStr, 0 ),
-
-        new StrProp<fComponent>("background", tr("Background image"), ""
-                               , this, &fComponent::background, &fComponent::setBackground, 0 ),
-
-        new StrProp<fComponent>("invertedpins","",""
-                               , this, &fComponent::invertedPins, &fComponent::setInvertedPins, propHidden ),
-    }, groupPkg } );
+        new BoolProp("starthalf", tr("Start at half Cell"), this, { nullptr,"", P_BOOL  , 0, 0 } ),
+        new IntProp("width"     , tr("Width")             , this, { nullptr,"", P_INT   , 0, 0 } ),
+        new IntProp("height"    , tr("Height")            , this, { nullptr,"", P_INT   , 0, 0 } ),
+        new StrProp("shape"     , tr("Shape")             , this, { nullptr,"", P_ENUM  , 0, 0 } ),
+        new StrProp("color"     , tr("Color")             , this, { nullptr,"", P_STRING, 0, 0 } ),
+        new StrProp("background", tr("Background image")  , this, { nullptr,"", P_STRING, 0, 0 } ),
+        new StrProp("invertedpins",""                     , this, { nullptr,"", P_STRING, propHidden, 0 } ),
+    }, groupPkg } );*/
 }
 fComponent::~fComponent(){}
 
@@ -197,9 +181,9 @@ void fComponent::setup() // Called from Circuit
                 if( prop.name == "name"   ) { name = prop.value; id = name.toLower(); }
                 if( prop.name == "propval") valStr = prop.value;
             }
-            ComProperty* prop = new IntPropF( id, name, "", this, 0 );
-            prop->setValStr( valStr );
-            myProperties.insert( id, prop );
+            ///ComProperty* prop = new IntPropF( id, name, this, { nullptr,"V", P_INT, 0, 0 } );
+            ///prop->setValStr( valStr );
+            ///myProperties.insert( id, prop );
         }
         else   // Create Module
         {
@@ -220,8 +204,8 @@ void fComponent::setup() // Called from Circuit
 
     if( myProperties.size() )
     {
-        this->addPropGroup( { "Main", {}, 0 } );
-        for( ComProperty* prop : myProperties.values() ) addProperty( "Main", prop );
+        ///this->addPropGroup( { "Main", {}, 0 } );
+        ///for( ComProperty* prop : myProperties.values() ) addProperty( "Main", prop );
     }
 }
 

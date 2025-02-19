@@ -11,11 +11,6 @@
 #include "fcomponent.h"
 #include "dialwidget.h"
 
-#include "boolprop.h"
-#include "intprop.h"
-#include "doubleprop.h"
-#include "pointprop.h"
-
 #define tr(str) simulideTr("mDial",str)
 
 listItem_t mDial::registerItem(){
@@ -43,32 +38,20 @@ mDial::mDial( int id )
 
     m_dialW = nullptr;
 
-    addPropGroup( { tr("Main"),
+    /*addPropGroup( { tr("Main"),
     {
-        new IntProp<mDial>("Min_Val", tr("Minimum Value"), ""
-                         , this, &mDial::minVal, &mDial::setMinVal ),
-
-        new IntProp<mDial>("Max_Val", tr("Maximum Value"), ""
-                         , this, &mDial::maxVal, &mDial::setMaxVal ),
-
-        new IntProp<mDial>("Steps", tr("Steps"), ""
-                         , this, &mDial::steps, &mDial::setSteps )
+        new IntProp("Min_Val", tr("Minimum Value"), "", this ),
+        new IntProp("Max_Val", tr("Maximum Value"), "", this ),
+        new IntProp("Steps", tr("Steps"), "", this )
     },0 } );
 
     addPropGroup( { "Dial",
     {
-        new PointProp<mDial>("pos", tr("Position"),""
-                            , this, &mDial::position, &mDial::setPosition ),
-
-        new DoubProp<mDial>("angle", tr("Angle") ,""
-                           , this, &mDial::angle , &mDial::setAngle ),
-
-        new DoubProp<mDial>("scale", tr("Scale") ,""
-                           , this, &mDial::scale , &mDial::setScale ),
-
-        new BoolProp<mDial>("slider", tr("Slider"),""
-                           , this, &mDial::slider, &mDial::setSlider )
-    },0} );
+        new PointProp("pos", tr("Position"),"", this ),
+        new DoubProp("angle", tr("Angle") ,"", this ),
+        new DoubProp("scale", tr("Scale") ,"", this ),
+        new BoolProp("slider", tr("Slider"),"", this )
+    },0} );*/
 }
 mDial::~mDial(){}
 

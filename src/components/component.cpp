@@ -17,12 +17,6 @@
 #include "propdialog.h"
 #include "linker.h"
 
-#include "doubleprop.h"
-#include "boolprop.h"
-#include "intprop.h"
-#include "stringprop.h"
-#include "pointprop.h"
-
 #define tr(str) simulideTr("Component",str)
 
 int  Component::m_error = 0;
@@ -43,7 +37,7 @@ Component::Component( int id )
     //m_group = nullptr;
 
     m_showId     = false;
-    m_showVal    = false;
+    //m_showVal    = false;
     m_moving     = false;
     m_isMainComp = false;
     m_hidden     = false;
@@ -53,7 +47,7 @@ Component::Component( int id )
     m_isLinker   = false;
     m_linkedTo   = nullptr;
     m_background = "";
-    m_showProperty = "";
+    //m_showProperty = "";
     m_linkNumber = -1;
 
     m_boardPos = QPointF(-1e6,-1e6 );
@@ -94,21 +88,12 @@ Component::Component( int id )
 new BoolProp<Component>("mainComp","","", this, &Component::isMainComp,&Component::setMainComp ),// Related to Subcircuit:
     }, groupHidden | groupNoCopy } );*/
 
-    addPropGroup( { "CompGraphic", {
-        new PointProp<Component>("pos","",""
-                                , this, &Component::position, &Component::setPosition ),
-
-        new DoubProp <Component>("rot","",""
-                                , this, &Component::getAngle, &Component::setAngle ),
-
-        new IntProp  <Component>("hflip","",""
-                                , this, &Component::hflip,    &Component::setHflip ),
-
-        new IntProp  <Component>("vflip","",""
-                                , this, &Component::vflip,    &Component::setVflip ),
-
-        new StrProp  <Component>("label","",""
-                                , this, &Component::idLabel,  &Component::setIdLabel ),
+    /*addPropGroup( { "CompGraphic", {
+        new PointProp("pos"  ,"", this, { nullptr,"", P_POINT , 0, 0 } ),
+        new DoubProp ("rot"  ,"", this, { nullptr,"", P_DOUBLE, 0, 0 } ),
+        new IntProp  ("hflip","", this, { nullptr,"", P_INT   , 0, 0 } ),
+        new IntProp  ("vflip","", this, { nullptr,"", P_INT   , 0, 0 } ),
+        new StrProp  ("label","", this, { nullptr,"", P_STRING, 0, 0 } ),*/
 
 
 /*new PointProp<Component>("id_pos"   ,"","", this, &Component::getIdPos,  &Component::setIdPos ),
@@ -117,8 +102,8 @@ new BoolProp <Component>("id_show"  ,"","", this, &Component::showId,    &Compon
 new PointProp<Component>("val_pos"  ,"","", this, &Component::getValPos, &Component::setValPos ),
 new IntProp  <Component>("val_rot"  ,"","", this, &Component::getValRot, &Component::setValRot ),
 new BoolProp <Component>("val_show" ,"","", this, &Component::showVal,   &Component::setShowVal ),
-new StrProp  <Component>("show_prop","","", this, &Component::showProp,  &Component::setShowProp ),*/
-    }, groupHidden | groupNoCopy } );
+new StrProp  <Component>("show_prop","","", this, &Component::showProp,  &Component::setShowProp ),
+    }, groupHidden | groupNoCopy } );*/
 
 /*    addPropGroup( { "Board", {                   // Board properties
 new PointProp<Component>("boardPos", "","", this, &Component::boardPos, &Component::setBoardPos ),
@@ -136,8 +121,8 @@ Component::~Component()
 
 void Component::setup()
 {
-    QString showP = showProp();
-    if( !showP.isEmpty() ) setValLabelText( getPropStr( showP ) );
+    //QString showP = showProp();
+    //if( !showP.isEmpty() ) setValLabelText( getPropStr( showP ) );
 }
 
 QVariant Component::itemChange( GraphicsItemChange change, const QVariant &value )
@@ -488,7 +473,7 @@ void Component::setLabelPos( float x, float y, int rot )
 void Component::updtLabelPos() { m_idLabel->updtLabelPos(); }
 
 void Component::setShowId( bool show ) { m_idLabel->setVisible( show ); m_showId = show; }
-void Component::setShowVal( bool show ) { m_valLabel->setVisible( show ); m_showVal = show; }
+//void Component::setShowVal( bool show ) { m_valLabel->setVisible( show ); m_showVal = show; }
 
 QPointF Component::getValPos() { return m_valLabel->getLabelPos(); }
 void Component::setValPos( QPointF p ) { m_valLabel->setLabelPos( p ); }
@@ -506,20 +491,20 @@ void Component::setValLabelPos( float x, float y, int rot )
 
 void Component::updtValLabelPos() { m_valLabel->updtLabelPos(); }
 
-void Component::setValLabelText( QString t ) { m_valLabel->setPlainText( t ); m_valLabel->updtLabelPos(); }
+void Component::setValLabelText( QString t ) { m_valLabel->setLabelText( t ); }
 QString Component::getValLabelText() { return m_valLabel->toPlainText(); }
 
-QString Component::showProp()
+/*QString Component::showProp()
 {
     if( m_showVal ) return m_showProperty;
     else            return "";
-}
+}*/
 
-void Component::setShowProp( QString prop )
+/*void Component::setShowProp( QString prop )
 {
     m_showProperty = prop;
     setShowVal( !(prop.isEmpty()) );
-}
+}*/
 
 void Component::moveSignal()
 {
@@ -556,7 +541,7 @@ void Component::setHidden( bool hid, bool hidArea, bool hidLabel )
         m_valLabel->setVisible( false );
         m_idLabel->setVisible( false );
     }else{
-        m_valLabel->setVisible( m_showVal );
+        m_valLabel->showLabel();
         m_idLabel->setVisible( m_showId );
     }
 }

@@ -7,9 +7,6 @@
 #include "pinbase.h"
 #include "fcomponent.h"
 
-#include "intprop.h"
-#include "stringprop.h"
-
 PortModule::PortModule( int id )
           : Module( id )
           , m_inputSlot("input" , hookInputInt )
@@ -27,23 +24,14 @@ PortModule::PortModule( int id )
 
     m_sideList = QStringList()<<"Right"<<"Left"<<"Top"<<"Bottom";
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new StrProp<PortModule>("side", "Side", m_sideList.join(",")
-                             , this, &PortModule::side, &PortModule::setSide,0,"enum" ),
-
-        new IntProp<PortModule>("pos", "Offset", ""
-                             , this, &PortModule::position, &PortModule::setPosition, 0 ),
-
-        new IntProp<PortModule>("dir", "Direction", ""
-                             , this, &PortModule::direction, &PortModule::setDirection, 0 ),
-
-        new IntProp<PortModule>("size", "Pins", ""
-                             , this, &PortModule::size, &PortModule::setSize, propSlot ),
-
-        new StrProp<PortModule>("pinnames", "Pin Names", ""
-                             , this, &PortModule::pinNames, &PortModule::setPinNames,0  ),
-    },0} );
+        new StrProp("side", "Side", m_sideList.join(","), this,0,"enum" ),
+        new IntProp("pos", "Offset", "", this, 0 ),
+        new IntProp("dir", "Direction", "", this, 0 ),
+        new IntProp("size", "Pins", "", this, propSlot ),
+        new StrProp("pinnames", "Pin Names", "", this,0  ),
+    },0} );*/
 }
 PortModule::~PortModule(){;}
 

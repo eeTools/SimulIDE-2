@@ -56,8 +56,8 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         void setLabelPos( float x, float y, int rot=0 );
         void updtLabelPos();
 
-        bool showVal() { return m_showVal; }
-        void setShowVal( bool show );
+        //bool showVal() { return m_showVal; }
+        //void setShowVal( bool show );
 
         QPointF getValPos();
         virtual void setValPos( QPointF p );
@@ -71,8 +71,8 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         void setValLabelText( QString t );
         QString getValLabelText();
 
-        QString showProp();
-        void setShowProp( QString prop );
+        //QString showProp();
+        //void setShowProp( QString prop );
 
         bool isGraphical() { return m_graphical; }
 
@@ -185,7 +185,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         bool m_isMainComp;
         bool m_graphical;
         bool m_showId;
-        bool m_showVal;
+        //bool m_showVal;
         bool m_moving;
         bool m_warning;
         bool m_crashed;
@@ -200,7 +200,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         int     m_circHflip;
         int     m_circVflip;
 
-        QString m_showProperty; // Property shown in val Label
+        //QString m_showProperty; // Property shown in val Label
 
         double  m_opCount;
         

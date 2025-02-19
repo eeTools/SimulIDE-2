@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PLOTSPINBOX_H
-#define PLOTSPINBOX_H
+#pragma once
 
 #include <QDoubleSpinBox>
 
@@ -16,6 +15,7 @@ class PlotSpinBox : public QDoubleSpinBox
 
         void setUnitStr( QString u ) { m_unit = u; }
 
+        QString textFromValue( double value ) const override;
         QValidator::State validate( QString& text, int& n ) const override;
 
     private:
@@ -23,4 +23,3 @@ class PlotSpinBox : public QDoubleSpinBox
 
         QString m_unit;
 };
-#endif

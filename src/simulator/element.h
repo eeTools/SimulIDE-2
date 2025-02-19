@@ -6,7 +6,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include <QString>
+//#include <QString>
 //#include <vector>
 
 class Node;

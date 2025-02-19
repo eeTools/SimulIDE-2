@@ -14,9 +14,6 @@
 #include "pin.h"
 #include "utils.h"
 
-#include "stringprop.h"
-#include "boolprop.h"
-
 #define tr(str) simulideTr("Tunnel",str)
 
 QHash<QString, QList<Tunnel*>*> Tunnel::m_tunnels;
@@ -45,20 +42,18 @@ Tunnel::Tunnel( int id )
     m_pin[0]->setSpace( 4 );
 
     setLabelPos(-16,-24, 0);
-    setRotated( false );
+    //setRotated( false );
 
-    addPropGroup( { tr("Main"), {
-        new StrProp <Tunnel>("Name" , tr("Id") ,""
-                            , this, &Tunnel::name,  &Tunnel::setName ),
+    addPropGroup( { tr("Main"), {}, groupNoCopy },
+    {
+        {"tid", tr("Id") , "", &m_name, P_String, P_NoSet },
+        {"bus", tr("Bus"), "", &m_isBus, P_Bool , P_NoSet }
+    });
 
-        new BoolProp<Tunnel>("IsBus", tr("Bus"),""
-                            , this, &Tunnel::isBus, &Tunnel::setIsbus )
-    }, groupNoCopy} );
-
-    addPropGroup( {"Hidden", {
-        new StrProp<Tunnel>("Uid","","", this
-                           , &Tunnel::tunnelUid, &Tunnel::setTunnelUid ),
-    }, groupNoCopy | groupHidden} );
+    /*addPropGroup( {"Hidden", {}, groupNoCopy | groupHidden},
+    {
+        {"Uid","","", nullptr, P_String, 0 }
+    });*/
 }
 Tunnel::~Tunnel() {}
 
@@ -116,7 +111,7 @@ void Tunnel::setGroupName( QString name, bool single )
     if( !m_packed ) m_pin[0]->setLabelText( name, false );
     if( name == "" ) m_size = 20;
     else  m_size = snapToGrid( m_pin[0]->labelSizeX()+4 );
-    setRotated( m_rotated );
+    //setRotated( m_rotated );
 
     if( m_tunnels.contains( name ) ) // There is already tunnel with this name
     {
@@ -133,7 +128,7 @@ void Tunnel::setGroupName( QString name, bool single )
     if( m_propDialog ) m_propDialog->updtValues();
 }
 
-bool Tunnel::isBus()
+/*bool Tunnel::isBus()
 {
     return m_pin[0]->wireFlags() & wireBus;
 }
@@ -141,21 +136,7 @@ bool Tunnel::isBus()
 void Tunnel::setIsbus( bool b )
 {
     m_pin[0]->writeWireFlag( wireBus, b );
-}
-
-void Tunnel::setRotated( bool rot )
-{
-    m_rotated  = rot;
-    if( rot ){
-        m_area = QRect( 4, -4, m_size+4, 8 );
-        m_pin[0]->setPinAngle( 180 );
-    }else {
-        m_area = QRect( -m_size-8, -4, m_size+4, 8 );
-        m_pin[0]->setPinAngle( 0 );
-    }
-    m_pin[0]->setLabelPos();
-    Circuit::self()->update();
-}
+}*/
 
 void Tunnel::setPacked( bool p )
 {
@@ -264,7 +245,7 @@ void Tunnel::paint( QPainter* p, const QStyleOptionGraphicsItem *o, QWidget *w )
 
     Component::paint( p, o, w );
 
-    if( m_rotated ){
+    /*if( m_rotated ){
         QPointF points[5] =        {
             QPointF( m_size+8,-4 ),
             QPointF(  8,-4 ),
@@ -273,7 +254,7 @@ void Tunnel::paint( QPainter* p, const QStyleOptionGraphicsItem *o, QWidget *w )
             QPointF( m_size+8, 4 ) };
 
         p->drawPolygon( points, 5 );
-    } else {
+    } else {*/
         QPointF points[5] =        {
             QPointF(-m_size-8,-4 ),
             QPointF(  -8,-4 ),
@@ -282,7 +263,7 @@ void Tunnel::paint( QPainter* p, const QStyleOptionGraphicsItem *o, QWidget *w )
             QPointF(-m_size-8, 4 ) };
 
         p->drawPolygon( points, 5 );
-    }
+    //}
     if( m_show ){
         p->setOpacity( 0.4 );
         p->fillRect( boundingRect(), Qt::darkBlue );

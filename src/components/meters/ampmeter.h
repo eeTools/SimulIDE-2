@@ -13,7 +13,7 @@ class AmpMeter : public Meter
         AmpMeter( int id );
         ~AmpMeter();
 
- static listItem_t registerItem();
-
         void updateStep() override;
+
+ static listItem_t registerItem();
 };

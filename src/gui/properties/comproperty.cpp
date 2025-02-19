@@ -6,29 +6,41 @@
 //#include <QFrame>
 
 #include "comproperty.h"
+#include "compbase.h"
 #include "propwidget.h"
-#include "labelwidget.h"
+#include "numwidget.h"
+#include "boolwidget.h"
+#include "strwidget.h"
+#include "enumwidget.h"
+#include "iconwidget.h"
+//#include "labelwidget.h"
 #include "utils.h"
 
-ComProperty::ComProperty( QString id, QString label, QString unit, QString type, uint8_t flags )
+ComProperty::ComProperty( CompBase* comp, param_t p, uint8_t idInt )
 {
-    m_id    = id;
-    m_label = label;
-    m_unit  = unit;
-    m_type  = type;
-    m_flags = flags;
+    m_compBase = comp;
+
+    m_idStr = p.idStr;
+    m_label = p.label;
+    m_unit  = p.unit;
+    m_type  = p.type;
+    m_flags = p.flags;
+    m_idInt = idInt;
 
     m_widget = nullptr;
 }
-QString ComProperty::id()   { return m_id; }
-QString ComProperty::label(){ return m_label; }
-QString ComProperty::type() { return m_type; }
-QString ComProperty::unit() { return m_unit; }
-uint8_t ComProperty::flags(){ return m_flags; }
 
-void    ComProperty::setValStr( QString ){;}
-QString ComProperty::getValStr(){ return ""; }
-double  ComProperty::getValue(){ return getValStr().toDouble(); }
+void ComProperty::setValStr( QString valStr )
+{
+    m_dispValStr = valStr;
+}
+
+QString ComProperty::getValStr()
+{
+    return m_dispValStr;
+}
+
+//double  ComProperty::getValue(){ return getValStr().toDouble(); }
 
 QString ComProperty::toString(){ return getValStr(); }
 
@@ -41,13 +53,24 @@ QString ComProperty::toString(){ return getValStr(); }
 
 void ComProperty::addCallBack( ComProperty* cb )
 {
-    /// if( !m_signal ) m_signal = new ModSignal( "signal@"+m_id, hookProperty );
-    /// m_signal->connect( cb );
     if( !m_callbacks.contains( cb ) ) m_callbacks.append( cb );
 }
 
 PropWidget* ComProperty::getWidget()
 {
-    if( !m_widget ) createWidget();
+    if( !m_widget )
+    {
+        switch( m_type )
+        {
+        case P_Uint:
+        case P_Int:
+        case P_Double: m_widget = new NumWidget( nullptr, this );  break;
+        case P_Bool:   m_widget = new BoolWidget( nullptr, this ); break;
+        case P_Icon:   m_widget = new IconWidget( nullptr, this ); break;
+        case P_Enum:
+        case P_Point:
+        case P_String: m_widget = new StrWidget ( nullptr, this ); break;
+        }
+    }
     return m_widget;
 }

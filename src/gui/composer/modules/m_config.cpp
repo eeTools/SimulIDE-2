@@ -9,8 +9,6 @@
 #include "propdialog.h"
 #include "simulator.h"
 
-#include "stringprop.h"
-
 #define tr(str) simulideTr("mConfig",str)
 
 listItem_t mConfig::registerItem(){
@@ -71,21 +69,18 @@ void mConfig::setComponent( fComponent* c )
         for( ComProperty* prop : group.propList )
         {
             QString propLabel = prop->label();
-            QString propId = prop->id();
+            QString propId = prop->idStr();
             m_propMap.insert( propId, propLabel );
             compPropStr += propId+",";
             compPropTra += propLabel+",";
         }
     }
 
-    addPropGroup( { tr("Main"),
+    /*addPropGroup( { tr("Main"),
     {
-        new StrProp<mConfig>("cfgprop", "Property", compPropStr+";"+compPropTra
-                            , this, &mConfig::cfgProperty, &mConfig::setCfgProperty, 0,"enum" ),
-
-        new StrProp<mConfig>("cfgval", "Values", ""
-                            , this, &mConfig::cfgValues, &mConfig::setCfgValues, 0 ),
-    },0} );
+        new StrProp("cfgprop", "Property", compPropStr+";"+compPropTra, this, 0,"enum" ),
+        new StrProp("cfgval", "Values", "", this, 0 ),
+    },0} );*/
 }
 
 void mConfig::setCfgValues( QString v )

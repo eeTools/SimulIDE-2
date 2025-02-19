@@ -9,8 +9,6 @@
 #include "iopin.h"
 #include "simulator.h"
 
-#include "doubleprop.h"
-
 #define tr(str) simulideTr("Rail",str)
 
 listItem_t Rail::registerItem(){
@@ -36,13 +34,17 @@ Rail::Rail( int id )
 
     Simulator::self()->addToUpdateList( this );
 
-    addPropGroup( { tr("Main"), {
-        new DoubProp<Rail>("Volt", tr("Voltage"),"V"
-                        , this, &Rail::voltage, &Rail::setVoltage )
-    }, 0} );
+    m_voltage = 5;
 
-    setShowProp("Volt");
-    setPropStr( "Volt", "5" );
+    addPropGroup( { tr("Main"), {}, 0},
+    {
+        {"volt", tr("Volt"),"V", &m_voltage, P_Double, P_NoSet }
+    });
+
+    m_voltProp = getPropertyId("volt");
+
+    ///setShowProp("volt");
+    //setPropStr( "Volt", "5" );
 }
 Rail::~Rail() { }
 
@@ -59,11 +61,21 @@ void Rail::updateStep()
     m_out->setVoltage( m_voltage );
 }
 
-void Rail::setVoltage( double v )
+void Rail::setValue( const uint8_t idInt, const value_t &val )
+{
+    if( idInt == m_voltProp )
+    {
+        m_voltage = *val.dblVal;
+        m_changed = true;
+    }
+    else Component::setValue( idInt, val );
+}
+
+/*void Rail::setVoltage( double v )
 {
     m_voltage = v;
     m_changed = true;
-}
+}*/
 
 void Rail::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {

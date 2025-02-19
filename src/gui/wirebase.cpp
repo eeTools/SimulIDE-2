@@ -6,8 +6,6 @@
 #include "wirebase.h"
 #include "pinbase.h"
 
-#include "stringprop.h"
-
 WireBase::WireBase( int id, PinBase* startpin )
         : CompBase( id )
 {
@@ -17,11 +15,12 @@ WireBase::WireBase( int id, PinBase* startpin )
 
     m_wireFlags = 0;
 
-    addPropGroup( {"Hidden", {
-        new StrProp<WireBase>( "pin0" ,"","", this, &WireBase::startPinId, &WireBase::dummySetter ),
-        new StrProp<WireBase>( "pin1" ,"","", this, &WireBase::endPinId,   &WireBase::dummySetter ),
-        new StrProp<WireBase>( "pList","","", this, &WireBase::pListStr,   &WireBase::setPointListStr )
-    }, 0} );
+    /*addPropGroup( {"Hidden", {}, 0 },
+    {
+        {"pin0" ,"","", P_String, 0, nullptr },
+        {"pin1" ,"","", P_String, 0, nullptr },
+        {"pList","","", P_String, 0, nullptr }
+    });*/
 }
 WireBase::~WireBase(){}
 

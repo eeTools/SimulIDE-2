@@ -8,9 +8,6 @@
 #include "m_binaryop.h"
 #include "fblock.h"
 
-#include "intprop.h"
-#include "stringprop.h"
-
 //#define tr(str) simulideTr("BinaryOp",str)
 
 listItem_t BinaryOp::registerItem(){
@@ -46,14 +43,11 @@ BinaryOp::BinaryOp( int id )
 
     /// TODO: Add Clock
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new StrProp<BinaryOp>("op", "Operation", m_binOpList.join(",")
-                         , this, &BinaryOp::typeStr, &BinaryOp::setTypeStr,propSlot,"enum" ),
-
-        new IntProp<BinaryOp>("size", "bits", ""
-                         , this, &BinaryOp::size, &BinaryOp::setSize, propSlot ),
-    },0} );
+        new StrProp("op", "Operation", m_binOpList.join(","), this,propSlot,"enum" ),
+        new IntProp("size", "bits", "", this, propSlot ),
+    },0} );*/
 }
 BinaryOp::~BinaryOp(){}
 

@@ -12,11 +12,6 @@
 #include "custombutton.h"
 #include "simulator.h"
 
-//#include "boolprop.h"
-#include "intprop.h"
-//#include "doubleprop.h"
-#include "pointprop.h"
-
 #define tr(str) simulideTr("mButton",str)
 
 listItem_t mButton::registerItem(){
@@ -41,22 +36,17 @@ mButton::mButton( int id )
 
     Simulator::self()->addToUpdateList( this );
 
-    addPropGroup( { tr("Main"),
+    /*addPropGroup( { tr("Main"),
     {
 
     },0 } );
 
     addPropGroup( { "Dial",
     {
-        new PointProp<mButton>("pos", tr("Position"),""
-                            , this, &mButton::position, &mButton::setPosition ),
-
-        new IntProp<mButton>("width", tr("Width") ,""
-                           , this, &mButton::width , &mButton::setWidth ),
-
-        new IntProp<mButton>("height", tr("Height") ,""
-                           , this, &mButton::height , &mButton::setHeight ),
-    },0} );
+        new PointProp("pos", tr("Position"),"", this ),
+        new IntProp("width", tr("Width") ,"", this ),
+        new IntProp("height", tr("Height") ,"", this ),
+    },0} );*/
 }
 mButton::~mButton(){}
 

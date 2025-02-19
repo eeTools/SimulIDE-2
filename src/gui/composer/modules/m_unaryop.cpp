@@ -9,9 +9,6 @@
 #include "m_unaryop.h"
 #include "fblock.h"
 
-#include "intprop.h"
-#include "stringprop.h"
-
 #define tr(str) simulideTr("UnaryOp",str)
 
 listItem_t UnaryOp::registerItem(){
@@ -47,17 +44,12 @@ UnaryOp::UnaryOp( int id )
 
     /// TODO: Add Clock
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new StrProp<UnaryOp>("gtype", "Type", m_unOpList.join(",")+";"+trOpList
-                            , this, &UnaryOp::typeStr, &UnaryOp::setTypeStr, propSlot, "enum" ),
-
-        new IntProp<UnaryOp>("size", "bits", ""
-                            , this, &UnaryOp::size, &UnaryOp::setSize, propSlot ),
-
-        new StrProp<UnaryOp>("trigger", "Trigger Type",""
-                            , this, &UnaryOp::triggerStr, &UnaryOp::setTriggerStr, propNoCopy, "enum" ),
-    },0} );
+        new StrProp("gtype", "Type", m_unOpList.join(",")+";"+trOpList, this, propSlot, "enum" ),
+        new IntProp("size", "bits", "", this, propSlot ),
+        new StrProp("trigger", "Trigger Type","", this, propNoCopy, "enum" ),
+    },0} );*/
 }
 UnaryOp::~UnaryOp(){}
 

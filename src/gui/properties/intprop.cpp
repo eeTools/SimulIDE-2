@@ -1,0 +1,32 @@
+/***************************************************************************
+ *   Copyright (C) 2025 by Santiago González                               *
+ *                                                                         *
+ ***( see copyright.txt file at root folder )*******************************/
+
+#include "intprop.h"
+#include "compbase.h"
+
+IntProp::IntProp( CompBase* comp, param_t p, uint8_t idInt )
+       : ComProperty( comp, p, idInt )
+{
+    m_value.intVal  = (int64_t*)p.data;
+    m_defaultVal = *m_value.intVal;
+}
+IntProp::~IntProp(){}
+
+void IntProp::setValStr( QString valStr )
+{
+    m_dispValStr = valStr;
+    int64_t intVal = valStr.toLongLong();
+    if( m_type == P_Uint && intVal < 0 ) intVal = 0; /// FIXME: set zero or return??
+
+    if( m_value.intVal ) *m_value.intVal = intVal;
+    else m_compBase->setValue( m_idInt, {.intVal=&intVal} );
+}
+
+/*QString IntProp::getValStr()
+{
+    QString valStr = m_dispValStr;
+
+    return valStr;
+}*/

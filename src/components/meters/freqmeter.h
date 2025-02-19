@@ -14,18 +14,18 @@ class FreqMeter : public Component, public Element
         FreqMeter( int id );
         ~FreqMeter();
 
- static listItem_t registerItem();
-
         void initialize() override;
         ///void stamp() override;
         void updateStep() override;
         void voltChanged() override;
 
-        double filter() { return m_filter; }
-        void setFilter( double f ) { m_filter = f; }
+        //double filter() { return m_filter; }
+        //void setFilter( double f ) { m_filter = f; }
         
-        void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
         
+ static listItem_t registerItem();
+
     protected:
         void setflip() override;
 

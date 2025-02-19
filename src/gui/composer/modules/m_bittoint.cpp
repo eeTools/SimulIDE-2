@@ -9,8 +9,6 @@
 #include "m_bittoint.h"
 #include "fblock.h"
 
-#include "intprop.h"
-
 listItem_t BitToInt::registerItem(){
     return {
         "Bit to Int",
@@ -32,11 +30,10 @@ BitToInt::BitToInt( int id )
 
     /// TODO: Add Clock
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new IntProp<BitToInt>("size", "bits", ""
-                             , this, &BitToInt::size, &BitToInt::setSize, propSlot ),
-    },0} );
+        new IntProp("size", "bits", "", this, propSlot ),
+    },0} );*/
 }
 BitToInt::~BitToInt(){}
 

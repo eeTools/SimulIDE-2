@@ -22,18 +22,18 @@ class Tunnel : public Component
         QString name() { return m_name; }
         void setName( QString name );
 
-        bool isBus();
-        void setIsbus( bool b );
+        //bool isBus();
+        //void setIsbus( bool b );
 
-        bool rotated() { return m_rotated; }
-        void setRotated( bool rot );
+        //bool rotated() { return m_rotated; }
+        //void setRotated( bool rot );
 
         void remove() override;
 
         void registerEnode( int enode, int n=-1 ) override;
 
-        QString tunnelUid() { return m_tunUid; }
-        void setTunnelUid( QString uid ) { m_tunUid = uid; }
+        //QString tunnelUid() { return m_tunUid; }
+        //void setTunnelUid( QString uid ) { m_tunUid = uid; }
 
         void setEnode( int node, int n=-1 );
         void setPacked( bool p );
@@ -41,8 +41,8 @@ class Tunnel : public Component
         bool m_show;
 
         Pin* getPin() { return m_pin[0]; }
- static int getEnode( QString n );
 
+ static int getEnode( QString n );
  static void clearTunnels();
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
@@ -62,11 +62,11 @@ class Tunnel : public Component
         int m_size;
 
         QString m_name;
-        QString m_tunUid;
+        //QString m_tunUid;
 
-        bool m_rotated;
         bool m_blocked;
         bool m_packed;
+        bool m_isBus;
 
  static QHash<QString, QList<Tunnel*>*> m_tunnels;
 };

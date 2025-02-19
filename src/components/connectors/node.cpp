@@ -11,9 +11,6 @@
 #include "wire.h"
 #include "circuit.h"
 
-#include "doubleprop.h"
-#include "pointprop.h"
-
 Node::Node( int id )
     : Component( id )
 {
@@ -28,10 +25,11 @@ Node::Node( int id )
         m_pin << new Pin( 90*i, QPoint(0,0), "pin"+QString::number(i)+"@"+id, this );
         m_pin[i]->setLength( 0 );
     }
-    remPropGroup( "CompGraphic" );
-    addPropGroup( { "CompGraphic", {
-new PointProp <Component>( "pos","","",this, &Component::position, &Component::setPosition )
-    },0} );
+    /*remPropGroup( "CompGraphic" );
+    addPropGroup( { "CompGraphic", {}, 0},
+    {
+        {"pos","","", P_Point , 0, nullptr }
+    });*/
 }
 Node::~Node(){}
 

@@ -54,6 +54,7 @@ INCLUDEPATH += $$PWD/src \
     $$PWD/src/gui/editor/dialogs \
     $$PWD/src/gui/filebrowser \
     $$PWD/src/gui/properties \
+    $$PWD/src/gui/properties/propertywidgets \
     $$PWD/src/simulator \
     $$PWD/src/simulator/elements \
     $$PWD/src/simulator/elements/active \

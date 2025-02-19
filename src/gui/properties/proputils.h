@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef PROPUTILS_H
-#define PROPUTILS_H
+#pragma once
 
 #include <QPointF>
 #include <QStringRef>
@@ -25,4 +24,3 @@ QVector<propStr_t> parseXmlProps( QStringRef line );
 QVector<propStr_t> parseProps( QStringRef line );
 propStr_t parseProp( QStringRef token );
 
-#endif

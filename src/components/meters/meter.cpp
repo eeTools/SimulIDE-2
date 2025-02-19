@@ -13,8 +13,6 @@
 #include "label.h"
 #include "utils.h"
 
-#include "boolprop.h"
-
 Meter::Meter( int id )
      : Component( id )
      , Resistance()

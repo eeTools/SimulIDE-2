@@ -39,7 +39,7 @@ CompBase* ListBase::createItem( QString type, int id )
 
     listItem_t item = m_componentFactory.value( type );
     CompBase* comp = item.construct( id );
-    comp->setItemType( item.type );
+    comp->m_type = item.type;
     return comp;
 }
 

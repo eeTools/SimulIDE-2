@@ -3,43 +3,42 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef COMPROPERTY_H
-#define COMPROPERTY_H
+#pragma once
 
 #include <QString>
 #include <QList>
 
-enum propFlags{
-    propHidden = 1,
-    propNoCopy = 1<<1,
-    propSignal = 1<<2,
-    propSlot   = 1<<3,
-    propPkg    = 1<<4
-};
+#include "proptypes.h"
 
 class PropWidget;
+class CompBase;
 
 class ComProperty
 {
     public:
-        ComProperty( QString id, QString label, QString unit, QString type, uint8_t flags );
+        ComProperty( CompBase* comp, param_t p, uint8_t idInt );
         virtual ~ComProperty(){;}
 
-        QString id();
-        QString label();
-        QString type();
-        QString unit();
-        uint8_t flags();
+        QString idStr() { return m_idStr; }
+        QString label() { return m_label; }
+        QString unit()  { return m_unit; }
+        pType_t type()  { return (pType_t)m_type; }
+        flags_t flags() { return (flags_t)m_flags; }
+        uint8_t idInt() { return m_idInt; }
+        value_t value() { return m_value; }
 
         //void setName( QString n );
 
         virtual void    setValStr( QString );
         virtual QString getValStr();
-        virtual double  getValue();
+        virtual QString getDispVal() { return m_dispValStr; }
+
 
         virtual QString toString();
 
         void addCallBack( ComProperty* cb );
+
+        CompBase* compBase() { return m_compBase; }
 
         virtual PropWidget* getWidget();
 
@@ -50,11 +49,17 @@ class ComProperty
 
         PropWidget* m_widget;
 
-        QString m_id;
-        QString m_label;
-        QString m_type;
-        QString m_unit;
-        uint8_t m_flags;
-};
+        CompBase* m_compBase;
 
-#endif
+        QString m_idStr;
+        QString m_label;
+
+        value_t m_value;
+
+        QString m_unit;
+        uint8_t m_type;
+        uint8_t m_flags;
+        uint8_t m_idInt;
+
+        QString m_dispValStr;
+};

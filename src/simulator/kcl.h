@@ -21,7 +21,7 @@ class Kcl
             changed = false;
             total   = 0;
         }
-
+/// TODO: vector values of doubles, and components hold the pointer
         std::vector<double*> values;  // Admitance vector
         double total;                 // Total admitance
 

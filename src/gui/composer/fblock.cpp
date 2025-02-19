@@ -106,7 +106,7 @@ void FuncBlock::setup()
 
         for( ComProperty* prop : propList )            // Add Properties
         {
-            QString propId = prop->id();
+            QString propId = prop->idStr();
             //if( prop->flags() & propHidden ) continue; // Property hidden
             if( propId == "" )           continue; // Just a label
 
@@ -130,7 +130,7 @@ void FuncBlock::setup()
             m_propSlots.append( hook0 );
             m_propSlotMap.insert( hookLabel, hook0 );
 
-            if( !(prop->flags() & propSignal) ) continue;
+            ///if( !(prop->flags() & propSignal) ) continue;
             Hook* hook1 = new Hook( 0, QPoint( 60, 0 ), propId+"Signal@"+m_id, hookProperty, this );
             m_propSignals.append( hook1 );
             m_propSignalMap.insert( hookLabel, hook1 );

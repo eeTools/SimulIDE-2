@@ -15,10 +15,6 @@
 #include "tunnel.h"
 #include "iopin.h"
 
-#include "stringprop.h"
-#include "doubleprop.h"
-#include "intprop.h"
-
 #define tr(str) simulideTr("Oscope",str)
 
 listItem_t Oscope::registerItem(){
@@ -79,22 +75,13 @@ Oscope::Oscope( int id )
     setLabelPos(-90,-100, 0);
     expand( false );
 
-    addPropGroup( { "Hidden1", {
-        new DoubProp<Oscope>("Filter", "", "V"
-                            , this, &Oscope::filter, &Oscope::setFilter ),
-
-        new IntProp <Oscope>("AutoSC" ,"", ""
-                            , this, &Oscope::autoSC, &Oscope::setAutoSC ),
-
-        new IntProp <Oscope>("Tracks","", ""
-                            , this, &Oscope::tracks, &Oscope::setTracks ),
-
-        new StrProp <Oscope>("HideCh","", ""
-                            , this, &Oscope::hideCh, &Oscope::setHideCh ),
-
-        new StrProp <Oscope>("VolPos","", ""
-                            , this, &Oscope::volPos, &Oscope::setVolPos )
-    }, groupHidden } );
+    /*addPropGroup( { "Hidden1", {
+        new DoubProp("Filter", "", "V", this ),
+        new IntProp("AutoSC" ,"", "", this ),
+        new IntProp("Tracks","", "", this ),
+        new StrProp("HideCh","", "", this ),
+        new StrProp("VolPos","", "", this )
+    }, groupHidden } );*/
 }
 Oscope::~Oscope()
 {

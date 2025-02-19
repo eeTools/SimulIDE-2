@@ -8,8 +8,6 @@
 #include "capacitor.h"
 #include "pin.h"
 
-#include "doubleprop.h"
-
 #define tr(str) simulideTr("Capacitor",str)
 
 listItem_t Capacitor::registerItem(){
@@ -34,14 +32,14 @@ Capacitor::Capacitor( int id )
     setValLabelPos(-16, 6, 0 );
     setLabelPos(-16,-24, 0 );
 
-    addPropGroup( { tr("Main"), {
-new DoubProp<Capacitor>( "Capac", tr("Capacitance")    , "F"    , this, &Capacitor::getCapacitance   , &Capacitor::setCapacitance ),
+    /*addPropGroup( { tr("Main"), {
+        new DoubProp( "Capac", tr("Capacitance"), this, { &m_capacitance, "F", P_DOUBLE, 0, 0 } ),
 //new DoubProp<CapacitorBase>( "Resist" , tr("Resistance")      ,"Ω"    , this, &CapacitorBase::resist  , &CapacitorBase::setResist ),
 //new DoubProp<CapacitorBase>( "InitVolt", tr("Initial Voltage"), "V"    , this, &CapacitorBase::initVolt, &CapacitorBase::setInitVolt ),
 //new IntProp <CapacitorBase>( "AutoStep", tr("Auto Step")      ,"_Steps", this, &CapacitorBase::autoStep, &CapacitorBase::setAutoStep,0,"uint" )
     },0 } );
     setShowProp("Capac");
-    //setPropStr( "Capac", "10 µF" );
+    //setPropStr( "Capac", "10 µF" );*/
 }
 Capacitor::~Capacitor(){}
 

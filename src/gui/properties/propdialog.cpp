@@ -64,6 +64,11 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
     int index=0;
     QList<propGroup> groups = comp->m_propGroups;
 
+    /*if( isComp ){
+        std::vector<property_t> props = comp->getProperties();
+        *props.at(0).value = 100;
+    }*/
+
     for( propGroup group : groups )
     {
         if( group.flags & groupHidden ) continue;
@@ -85,11 +90,11 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
 
             for( ComProperty* prop : propList )
             {
-                if( prop->flags() & propHidden ) continue; // Property hidden
+                if( prop->flags() & P_Hidden ) continue; // Property hidden
                  //|| prop->flags() & propSignal
                  //|| prop->flags() & propSlot ) continue; // Property hidden
 
-                if( prop->id() == "" ) // Just a label
+                if( prop->idStr() == "" ) // Just a label
                 {
                     QString text = prop->label();
                     if( text == "separator")
@@ -114,7 +119,7 @@ void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
                 groupWidget->layout()->addWidget( mp );
 
                 bool propEnabled = true;
-                if( isMaincomp && (prop->flags() & propNoCopy) ) propEnabled = false;
+                if( isMaincomp && (prop->flags() & P_NoCopy) ) propEnabled = false;
 
                 mp->setEnabled( groupEnabled && propEnabled );
             }

@@ -7,9 +7,6 @@
 #include "callback.h"
 #include "fblock.h"
 
-#include "intprop.h"
-#include "stringprop.h"
-
 listItem_t mProperty::registerItem(){
     return {
         "Property",
@@ -27,20 +24,13 @@ mProperty::mProperty( int id )
     m_minVal = 0;
     m_maxVal = 999;
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new StrProp<mProperty>("name", "Name", ""
-                              , this, &mProperty::propName, &mProperty::setPropName,0 ),
-
-        new IntProp<mProperty>("min", "Minimum", ""
-                              , this, &mProperty::minVal, &mProperty::setMinVal, 0 ),
-
-        new IntProp<mProperty>("max", "Maximum", ""
-                              , this, &mProperty::maxVal, &mProperty::setMaxVal, 0 ),
-
-        new IntProp<mProperty>("propval", "Value", ""
-                              , this, &mProperty::value, &mProperty::setValue, propSignal )
-    },0} );
+        new StrProp("name", "Name", "", this ),
+        new IntProp("min", "Minimum", "", this, 0 ),
+        new IntProp("max", "Maximum", "", this, 0 ),
+        new IntProp("propval", "Value", "", this, propSignal )
+    },0} );*/
 }
 mProperty::~mProperty(){}
 

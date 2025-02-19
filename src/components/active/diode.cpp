@@ -9,9 +9,6 @@
 //#include "simulator.h"
 #include "pin.h"
 
-#include "doubleprop.h"
-#include "stringprop.h"
-
 #define tr(str) simulideTr("Diode",str)
 
 listItem_t Diode::registerItem(){

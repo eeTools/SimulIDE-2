@@ -13,18 +13,19 @@ class Resistance : public Element
         Resistance();
         ~Resistance();
 
-        virtual void stampAdmit() override;
-        virtual void stampCurrent() override;
+        void stampAdmit() override;
+        void stampCurrent() override;
 
         double getResistance() { return 1/m_admitance;}
         void setResistance( double r ) { m_admitance = 1/r; }
-        void setAdmitance( double a )  { m_admitance = a; }
 
-    protected:
         double m_admitance;
-        double m_current;
 
         int m_node0;
         int m_node1;
+
+    protected:
+        //double m_current;
+
         int m_nodeGroup;
 };

@@ -12,11 +12,6 @@
 #include "iopin.h"
 #include "utils.h"
 
-#include "stringprop.h"
-#include "doubleprop.h"
-#include "boolprop.h"
-#include "intprop.h"
-
 #define tr(str) simulideTr("PlotBase",str)
 
 PlotBase::PlotBase( int id )
@@ -70,50 +65,27 @@ PlotBase::PlotBase( int id )
     m_autoExport = false;
     m_exportFile = changeExt( Circuit::self()->getFilePath(), "_"+QString::number( id )+".vcd" );
 
-    addPropGroup( { tr("Main"), {
-        new IntProp <PlotBase>("Basic_X",tr("Screen Width"), "_px"
-                              , this, &PlotBase::baSizeX, &PlotBase::setBaSizeX,0,"uint" ),
-
-        new IntProp <PlotBase>("Basic_Y",tr("Screen Height"),"_px"
-                              , this, &PlotBase::baSizeY, &PlotBase::setBaSizeY,0,"uint" ),
-
-        new IntProp <PlotBase>("BufferSize",tr("Buffer Size"),""
-                              , this, &PlotBase::bufferSize, &PlotBase::setBufferSize,0,"uint" ),
-
-        new BoolProp<PlotBase>("connectGnd",tr("Connect to ground"),""
-                              , this, &PlotBase::connectGnd, &PlotBase::setConnectGnd,0 ),
-
-        new DoubProp<PlotBase>("InputImped",tr("Impedance"),"MΩ"
-                              , this, &PlotBase::inputImped, &PlotBase::setInputImped )
+    /*addPropGroup( { tr("Main"), {
+        new IntProp ("Basic_X"   ,tr("Screen Width px")  , "", this,0,"uint" ),
+        new IntProp ("Basic_Y"   ,tr("Screen Height px") , "", this,0,"uint" ),
+        new IntProp ("BufferSize",tr("Buffer Size")      , "", this,0,"uint" ),
+        new BoolProp("connectGnd",tr("Connect to ground"), "", this,0 ),
+        new DoubProp("InputImped",tr("Impedance")        ,"Ω", this )
     }, groupNoCopy} );
 
     addPropGroup( { tr("Test"), {
-        new IntProp <PlotBase>("TestTime",tr("Test Time"),""
-                              , this, &PlotBase::testTime, &PlotBase::setTestTime,0,"uint" ),
+        new IntProp("TestTime",tr("Test Time"),"", this,0,"uint" ),
     }, 0 } );
 
     addPropGroup( {"Hidden", {
-        new StrProp<PlotBase>("TimDiv","",""
-                             , this, &PlotBase::timDiv, &PlotBase::setTimDiv ),
-
-        new StrProp<PlotBase>("TimPos","",""
-                             , this, &PlotBase::timPos, &PlotBase::setTimPos ),
-
-        new StrProp<PlotBase>("VolDiv","",""
-                             , this, &PlotBase::volDiv, &PlotBase::setVolDiv ),
-
-        new StrProp<PlotBase>("Conds","",""
-                             , this, &PlotBase::conds, &PlotBase::setConds ),
-
-        new StrProp<PlotBase>("Tunnels","",""
-                             , this, &PlotBase::tunnels, &PlotBase::setTunnels ),
-
-        new IntProp<PlotBase>("Trigger","",""
-                             , this, &PlotBase::trigger, &PlotBase::setTrigger ),
-
-       new StrProp<PlotBase>("TestData","",""
-                            , this, &PlotBase::testData, &PlotBase::setTestData ),
-    }, groupHidden } );
+        new StrProp("TimDiv","","", this ),
+        new StrProp("TimPos","","", this ),
+        new StrProp("VolDiv","","", this ),
+        new StrProp("Conds","","", this ),
+        new StrProp("Tunnels","","", this ),
+        new IntProp("Trigger","","", this ),
+       new StrProp("TestData","","", this ),
+    }, groupHidden } );*/
 }
 PlotBase::~PlotBase()
 {

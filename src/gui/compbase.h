@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef COMPBASE_H
-#define COMPBASE_H
+#pragma once
 
 #include <QString>
 #include <QPointF>
@@ -12,6 +11,7 @@
 #include <QCoreApplication>
 
 #include "proputils.h"
+#include "proptypes.h"
 
 #define simulideTr(comp_name,str) QCoreApplication::translate(comp_name,str)
 
@@ -27,7 +27,7 @@ enum groupFlags{
 struct propGroup{
     QString name;
     QList<ComProperty*> propList;
-    int flags;
+    uint8_t flags;
 };
 
 struct listItem_t{
@@ -38,49 +38,56 @@ struct listItem_t{
     CompBase* (*construct)(int);
 };
 
+
 class PropDialog;
 
 class CompBase
 {
     friend class PropDialog;
+    friend class ListBase;
 
     public:
         CompBase( int id );
         virtual ~CompBase();
 
-        void addPropGroup( propGroup pg, bool list=true );
-        void remPropGroup( QString name );
+        int getUid() { return m_id; }
+        QString itemType()  { return m_type; }
+
+        void addPropGroup( propGroup pg, const std::vector<param_t> &props, bool list=true );
+        //void remPropGroup( QString name );
+        //void addProp( propGroup& pg, param_t p );
         void addProperty( QString group, ComProperty* p );
-        void remProperty( QString prop );
-        ComProperty* getProperty( QString name );
+        //void remProperty( QString prop );
+
+        uint8_t getPropertyId( QString name );
         QList<propGroup> getPropGroups() { return m_propGroups; }
         //QList<propGroup>* properties() { return &m_propGroups; } // Circuit needs pointer bcos properties can change (ex: loadHex changes Config)
+
+        virtual void setValue( const uint8_t idInt, const value_t &val ){}
 
         virtual void loadProperties( QVector<propStr_t> p );
 
         virtual bool    setPropStr( QString prop, QString val );
         virtual QString getPropStr( QString prop );
 
-        virtual QString toString();
-
-        int getUid() { return m_id; }
-        void setUid( int uid ) { m_id = uid; }
-
-        QString itemType()  { return m_type; }
-        void setItemType( QString t ) { m_type = t; }
-
         virtual bool isHidden() { return false; }
 
         virtual void setup(){;} // Called after all properties are set
 
+        virtual QString toString();
+
     protected:
-        int m_id;
+        uint8_t newPropId() { return m_propCount++; }
+        ComProperty* getProperty( QString name );
+
+        int64_t m_id;
         QString m_type;
         QString m_help;
+
+        uint8_t m_propCount;
 
         PropDialog* m_propDialog;
         QList<propGroup> m_propGroups;
         QMap<QString, ComProperty*> m_propMap;
+        std::vector<ComProperty*> m_propVector;
 };
-
-#endif

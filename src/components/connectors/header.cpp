@@ -5,8 +5,6 @@
 
 #include "header.h"
 
-#include "boolprop.h"
-
 #define tr(str) simulideTr("Header",str)
 
 listItem_t Header::registerItem(){
@@ -28,9 +26,8 @@ Header::Header( int id )
 
     m_color = QColor( 65, 65, 65 );
 
-    this->addProperty( tr("Main"),
-        new BoolProp<Header>("Down", tr("Downwards"),""
-                            , this, &Header::pointDown, &Header::setPointDown ));
+    ///this->addProperty( tr("Main"),
+    ///    new BoolProp("Down", tr("Downwards"), this, { nullptr,"", P_Bool, 0, 0 }) );
 }
 Header::~Header(){}
 

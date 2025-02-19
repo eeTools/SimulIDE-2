@@ -16,9 +16,6 @@
 #include "label.h"
 #include "iopin.h"
 
-#include "doubleprop.h"
-#include "boolprop.h"
-
 #define tr(str) simulideTr("Probe",str)
 
 listItem_t Probe::registerItem(){
@@ -38,9 +35,12 @@ Probe::Probe( int id )
     m_area = QRect(-12,-8, 20, 16 );
     m_graphical = true;
     m_pauseState = false;
+    m_showVolt = true;
 
     m_voltTrig = 2.5;
     m_voltIn = 0;
+    m_voltStr = "0 V";
+    m_valLabel->addLine( m_voltStr );
 
     m_inputPin = new InputPin( 180, QPoint(-22,0), "inPin@"+id, this );
     m_inputPin->setBoundingRect( QRect(-1, -1, 2, 2) );
@@ -48,7 +48,6 @@ Probe::Probe( int id )
     m_pin << m_inputPin;
 
     setValLabelPos( 16, 0, 45 ); // x, y, rot
-    setShowVal( true );
     setLabelPos( 16,-16, 45 );
     setRotation( rotation() - 45 );
     m_voltIn = -1; // Force update
@@ -58,19 +57,15 @@ Probe::Probe( int id )
 
     Simulator::self()->addToUpdateList( this );
 
-    addPropGroup( { tr("Main"), {
-        new BoolProp<Probe>("ShowVolt" , tr("Show Voltage"), ""
-                           , this, &Probe::showVal, &Probe::setShowVal, propNoCopy ),
+    //m_parameters.reserve( m_parameters.size()+4 );
+    //m_parameters.emplace_back( parameter_t({ nullptr    ,"" , P_BOOL  , propNoCopy, 0 }) );
 
-        new DoubProp<Probe>("Threshold", tr("Threshold"), "V"
-                           , this, &Probe::threshold, &Probe::setThreshold ),
-
-        new BoolProp<Probe>("Small", tr("Small size"), ""
-                           , this, &Probe::isSmall, &Probe::setSmall ),
-
-        new BoolProp<Probe>("Pause", "", ""
-                           , this, &Probe::pauseState, &Probe::setPauseState, propHidden )
-    }, 0 } );
+    /*addPropGroup( { tr("Main"), {
+        new BoolProp("ShowVolt" , tr("Show Voltage"), this, { nullptr    ,"" , P_BOOL  , propNoCopy, 0 } ),
+        new DoubProp("Threshold", tr("Threshold")   , this, { &m_voltTrig,"V", P_DOUBLE, 0, 0 } ),
+        new BoolProp("Small"    , tr("Small size")  , this, { nullptr      ,"" , P_BOOL  , 0, 0 } ),
+        new BoolProp("Pause"    , ""                , this, { &m_pauseState,"" , P_BOOL  , propHidden, 0 } )
+    }, 0 } );*/
 }
 Probe::~Probe(){}
 
@@ -124,12 +119,16 @@ void Probe::setVolt( double volt )
     m_voltIn = volt;
     update();       // Repaint
 
-    if( !m_showVal ) return;
+    if( !m_showVolt ) return;
     if( qFabs(volt) < 0.01 ) volt = 0;
     
     float v = ( volt > 0 ) ? 0.5 : -0.5;
     v = float(int( v+volt*100 ))/100;
-    setValLabelText( QString("%1 V").arg(v) );
+
+    QString voltStr = QString("%1 V").arg(v);
+    m_valLabel->replaceLine( m_voltStr, voltStr );
+
+    m_voltStr = voltStr;
 }
 
 void Probe::rotateAngle( double a )

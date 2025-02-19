@@ -20,7 +20,7 @@
 #include "mainwindow.h"
 #include "circuit.h"
 #include "componentlist.h"
-#include "editorwindow.h"
+//#include "editorwindow.h"
 #include "circuitwidget.h"
 #include "composerwidget.h"
 #include "filewidget.h"
@@ -118,7 +118,7 @@ void MainWindow::keyPressEvent( QKeyEvent* event)
 
 void MainWindow::closeEvent( QCloseEvent *event )
 {
-    if( !m_editor->close() )       { event->ignore(); return; }
+///    if( !m_editor->close() )       { event->ignore(); return; }
     if( !m_circuitW->newCircuit()) { event->ignore(); return; }
 
     writeSettings();
@@ -268,10 +268,10 @@ void MainWindow::createWidgets()
     m_sidePanel->setTabVisible( 1, false );
 
     m_circuitW = new CircuitWidget( this );
-    m_editor   = new EditorWindow( this );
+    ///m_editor   = new EditorWindow( this );
     m_simSplitter = new QSplitter( this );
     m_simSplitter->addWidget( m_circuitW );
-    m_simSplitter->addWidget( m_editor );
+    ///m_simSplitter->addWidget( m_editor );
     //m_simSplitter->setSizes( {350, 500} );
 
     m_composer = new ComposerWidget( this );

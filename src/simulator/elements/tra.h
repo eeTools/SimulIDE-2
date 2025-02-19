@@ -3,8 +3,7 @@
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef BJTE_H
-#define BJTE_H
+#pragma once
 
 #include "element.h"
 
@@ -21,7 +20,4 @@ class Bjt : public Element
     protected:
 
         bool m_PNP;
-
 };
-
-#endif

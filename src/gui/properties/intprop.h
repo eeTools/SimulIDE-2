@@ -1,39 +1,22 @@
 /***************************************************************************
- *   Copyright (C) 2021 by Santiago González                               *
+ *   Copyright (C) 2025 by Santiago González                               *
  *                                                                         *
  ***( see copyright.txt file at root folder )*******************************/
 
-#ifndef INTPROP_H
-#define INTPROP_H
+#pragma once
 
-#include "numprop.h"
-#include "numwidget.h"
+#include "comproperty.h"
 
-template <class Comp>
-class IntProp : public NumProp
+class IntProp : public ComProperty
 {
     public:
-        IntProp( QString id, QString label, QString unit, Comp* comp
-               , int (Comp::*getter)(), void (Comp::*setter)(int)
-               , uint8_t flags=0, QString type="int" )
-        : NumProp( id, label, unit, type, flags )
-        {
-            m_comp = comp;
-            m_getter = getter;
-            m_setter = setter;
-        }
-        ~IntProp(){;}
+        IntProp( CompBase* comp, param_t p, uint8_t idInt );
+        ~IntProp();
 
-        double getValue() override
-        { return (m_comp->*m_getter)(); }
+        void    setValStr( QString valStr ) override;
+        //QString getValStr() override;
 
     private:
-        void createWidget() override { m_widget = new NumWidget( nullptr, m_comp, this ); }
-        void setVal( double v ) override { (m_comp->*m_setter)(v); }
+        int64_t m_defaultVal;
 
-        Comp* m_comp;
-        int  (Comp::*m_getter)();
-        void (Comp::*m_setter)(int);
 };
-
-#endif

@@ -8,8 +8,6 @@
 //#include "simulator.h"
 #include "fcomponent.h"
 
-#include "intprop.h"
-
 listItem_t mHookPort::registerItem(){
     return {
         "Hook Port",

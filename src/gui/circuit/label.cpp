@@ -26,6 +26,37 @@ Label::Label( Component* parent )
 }
 Label::~Label() { }
 
+void Label::showLabel()
+{
+    setVisible( !m_text.isEmpty() );
+}
+
+void Label::setLabelText( QString text )
+{
+    setPlainText( text );
+    updtLabelPos();
+    setVisible( !text.isEmpty() );
+}
+
+void Label::addLine( QString line )
+{
+    if( m_text.contains( line ) ) return;
+    m_text.append( line+"\n");
+    setLabelText( m_text );
+}
+
+void Label::remLine( QString line )
+{
+    m_text.remove( line+"\n");
+    setLabelText( m_text );
+}
+
+void Label::replaceLine( QString oldLine, QString newLine )
+{
+    m_text.replace( oldLine, newLine );
+    setLabelText( m_text );
+}
+
 void Label::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
     if( event->button() == Qt::LeftButton )

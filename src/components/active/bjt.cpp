@@ -11,9 +11,6 @@
 #include "circuit.h"
 #include "pin.h"
 
-#include "doubleprop.h"
-#include "boolprop.h"
-
 #define tr(str) simulideTr("BJT",str)
 
 listItem_t BJT::registerItem(){

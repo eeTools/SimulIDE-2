@@ -14,7 +14,7 @@ class Mosfet : public Component, public Fet
         Mosfet( int id );
         ~Mosfet();
 
- static listItem_t registerItem();
-
         virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w );
+
+ static listItem_t registerItem();
 };

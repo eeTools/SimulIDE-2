@@ -16,10 +16,6 @@
 #include "canvas.h"
 #include "utils.h"
 
-#include "intprop.h"
-#include "boolprop.h"
-#include "stringprop.h"
-
 ComposerWidget* ComposerWidget::m_pSelf = nullptr;
 
 ComposerWidget::ComposerWidget( QWidget* parent  )
@@ -72,20 +68,13 @@ void ComposerWidget::createPackage()
 
     Canvas::self()->addItem( m_fComp );
 
-    m_fComp->addPropGroup( { tr("List Item"),
+    /*m_fComp->addPropGroup( { tr("List Item"),
     {
-        new StrProp<ListItem>("label", tr("Label"), ""
-                             , &m_listItem, &ListItem::label, &ListItem::setLabel, 0 ),
-
-        new StrProp<ListItem>("category", tr("Category"), ""
-                             , &m_listItem, &ListItem::category, &ListItem::setCategory, 0 ),
-
-        new StrProp<ListItem>("type", tr("Type"), ""
-                             , &m_listItem, &ListItem::itemType, &ListItem::setItemType, 0 ),
-
-        new StrProp<ListItem>("icondata", tr("Icon"), ""
-                             , &m_listItem, &ListItem::icon, &ListItem::setIcon, 0, "icon" ),
-    },0} );
+        new StrProp("label"   , tr("Label"), "", &m_listItem, 0 ),
+        new StrProp("category", tr("Category"), "", &m_listItem, 0 ),
+        new StrProp("type"    , tr("Type"), "", &m_listItem, 0 ),
+        new StrProp("icondata", tr("Icon"), "", &m_listItem, 0, "icon" ),
+    },0} );*/
 
     if( m_pkgProps ) m_pkgProps->close();
     m_pkgProps = new PropDialog( this, "" );

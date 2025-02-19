@@ -45,7 +45,7 @@ class Pin;
     else if( qFabs( val ) < 1000) decimals = 1;
 
 double getMultiplier( QString mult );
-QString multToValStr( double value, QString mult );
+//QString multToValStr( int64_t value, QString mult );
 
 QString val2hex( int d );
 QString toDigit( int d );

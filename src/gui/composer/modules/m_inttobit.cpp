@@ -9,8 +9,6 @@
 #include "m_inttobit.h"
 #include "fblock.h"
 
-#include "intprop.h"
-
 listItem_t IntToBit::registerItem(){
     return {
         "Int to Bit",
@@ -31,11 +29,10 @@ IntToBit::IntToBit( int id )
 
     /// TODO: Add Clock
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new IntProp<IntToBit>("size", "bits", ""
-                             , this, &IntToBit::size, &IntToBit::setSize, propSlot ),
-    },0} );
+        new IntProp("size", "bits", "", this ),
+    },0} );*/
 }
 IntToBit::~IntToBit(){}
 

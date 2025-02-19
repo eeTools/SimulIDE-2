@@ -14,9 +14,9 @@ class BJT : public Component, public Bjt
         BJT( int id );
         ~BJT();
 
- static listItem_t registerItem();
-
         void updateStep() override;
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* ) override;
+
+ static listItem_t registerItem();
 };

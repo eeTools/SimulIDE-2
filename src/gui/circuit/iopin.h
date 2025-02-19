@@ -23,7 +23,7 @@ class asIScriptEngine;
 class IoPin : public Pin
 {
     public:
-    IoPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup=false );
+        IoPin( int angle, const QPoint pos, QString id, Component* parent, bool pullup=false );
         ~IoPin();
 
         /// void runEvent() override;

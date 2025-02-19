@@ -9,8 +9,6 @@
 #include "simulator.h"
 #include "fcomponent.h"
 
-#include "doubleprop.h"
-
 listItem_t Delay::registerItem(){
     return {
         "Delay",
@@ -32,11 +30,10 @@ Delay::Delay( int id )
     m_slots.emplace_back( &m_inputSlot );
     m_signals.emplace_back( &m_outSignal );
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new DoubProp<Delay>("Time", "Time", "s"
-                           , this, &Delay::delayNanoS, &Delay::setDelayNanoS )
-    },0} );
+        new DoubProp("Time", "Time", "s", this )
+    },0} );*/
 }
 Delay::~Delay(){}
 

@@ -15,11 +15,6 @@
 #include "tunnel.h"
 #include "iopin.h"
 
-#include "stringprop.h"
-#include "doubleprop.h"
-#include "boolprop.h"
-#include "intprop.h"
-
 #define tr(str) simulideTr("LAnalizer",str)
 
 listItem_t LAnalizer::registerItem(){
@@ -85,24 +80,18 @@ LAnalizer::LAnalizer( int id )
     expand( false );
     setTrigger( 9 ); // Trigger = None
 
-    addPropGroup( { tr("Export"), {
-        new IntProp <LAnalizer>("TimeStep", tr("Base Time Step"), "_ps"
-                               , this, &LAnalizer::timeStep,   &LAnalizer::setTimeStep,0,"uint" ),
-
-        new BoolProp<LAnalizer>("AutoExport", tr("Export at pause"),""
-                               , this, &LAnalizer::autoExport, &LAnalizer::setAutoExport ),
+    /*addPropGroup( { tr("Export"), {
+        new IntProp("TimeStep", tr("Base Time Step"), "_ps", this, 0,"uint" ),
+        new BoolProp("AutoExport", tr("Export at pause"),"", this ),
     },0} );
 
     addPropGroup( { "Hidden1", {
-        new DoubProp<LAnalizer>("TresholdR", "", "V"
-                               , this, &LAnalizer::thresholdR, &LAnalizer::setThresholdR ),
+        new DoubProp("TresholdR", "", "V", this ),
 
-        new StrProp <LAnalizer>("Bus", "", ""
-                               , this, &LAnalizer::busStr, &LAnalizer::setBusStr ),
+        new StrProp("Bus", "", "", this ),
 
-        new DoubProp<LAnalizer>("TresholdF", "", "V"
-                               , this, &LAnalizer::thresholdF, &LAnalizer::setThresholdF )
-    }, groupHidden } );
+        new DoubProp("TresholdF", "", "V", this )
+    }, groupHidden } );*/
 }
 LAnalizer::~LAnalizer()
 {

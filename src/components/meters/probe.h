@@ -24,8 +24,8 @@ class Probe : public Component, public Element
 
         void setVolt( double volt );
 
-        void setSmall( bool s );
         bool isSmall() { return m_small; }
+        void setSmall( bool s );
 
         double threshold() { return m_voltTrig; }
         void setThreshold( double t ) { m_voltTrig = t; }
@@ -46,9 +46,12 @@ class Probe : public Component, public Element
         double m_voltIn;
         double m_voltTrig;
 
+        bool m_showVolt;
         bool m_small;
         bool m_pauseState;
         bool m_state;
+
+        QString m_voltStr;
 
         IoPin* m_inputPin;
 };

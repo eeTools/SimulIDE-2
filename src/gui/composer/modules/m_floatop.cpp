@@ -9,9 +9,6 @@
 #include "m_floatop.h"
 #include "fblock.h"
 
-#include "intprop.h"
-#include "stringprop.h"
-
 #define tr(str) simulideTr("FloatOpOp",str)
 
 listItem_t FloatOp::registerItem(){
@@ -47,11 +44,10 @@ FloatOp::FloatOp( int id )
 
     /// TODO: Add Clock
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new StrProp<FloatOp>("gType", "Type", m_floatOpList.join(",")+";"+trOpList
-                            , this, &FloatOp::typeStr, &FloatOp::setTypeStr,propSlot,"enum" ),
-    },0} );
+        new StrProp("gType", "Type", m_floatOpList.join(",")+";"+trOpList, this,propSlot,"enum" ),
+    },0} );*/
 }
 FloatOp::~FloatOp(){}
 

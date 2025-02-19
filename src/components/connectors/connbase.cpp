@@ -8,8 +8,6 @@
 #include "simulator.h"
 #include "circuit.h"
 
-#include "intprop.h"
-
 #define tr(str) simulideTr("ConnBase",str)
 
 ConnBase::ConnBase( int id )
@@ -23,10 +21,10 @@ ConnBase::ConnBase( int id )
     setSize( 8 );
     setLabelPos(-16,-44, 0);
 
-    addPropGroup( { tr("Main"), {
-        new IntProp<ConnBase>("Size", tr("Size"),"_Pins"
-                             , this, &ConnBase::size, &ConnBase::setSize, propNoCopy,"uint" )
-    }, groupNoCopy } );
+    /*addPropGroup( { tr("Main"), {}, groupNoCopy },
+    {
+        {"Size", tr("Size"),"Pins", P_Uint, 0, nullptr }
+    });*/
 }
 ConnBase::~ConnBase()
 {

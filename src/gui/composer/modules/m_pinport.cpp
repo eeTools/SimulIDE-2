@@ -9,11 +9,6 @@
 #include "fcomponent.h"
 #include "iopin.h"
 
-#include "uintprop.h"
-#include "doubleprop.h"
-#include "stringprop.h"
-#include "boolprop.h"
-
 #define tr(str) simulideTr("mPinPort",str)
 
 listItem_t mPinPort::registerItem(){
@@ -72,44 +67,29 @@ PinBase* mPinPort::addPin( QString id )
 
 QList<ComProperty*> mPinPort::inputProps()
 {
-    QList<ComProperty*> props =
+    QList<ComProperty*> props;/* =
     {
-        new StrProp<mPinPort>("Family", tr("Logic Family"), m_families.keys().join(",")
-                            , this, &mPinPort::family, &mPinPort::setFamily, 0,"enum" ),
-
-        new DoubProp<mPinPort>("SupplyV", tr("Supply Voltage"), "V"
-                             , this, &mPinPort::supplyV, &mPinPort::setSupplyV ),
-
+        new StrProp("Family", tr("Logic Family"), m_families.keys().join(","), this, 0,"enum" ),
+        new DoubProp("SupplyV", tr("Supply Voltage"), "V", this ),
         //new ComProperty("", " ","","",0),
-        new ComProperty( "", tr("Inputs:"),"","",0),
-
-        new DoubProp<mPinPort>("Input_High_V", tr("Low to High Threshold"), "V"
-                             , this, &mPinPort::inpHighV, &mPinPort::setInpHighV ),
-
-        new DoubProp<mPinPort>("Input_Low_V", tr("High to Low Threshold"), "V"
-                             , this, &mPinPort::inpLowV, &mPinPort::setInpLowV ),
-
-        new DoubProp<mPinPort>("Input_Imped", tr("Input Impedance"), "MΩ"
-                             , this, &mPinPort::inputImp, &mPinPort::setInputImp )
-    };
+        new ComProperty( "", tr("Inputs:"),"","",0, this ),
+        new DoubProp("Input_High_V", tr("Low to High Threshold"), "V", this ),
+        new DoubProp("Input_Low_V", tr("High to Low Threshold"), "V", this ),
+        new DoubProp("Input_Imped", tr("Input Impedance"), "MΩ", this  )
+    };*/
     return props;
 }
 
 QList<ComProperty*> mPinPort::outputProps()
 {
-    QList<ComProperty*> props =
+    QList<ComProperty*> props;/* =
     {
-        new ComProperty("", tr("Outputs:"),"","",0),
+        new ComProperty("", tr("Outputs:"),"","",0, this),
 
-        new DoubProp<mPinPort>("Out_High_V", tr("Output High Voltage"), "V"
-                             , this, &mPinPort::outHighV, &mPinPort::setOutHighV ),
-
-        new DoubProp<mPinPort>("Out_Low_V", tr("Output Low Voltage"), "V"
-                             , this, &mPinPort::outLowV, &mPinPort::setOutLowV ),
-
-        new DoubProp<mPinPort>("Out_Imped", tr("Output Impedance"), "Ω"
-                             , this, &mPinPort::outImp, &mPinPort::setOutImp )
-    };
+        new DoubProp("Out_High_V", tr("Output High Voltage"), "V", this ),
+        new DoubProp("Out_Low_V", tr("Output Low Voltage"), "V", this ),
+        new DoubProp("Out_Imped", tr("Output Impedance"), "Ω", this )
+    };*/
     return props;
 }
 
@@ -125,18 +105,15 @@ QList<ComProperty*> mPinPort::outputProps()
 
 QList<ComProperty*> mPinPort::edgeProps()
 {
-    return {
-        new DoubProp<mPinPort>("pd_n"  , tr("Delay Multiplier"), ""
-                             , this, &mPinPort::propSize, &mPinPort::setPropSize ),
+    QList<ComProperty*> props;
 
-        new UintProp<mPinPort>("tpd_ps", tr("Family Delay"), "ns"
-                             , this, &mPinPort::propDelay, &mPinPort::setPropDelay ),
+    /*return {
+        new DoubProp("pd_n"  , tr("Delay Multiplier"), "", this ),
+        new UintProp("tpd_ps", tr("Family Delay"), "ns", this ),
+        new UintProp("tr_ps" , tr("Rise Time"), "ns", this ),
+        new UintProp("tf_ps" , tr("Fall Time"), "ns", this ) };*/
 
-        new UintProp<mPinPort>("tr_ps" , tr("Rise Time"), "ns"
-                             , this, &mPinPort::riseTime,  &mPinPort::setRiseTime ),
-
-        new UintProp<mPinPort>("tf_ps" , tr("Fall Time"), "ns"
-                             , this, &mPinPort::fallTime,  &mPinPort::setFallTime ) };
+    return props;
 }
 
 void mPinPort::setInpHighV( double volt )

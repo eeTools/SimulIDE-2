@@ -19,21 +19,22 @@
 #include "utils.h"
 #include "pin.h"
 
+//QMap<QString, int64_t> multipliers = {{"p",1},{"n",1e3},{"µ",1e6},{"m",1e9},{" ",1e12},{"k",1e15},{"M",1e18},{"G",1e21},{"T",1e24}};
 QMap<QString, double> multipliers = {{"p",1e-12},{"n",1e-9},{"µ",1e-6},{"m",1e-3},{"k",1e3},{"M",1e6},{"G",1e9},{"T",1e12}};
 
 double getMultiplier( QString mult )
 {
-    mult = mult.remove(" ");
-    mult = mult.left(1);
+    //mult = mult.remove(" ");
+    //mult = mult.left(1);
     double multiplier = multipliers.value( mult );
     if( multiplier == 0 ) multiplier = 1;
     return multiplier;
 }
 
-QString multToValStr( double value, QString mult )
+/*QString multToValStr( int64_t value, QString mult )
 {
     return QString::number( value*getMultiplier( mult ) );
-}
+}*/
 
 QString val2hex( int d )
 {

@@ -17,9 +17,9 @@ class Capacitance : public Resistance
         Capacitance();
         ~Capacitance();
 
-        virtual void stampAdmit() override;
-        virtual void stampCurrent() override;
-        virtual void voltChanged() override;
+        void stampAdmit() override;
+        void stampCurrent() override;
+        void voltChanged() override;
 
         void runStep();
 

@@ -21,13 +21,17 @@ class Rail : public Component
         void initialize() override;
         void updateStep() override;
 
-        double voltage() { return m_voltage; }
-        void setVoltage( double v );
+        //double voltage() { return m_voltage; }
+        //void setVoltage( double v );
+
+        void setValue( const uint8_t idInt, const value_t &val ) override;
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private:
         double m_voltage;
+
+        uint8_t m_voltProp;
 
         IoPin* m_out;
 };

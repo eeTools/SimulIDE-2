@@ -3,8 +3,7 @@
  *                                                                         *
  ***( All Rights Reserved )*************************************************/
 
-#ifndef PN_H
-#define PN_H
+#pragma once
 
 #include "resistance.h"
 
@@ -21,5 +20,3 @@ class PN : public Resistance
     protected:
 
 };
-
-#endif

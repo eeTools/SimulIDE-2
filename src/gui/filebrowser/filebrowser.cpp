@@ -10,7 +10,7 @@
 #include "mainwindow.h"
 #include "circuit.h"
 #include "filewidget.h"
-#include "editorwindow.h"
+///#include "editorwindow.h"
 #include "componentlist.h"
 
 FileBrowser* FileBrowser::m_pSelf = nullptr;
@@ -53,7 +53,7 @@ void FileBrowser::cdUp()
 void FileBrowser::openInEditor()
 {
     QString path = m_fileSystemModel->filePath( currentIndex() );
-    EditorWindow::self()->loadFile( path );
+///    EditorWindow::self()->loadFile( path );
 }
 
 void FileBrowser::open()
@@ -64,7 +64,7 @@ void FileBrowser::open()
     if( m_fileSystemModel->isDir( currentIndex() ) ) setPath( path );
     else{
         if( path.endsWith(".sim2") ) CircuitWidget::self()->loadCirc( path );
-        else                         EditorWindow::self()->loadFile( path );
+///        else                         EditorWindow::self()->loadFile( path );
     }
 }
 

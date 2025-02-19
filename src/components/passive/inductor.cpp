@@ -9,9 +9,6 @@
 #include "inductor.h"
 #include "pin.h"
 
-#include "doubleprop.h"
-#include "intprop.h"
-
 #define tr(str) simulideTr("Inductor",str)
 
 listItem_t Inductor::registerItem(){
@@ -34,12 +31,12 @@ Inductor::Inductor( int id )
 
     //m_inductance = 1; // H
 
-    addPropGroup( { tr("Main"), {
+    /*addPropGroup( { tr("Main"), {
 //new DoubProp<Inductor>( "Inductance", tr("Inductance")     , "H"     , this, &Inductor::value,    &Inductor::setValue ),
 //new DoubProp<Inductor>( "Resistance", tr("Resistance")     , "Ω"     , this, &Inductor::resist  , &Inductor::setResist ),
 //new DoubProp<Inductor>( "InitVolt"  , tr("Initial Current"), "A"     , this, &Inductor::initCurr, &Inductor::setInitCurr ),
 //new IntProp <Inductor>( "AutoStep"  , tr("Auto Step")      , "_Steps", this, &Inductor::autoStep, &Inductor::setAutoStep,0,"uint" )
-    },0 } );
+    },0 } );*/
 
     //setShowProp("Inductance");
     //setPropStr( "Inductance", "1" );

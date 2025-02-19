@@ -11,8 +11,6 @@
 #include "pin.h"
 #include "label.h"
 
-#include "doubleprop.h"
-
 #define tr(str) simulideTr("FreqMeter",str)
 
 listItem_t FreqMeter::registerItem(){
@@ -45,16 +43,14 @@ FreqMeter::FreqMeter( int id )
     m_display.setPos( -30, -6 );
     m_display.setVisible( true );
 
-    m_filter   = 0.1;
+    m_filter = 0.1;
 
     Simulator::self()->addToUpdateList( this );
 
-    //FreqMeter::initialize();
-
-    addPropGroup( { tr("Main"), {
-        new DoubProp<FreqMeter>("Filter", tr("Filter"), "V"
-                       , this, &FreqMeter::filter, &FreqMeter::setFilter ),
-    },0 } );
+    addPropGroup( { tr("Main"), {}, 0 },
+    {
+        {"filter", tr("Filter"),"V", &m_filter, P_Double, 0 },
+    });
 }
 FreqMeter::~FreqMeter(){}
 
@@ -160,9 +156,9 @@ void FreqMeter::setflip()
     m_display.setTransform( QTransform::fromScale( m_Hflip, m_Vflip ) );
 }
 
-void FreqMeter::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget )
+void FreqMeter::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )
 {
-    Component::paint( p, option, widget );
+    Component::paint( p, o, w );
     p->setBrush( Qt::black);
     p->drawRoundedRect( m_area, 1, 1);
 

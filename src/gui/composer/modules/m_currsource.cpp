@@ -10,8 +10,6 @@
 #include "fblock.h"
 #include "pin.h"
 
-#include "doubleprop.h"
-
 #define tr(str) simulideTr("mCurrentSource",str)
 
 listItem_t mCurrentSource::registerItem(){
@@ -31,11 +29,10 @@ mCurrentSource::mCurrentSource( int id )
 
     m_gain = 1;
 
-    addPropGroup( { "Main",
+    /*addPropGroup( { "Main",
     {
-        new DoubProp<mCurrentSource>("gain", tr("Gain"), ""
-                                    , this, &mCurrentSource::gain, &mCurrentSource::setGain ),
-    },0} );
+        new DoubProp ("gain", tr("Gain"), "", this ),
+    },0} );*/
 }
 mCurrentSource::~mCurrentSource(){}
 
