@@ -76,7 +76,7 @@ void Composer::loadStrDoc( QString doc )
 {
     fComponent* fComp = ComposerWidget::self()->package();
 
-    Module* module = nullptr;
+    //Module* module = nullptr;
     QStringList docLines = doc.split("\n");
     docLines.removeAll("");
 

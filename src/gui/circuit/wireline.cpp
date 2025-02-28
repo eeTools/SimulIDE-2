@@ -33,6 +33,7 @@ WireLine::WireLine( int x1, int y1, int x2, int y2, Wire* wire )
     m_moveP1 = false;
     m_moveP2 = false;
     m_moving = false;
+    m_animateCurrent = false;
 
     this->setFlag( QGraphicsItem::ItemIsSelectable, true );
 
@@ -309,6 +310,31 @@ void WireLine::contextMenuEvent( QGraphicsSceneContextMenuEvent* event )
        menu.exec(event->screenPos());
 }   }
 
+void WireLine::animateLine()
+{
+
+    update();
+
+        if( m_moving ) return;
+    updtLength();
+m_animateCurrent = true;
+m_currentSpeed = 1;
+    uint64_t time = Simulator::self()->circTime()/1e8;
+m_step = time;
+    time *= m_currentSpeed;
+    time /= 80; // 50 ms FIXME: get FPS
+    time = time%80;
+    m_step = (double)time/10;
+    //qDebug() <<"ConnectorLine::animate"<< m_lenght << time << m_step;
+}
+
+void WireLine::updtLength()
+{
+    int termX = m_p2X-m_p1X;
+    int termY = m_p2Y-m_p1Y;
+    m_lenght = std::fabs( std::sqrt( termX*termX + termY*termY) );
+}
+
 QPainterPath WireLine::shape() const
 {
     int dy = m_p2Y-m_p1Y;
@@ -355,7 +381,7 @@ void WireLine::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidg
     else if( Circuit::self()->animate() )
     {
         if( m_wire->getVoltage() > 2.5 ) color = QColor( 200, 50, 50  );
-        else                                   color = QColor( 50,  50, 200 );
+        else                             color = QColor( 50,  50, 200 );
     }
     else color = QColor( 40, 40, 60 /*Qt::black*/ );
 
@@ -364,10 +390,34 @@ void WireLine::paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidg
     //p->drawRect( boundingRect() );
     //p->setBrush( Qt::blue );
     //p->drawPath( shape() );
-    
+
     if( m_isBus ) pen.setWidth( 3 );
+    else if( m_animateCurrent ) pen.setWidthF( 2.5 );
 
     p->setPen( pen );
     p->drawLine( 0, 0, dx(), dy());
+
+    if( m_isBus ) return;
+    if( !m_animateCurrent ) return;
+    if( !Simulator::self()->isRunning() ) return;
+    p->setBrush( QColor( 200, 255, 50 ) );
+    pen.setWidthF( 0.5 );
+    p->setPen( pen );
+
+    int dir = 1;
+    if( dx() )
+    {
+        if( dx() < 0 ) dir = -1;
+
+        for( double i=0; i+m_step<m_lenght; i+=8 )
+            p->drawEllipse( QPointF( dir*(i+m_step), 0 ), 1.5, 1.5  );
+    }
+    if( dy() )
+    {
+        if( dy() < 0 ) dir = -1;
+
+        for( double i=0; i+m_step<m_lenght; i+=8 )
+            p->drawEllipse( QPointF( 0, dir*(i+m_step )), 1.5, 1.5  );
+    }
 }
 

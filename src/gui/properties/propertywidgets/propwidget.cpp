@@ -14,7 +14,7 @@ PropWidget::PropWidget( PropDialog* parent, ComProperty* prop )
           : QWidget( parent )
 {
     m_propDialog = parent;
-    m_component = prop->compBase();
+    m_compBase = prop->m_compBase;
     m_property  = prop;
     m_propId  = prop->idStr();
     m_blocked = false;
@@ -33,7 +33,7 @@ void PropWidget::saveChanges()
 {
     if( m_undo ){ // Don'use endUndoStep() because We need addItemChange() before endChangeBatch()
         Circuit::self()->calculateChanges();
-        Circuit::self()->addItemChange( m_component->getUid(), m_propId, m_oldValue );
+        Circuit::self()->addItemChange( m_compBase->getUid(), m_propId, m_oldValue );
         Circuit::self()->endChangeBatch();
     }
     else if( m_propDialog ) m_propDialog->changed();

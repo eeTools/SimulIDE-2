@@ -6,9 +6,9 @@
 #pragma once
 
 union value_t{
-    int64_t* intVal;
-    double*  dblVal;
-    bool*    boolVal;
+    int64_t intVal;
+    double  dblVal;
+    bool    boolVal;
     QString* strVal;
 };
 

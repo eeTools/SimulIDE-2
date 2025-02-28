@@ -10,13 +10,12 @@
 class IntProp : public ComProperty
 {
     public:
-        IntProp( CompBase* comp, param_t p, uint8_t idInt );
+        IntProp( CompBase* comp, QString idStr, QString label, int64_t val, uint8_t flags );
         ~IntProp();
 
-        void    setValStr( QString valStr ) override;
-        //QString getValStr() override;
+        void setValStr( QString valStr ) override;
+        QString getValStr() override;
 
     private:
-        int64_t m_defaultVal;
 
 };

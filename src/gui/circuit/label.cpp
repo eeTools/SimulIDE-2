@@ -38,23 +38,18 @@ void Label::setLabelText( QString text )
     setVisible( !text.isEmpty() );
 }
 
-void Label::addLine( QString line )
+void Label::setLine( uint8_t prop, QString newLine )
 {
-    if( m_text.contains( line ) ) return;
-    m_text.append( line+"\n");
-    setLabelText( m_text );
+    if( newLine.isEmpty() ) m_lines.remove( prop );
+    else                    m_lines[prop] = newLine;
+    updateLines();
 }
 
-void Label::remLine( QString line )
+void Label::updateLines()
 {
-    m_text.remove( line+"\n");
-    setLabelText( m_text );
-}
-
-void Label::replaceLine( QString oldLine, QString newLine )
-{
-    m_text.replace( oldLine, newLine );
-    setLabelText( m_text );
+    QString text;
+    for( QString line : m_lines.values() ) text.append( line+"\n" );
+    setLabelText( text );
 }
 
 void Label::mousePressEvent( QGraphicsSceneMouseEvent* event )

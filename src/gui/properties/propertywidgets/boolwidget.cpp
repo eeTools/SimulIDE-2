@@ -32,7 +32,7 @@ void BoolWidget::on_trueVal_toggled( bool checked )
     if( m_blocked ) return;
 
     prepareChange();
-    m_property->setValStr( checked ? "1" : "0" );
+    m_property->setValue( {.boolVal=checked} );
     saveChanges();
 }
 

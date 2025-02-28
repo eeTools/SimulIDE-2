@@ -39,7 +39,7 @@ class PropWidget : public QWidget
         QString m_oldValue;
         QString m_propId;
 
-        CompBase*    m_component;
+        CompBase*    m_compBase;
         ComProperty* m_property;
         PropDialog*  m_propDialog;
 };

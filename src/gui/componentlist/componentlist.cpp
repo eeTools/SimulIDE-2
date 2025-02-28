@@ -164,14 +164,14 @@ void ComponentList::loadXml( QString xmlFile )
 {
     QFile file( xmlFile );
     if( !file.open(QFile::ReadOnly | QFile::Text) ){
-          qDebug() << "ComponentList::loadXml Cannot read file"<< endl << xmlFile << endl << file.errorString();
+          qDebug() << "ComponentList::loadXml Cannot read file"<< Qt::endl << xmlFile << Qt::endl << file.errorString();
           return;
     }
     QXmlStreamReader reader( &file );
     if( reader.readNextStartElement() )
     {
         if( reader.name() != "itemlib" ){
-            qDebug() <<  "ComponentList::loadXml Error parsing file (itemlib):"<< endl << xmlFile;
+            qDebug() <<  "ComponentList::loadXml Error parsing file (itemlib):"<< Qt::endl << xmlFile;
             file.close();
             return;
         }

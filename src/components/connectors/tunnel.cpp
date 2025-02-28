@@ -44,11 +44,11 @@ Tunnel::Tunnel( int id )
     setLabelPos(-16,-24, 0);
     //setRotated( false );
 
-    addPropGroup( { tr("Main"), {}, groupNoCopy },
+    /*addPropGroup( { tr("Main"), {}, groupNoCopy },
     {
         {"tid", tr("Id") , "", &m_name, P_String, P_NoSet },
         {"bus", tr("Bus"), "", &m_isBus, P_Bool , P_NoSet }
-    });
+    });*/
 
     /*addPropGroup( {"Hidden", {}, groupNoCopy | groupHidden},
     {

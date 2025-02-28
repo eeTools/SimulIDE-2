@@ -27,12 +27,15 @@ class Wire : public WireBase
         void setVisib( bool vis ) override;
         void select( bool selected ) override;
 
+
         void move( QPointF delta ) override;
         void remove() override;
 
         WireLine* addConLine( int x1, int y1, int x2, int y2, int index );
 
         double getVoltage();
+
+        void updateLines();
 
     protected:
         void refreshPointList() override;
@@ -43,7 +46,7 @@ class Wire : public WireBase
         void addConLine( WireLine* line, int index );
         void splitCon( int index, PinBase* pin0, PinBase* pin2 );
         QList<WireLine*>* lineList() { return &m_wireLineList; }
-        void updateLines();
+
         void remNullLines();
         void remLines();
 

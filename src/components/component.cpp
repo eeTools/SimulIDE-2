@@ -369,7 +369,7 @@ void Component::slotGroup()
 
 void Component::remove()
 {
-    for( uint i=0; i<m_pin.size(); i++ )
+    for( int i=0; i<m_pin.size(); i++ )
         if( m_pin[i] ) m_pin[i]->removeWire();
 
     if( m_linkedTo ) m_linkedTo->removeLinked( this );

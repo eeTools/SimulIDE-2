@@ -189,7 +189,7 @@ InputPin::~InputPin(){}
 void InputPin::updateStep()
 {
     m_pinAnim = getPinAnim( this );
-    update();
+    Pin::updateStep();
 }
 
 pinAnim_t InputPin::getPinAnim( IoPin* pin )
@@ -212,7 +212,7 @@ OutputPin::~OutputPin(){}
 void OutputPin::updateStep()
 {
     m_pinAnim = getPinAnim( this );
-    update();
+    Pin::updateStep();
 }
 
 pinAnim_t OutputPin::getPinAnim( IoPin* pin )
@@ -257,7 +257,7 @@ void BidirPin::updateStep()
     if( m_direction == pinInput ) m_pinAnim = InputPin::getPinAnim( this );
     else                          m_pinAnim = OutputPin::getPinAnim( this );
 
-    update();
+    Pin::updateStep();
 }
 
 void BidirPin::setDirection( pinDirection_t d )
@@ -294,7 +294,7 @@ void OpenColPin::updateStep()
 
     pinAnim_t lowAnim = m_outState ? driven_low : open_low;
     m_pinAnim = state? open_high : lowAnim ;
-    update();
+    Pin::updateStep();
 }
 
 void OpenColPin::runStep()

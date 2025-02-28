@@ -17,9 +17,9 @@ WireBase::WireBase( int id, PinBase* startpin )
 
     /*addPropGroup( {"Hidden", {}, 0 },
     {
-        {"pin0" ,"","", P_String, 0, nullptr },
-        {"pin1" ,"","", P_String, 0, nullptr },
-        {"pList","","", P_String, 0, nullptr }
+        {"pin0" ,"","", nullptr, P_String, P_NoSet },
+        {"pin1" ,"","", nullptr, P_String, P_NoSet },
+        {"pList","","", nullptr, P_String, P_NoSet }
     });*/
 }
 WireBase::~WireBase(){}
@@ -31,4 +31,15 @@ void WireBase::writeWireFlag( int flag, bool val )
 {
     if( val ) m_wireFlags |= flag;
     else      m_wireFlags &= !(~flag);
+}
+
+QString WireBase::toString() // Used to save circuit
+{
+    QString item = "\n"+m_type;
+    item += "; pin0="+startPinId();
+    item += "; pin1="+endPinId();
+    item += "; pList="+pListStr();
+    item += "\n";
+
+    return item;
 }

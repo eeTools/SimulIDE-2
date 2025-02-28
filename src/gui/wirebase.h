@@ -53,6 +53,8 @@ class WireBase : public CompBase
         void setWireFlags( int flags ) { m_wireFlags = flags; }
         int  wireFlags() { return m_wireFlags; }
 
+        QString toString() override;
+
         bool m_freeLine;
 
     protected:

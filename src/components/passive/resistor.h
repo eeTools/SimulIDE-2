@@ -20,12 +20,10 @@ class Resistor : public Component
 
         void setResistance( double r );
 
-        void setValue( const uint8_t idInt, const value_t &val ) override;
+        void propertyChanged( const ComProperty* prop ) override;
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
-        uint8_t m_resistProp;
-        double  m_resistVal;
-
+    private:
         Resistance m_resistance;
 };

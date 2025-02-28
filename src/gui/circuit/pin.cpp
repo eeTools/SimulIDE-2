@@ -22,6 +22,7 @@ Pin::Pin( int angle, QPoint pos, QString id, Component* parent, int length )
 {
     m_area = QRect(-3, -3, 11, 6);
 
+    m_id = id;
     m_component = parent;
     m_pinAnim = no_anim;
     m_pinType = pinNormal;
@@ -56,13 +57,17 @@ Pin::~Pin()
 void Pin::updateStep()
 {
     if( m_unused ) return;
-    //if( m_PinChanged )
-        update();
+    if( m_wire )
+    {
+        Wire* wire = static_cast<Wire*>(m_wire);
+        wire->updateLines();
+    }
+    update();
 }
 
 void Pin::removeWire()
 {
-    if( m_wire ) Circuit::self()->removeWire( (Wire*)m_wire );
+    if( m_wire ) Circuit::self()->removeWire( m_wire );
     PinBase::removeWire();
 }
 

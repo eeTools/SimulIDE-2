@@ -47,10 +47,10 @@ FreqMeter::FreqMeter( int id )
 
     Simulator::self()->addToUpdateList( this );
 
-    addPropGroup( { tr("Main"), {}, 0 },
+    /*addPropGroup( { tr("Main"), {}, 0 },
     {
         {"filter", tr("Filter"),"V", &m_filter, P_Double, 0 },
-    });
+    });*/
 }
 FreqMeter::~FreqMeter(){}
 

@@ -71,6 +71,8 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         void setValLabelText( QString t );
         QString getValLabelText();
 
+        Label* getValLabel() { return m_valLabel; }
+
         //QString showProp();
         //void setShowProp( QString prop );
 

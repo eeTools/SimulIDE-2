@@ -27,9 +27,7 @@ class Label : public QGraphicsTextItem
         void rotateAngle( double a );
 
         void setLabelText( QString text );
-        void addLine( QString line );
-        void remLine( QString line );
-        void replaceLine( QString oldLine, QString newLine );
+        void setLine( uint8_t prop, QString newLine );
 
         void showLabel();
 
@@ -49,6 +47,7 @@ class Label : public QGraphicsTextItem
 
     private:
         QPointF adjustPos( float x, float y, int width, int height );
+        void updateLines();
 
         QString m_text;
 
@@ -57,5 +56,7 @@ class Label : public QGraphicsTextItem
         float m_labelx;
         float m_labely;
         int m_labelrot;
+
+        QMap<uint8_t, QString> m_lines;
 };
 #endif

@@ -50,20 +50,23 @@ class CompBase
         CompBase( int id );
         virtual ~CompBase();
 
-        int getUid() { return m_id; }
-        QString itemType()  { return m_type; }
+        int     getUid()   { return m_id; }
+        QString itemType() { return m_type; }
 
-        void addPropGroup( propGroup pg, const std::vector<param_t> &props, bool list=true );
+        void addPropGroup( propGroup pg, bool list=true );
+        //void addPropGroup( propGroup pg, const std::vector<param_t> &props, bool list=true );
         //void remPropGroup( QString name );
         //void addProp( propGroup& pg, param_t p );
         void addProperty( QString group, ComProperty* p );
         //void remProperty( QString prop );
 
-        uint8_t getPropertyId( QString name );
+        //uint8_t getPropertyId( QString name );
         QList<propGroup> getPropGroups() { return m_propGroups; }
         //QList<propGroup>* properties() { return &m_propGroups; } // Circuit needs pointer bcos properties can change (ex: loadHex changes Config)
 
-        virtual void setValue( const uint8_t idInt, const value_t &val ){}
+        uint8_t newPropId() { return m_propCount++; }
+
+        virtual void propertyChanged( const ComProperty* prop ){;}
 
         virtual void loadProperties( QVector<propStr_t> p );
 
@@ -77,7 +80,7 @@ class CompBase
         virtual QString toString();
 
     protected:
-        uint8_t newPropId() { return m_propCount++; }
+
         ComProperty* getProperty( QString name );
 
         int64_t m_id;

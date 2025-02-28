@@ -67,7 +67,7 @@ class Pin : public PinBase
         void animate( bool an ) override;
         void isMoved() override;
 
-        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget ) override;
+        void paint( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* ) override;
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent* event ) override;

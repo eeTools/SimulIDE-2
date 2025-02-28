@@ -374,7 +374,7 @@ void Wire::splitCon( int index, PinBase* pin0, PinBase* pin2 )
 
 void Wire::updateLines()
 {
-    for( WireLine* line : m_wireLineList ) line->update();
+    for( WireLine* line : m_wireLineList ) line->animateLine();
 
     /*eNode* enode = startPin()->getEnode();
     if( enode && enode->voltchanged() )

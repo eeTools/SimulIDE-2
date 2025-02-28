@@ -10,13 +10,15 @@
 class BoolProp : public ComProperty
 {
     public:
-        BoolProp( CompBase* comp, param_t p, uint8_t idInt );
+        BoolProp( CompBase* comp, QString idStr, QString label, bool val, uint8_t flags );
         ~BoolProp();
 
-        void    setValStr( QString valStr ) override;
-        //QString getValStr() override;
+        // External interface
+        void setValStr( QString valStr ) override;
+        QString getValStr() override;
 
-    private:
-        bool m_defaultVal;
+        // Component interface
+        bool get();
+        void set( bool val );
 
 };

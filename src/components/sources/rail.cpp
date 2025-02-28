@@ -22,10 +22,11 @@ listItem_t Rail::registerItem(){
 
 Rail::Rail( int id )
     : Component( id )
+    , m_voltage( this, "volt", tr("Voltage"),"V", 5, P_NoSet )
 {
     m_area = QRect(-6,-9, 12, 9 );
 
-    m_out = new OutputPin( 270, QPoint(0, 8), "Pin@"+id, this );
+    m_out = new OutputPin( 270, QPoint(0, 8), "Pin@"+QString::number(id), this );
     m_pin << m_out;
     m_out->setOutputImp( 1e-9 );
 
@@ -34,14 +35,9 @@ Rail::Rail( int id )
 
     Simulator::self()->addToUpdateList( this );
 
-    m_voltage = 5;
+    //m_voltage = 5;
 
-    addPropGroup( { tr("Main"), {}, 0},
-    {
-        {"volt", tr("Volt"),"V", &m_voltage, P_Double, P_NoSet }
-    });
-
-    m_voltProp = getPropertyId("volt");
+    addPropGroup( { tr("Main"), {&m_voltage}, 0} );
 
     ///setShowProp("volt");
     //setPropStr( "Volt", "5" );
@@ -50,7 +46,7 @@ Rail::~Rail() { }
 
 void Rail::initialize()
 {
-    m_out->setVoltage( m_voltage );
+    /// m_out->setVoltage( m_voltage );
     m_changed = true;
 }
 
@@ -58,17 +54,16 @@ void Rail::updateStep()
 {
     if( !m_changed ) return;
     m_changed = false;
-    m_out->setVoltage( m_voltage );
+    m_out->setVoltage( m_voltage.get() );
 }
 
-void Rail::setValue( const uint8_t idInt, const value_t &val )
+void Rail::propertyChanged( const ComProperty* prop )
 {
-    if( idInt == m_voltProp )
+    if( prop == &m_voltage )
     {
-        m_voltage = *val.dblVal;
         m_changed = true;
     }
-    else Component::setValue( idInt, val );
+    else Component::propertyChanged( prop );
 }
 
 /*void Rail::setVoltage( double v )

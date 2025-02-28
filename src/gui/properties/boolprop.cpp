@@ -6,19 +6,35 @@
 #include "boolprop.h"
 #include "compbase.h"
 
-BoolProp::BoolProp( CompBase* comp, param_t p, uint8_t idInt )
-        : ComProperty( comp, p, idInt )
+BoolProp::BoolProp( CompBase* comp, QString idStr, QString label, bool val, uint8_t flags )
+        : ComProperty( comp, idStr, label, flags )
 {
-    m_value.boolVal = (bool*)   p.data;
-    if( m_value.boolVal ) m_defaultVal = *m_value.boolVal;
+    m_type = P_Bool;
+
+    m_value.boolVal = val;
+    m_defaultVal.boolVal = val;
 }
 BoolProp::~BoolProp(){}
 
+bool BoolProp::get()
+{
+    return m_value.boolVal;
+}
+
+void BoolProp::set( bool val )
+{
+    m_value.boolVal = val;
+}
+
 void BoolProp::setValStr( QString valStr )
 {
-    m_dispValStr = valStr;
-    bool boolVal = valStr == "1"; /// FIXME valStr;
+    //m_dispValStr = valStr;
+    bool boolVal = valStr == "1";
+    setValue( {.boolVal=boolVal} );
+}
 
-    if( m_value.boolVal ) *m_value.boolVal = boolVal;
-    else                  m_compBase->setValue( m_idInt, {.boolVal=&boolVal} );
+QString BoolProp::getValStr()
+{
+    QString valStr = m_value.boolVal ? "1" : "0";
+    return valStr;
 }

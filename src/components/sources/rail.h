@@ -8,6 +8,8 @@
 #include "component.h"
 #include "pinsource.h"
 
+#include "doubprop.h"
+
 class IoPin;
 
 class Rail : public Component
@@ -24,14 +26,12 @@ class Rail : public Component
         //double voltage() { return m_voltage; }
         //void setVoltage( double v );
 
-        void setValue( const uint8_t idInt, const value_t &val ) override;
+        void propertyChanged( const ComProperty* prop ) override;
 
         void paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w ) override;
 
     private:
-        double m_voltage;
-
-        uint8_t m_voltProp;
+        DoubProp m_voltage;
 
         IoPin* m_out;
 };

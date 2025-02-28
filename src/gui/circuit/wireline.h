@@ -49,6 +49,8 @@ class WireLine : public QGraphicsItem
         void updatePrev() { if( m_prevLine ) m_prevLine->sSetP2( QPoint( m_p1X, m_p1Y) ); }
         void updateNext();
 
+        void animateLine();
+
         bool connectToWire( QPoint point1 );
         
         void setIsBus( bool bus ) { m_isBus = bus; }
@@ -59,8 +61,8 @@ class WireLine : public QGraphicsItem
 
         void contextMenuEvent( QGraphicsSceneContextMenuEvent* event );
         
-        virtual QPainterPath shape() const;
-        virtual void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget );
+        QPainterPath shape() const;
+        void paint( QPainter* p, const QStyleOptionGraphicsItem* option, QWidget* widget );
 
     public slots:
         void sSetP1( QPoint );
@@ -68,12 +70,19 @@ class WireLine : public QGraphicsItem
         void remove();
 
     private:
+        void updtLength();
         int myIndex();
+
         int m_p1X;
         int m_p1Y;
         int m_p2X;
         int m_p2Y;
-        
+
+        int m_lenght;
+        double m_step;
+        bool m_animateCurrent;
+        double m_currentSpeed;
+
         bool m_isBus;
         bool m_moveP1;
         bool m_moveP2;

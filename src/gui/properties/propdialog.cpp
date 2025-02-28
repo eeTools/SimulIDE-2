@@ -9,13 +9,13 @@
 
 #include "labelwidget.h"
 #include "numwidget.h"
-#include "pathwidget.h"
+//#include "pathwidget.h"
 #include "strwidget.h"
-#include "textwidget.h"
-#include "enumwidget.h"
+//#include "textwidget.h"
+//#include "enumwidget.h"
 #include "boolwidget.h"
-#include "colorwidget.h"
-#include "iconwidget.h"
+//#include "colorwidget.h"
+//#include "iconwidget.h"
 #include "mainwindow.h"
 
 #include "comproperty.h"
@@ -38,7 +38,7 @@ PropDialog::PropDialog( QWidget* parent, QString help )
 void PropDialog::setComponent( CompBase* comp, bool isComp, bool showHelp )
 {
     QFontMetrics fm( labelLabel->font() );
-    m_scale = fm.width(" ")/2.0;
+    m_scale = fm.horizontalAdvance(" ")/2.0;
     m_minW  = 265*m_scale;
     m_minH  = 100*m_scale;
 

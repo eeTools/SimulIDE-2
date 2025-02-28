@@ -36,8 +36,8 @@ class fComponent : public Component, public Element
         void initialize() override;
         void voltChanged() override;
 
-        int value() { return 0; }
-        void setValue( int v ){;}
+        //int value() { return 0; }
+        //void setValue( int v ){;}
 
         int width() { return m_width; }
         void setWidth( int width );

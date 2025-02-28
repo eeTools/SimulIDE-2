@@ -38,12 +38,10 @@ Resistor::Resistor( int id )
 
     setResistance( 100 );
 
-    addPropGroup( { tr("Main"), {}, 0 },
+    /*addPropGroup( { tr("Main"), {}, 0 },
     {
         {"res", tr("Resistance"), "Ω", &m_resistVal, P_Double, P_NoSet }
-    });
-
-    m_resistProp = getPropertyId("res");
+    });*/
 }
 Resistor::~Resistor(){}
 
@@ -55,14 +53,14 @@ void Resistor::initialize()
 
 void Resistor::setResistance( double r )
 {
-    m_resistVal = r;
+    //m_resistVal = r;
     m_resistance.setResistance( r );
 }
 
-void Resistor::setValue( const uint8_t idInt, const value_t &val )
+void Resistor::propertyChanged( const ComProperty* prop )
 {
-    if( idInt == m_resistProp ) setResistance( *val.dblVal );
-    else                        Component::setValue( idInt, val );
+    //if( idInt == m_resistProp ) setResistance( val.dblVal );
+    //else                        Component::propertyChanged( idInt, val );
 }
 
 void Resistor::paint( QPainter* p, const QStyleOptionGraphicsItem* o, QWidget* w )

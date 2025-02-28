@@ -9,6 +9,7 @@
 #include "propwidget.h"
 
 class PropDialog;
+class Label;
 
 class NumWidget : public PropWidget, private Ui::NumWidget
 {
@@ -31,4 +32,6 @@ class NumWidget : public PropWidget, private Ui::NumWidget
         QString m_type;
 
         bool m_useMult;
+
+        Label* m_compLabel;
 };

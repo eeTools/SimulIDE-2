@@ -9,9 +9,9 @@
 #include "boolprop.h"
 #include "doubprop.h"
 #include "intprop.h"
-#include "iconprop.h"
+//#include "iconprop.h"
 #include "pointprop.h"
-#include "enumprop.h"
+//#include "enumprop.h"
 #include "strprop.h"
 
 CompBase::CompBase( int id )
@@ -20,15 +20,14 @@ CompBase::CompBase( int id )
 
     m_propDialog = nullptr;
 
-    addPropGroup( {"CompBase", {}, groupHidden | groupNoCopy },
+    /*addPropGroup( {"CompBase", {}, groupHidden | groupNoCopy },
     {
         //new StrProp <Component>("itemtype","","", this, &Component::itemType,  &Component::setItemType ),
         {"uid","","", &m_id, P_Int, 0 }
-    });
+    });*/
 }
 CompBase::~CompBase()
 {
-    for( ComProperty* p : m_propMap.values() ) delete p;
     if( m_propDialog )
     {
         m_propDialog->setParent( nullptr );
@@ -54,7 +53,7 @@ void CompBase::loadProperties( QVector<propStr_t> properties ) // Set properties
             break;
 }   }   }*/
 
-void CompBase::addPropGroup( propGroup pg, const std::vector<param_t> &props, bool list )
+/*void CompBase::addPropGroup( propGroup pg, const std::vector<param_t> &props, bool list )
 {
     for( param_t param : props )
     {
@@ -78,12 +77,20 @@ void CompBase::addPropGroup( propGroup pg, const std::vector<param_t> &props, bo
         if( list ) m_propMap[cp->idStr()] = cp;
     }
     m_propGroups.append( pg );
-}
+}*/
 
 /*void CompBase::addProp( propGroup& pg, param_t p )
 {
 
 }*/
+
+void CompBase::addPropGroup( propGroup pg, bool list )
+{
+    m_propGroups.append( pg );
+
+    if( list )
+        for( ComProperty* p : pg.propList ) m_propMap[p->label()] = p;
+}
 
 void CompBase::addProperty( QString group, ComProperty* p )
 {
@@ -113,10 +120,10 @@ void CompBase::addProperty( QString group, ComProperty* p )
             return;
 }   }   }*/
 
-uint8_t CompBase::getPropertyId( QString name )
+/*uint8_t CompBase::getPropertyId( QString name )
 {
     return getProperty( name )->idInt();
-}
+}*/
 
 ComProperty* CompBase::getProperty( QString id )
 {
@@ -143,7 +150,7 @@ QString CompBase::getPropStr( QString prop )
 QString CompBase::toString() // Used to save circuit
 {
     QString item = "\n"+m_type;
-    for( propGroup pg : m_propGroups )
+    /*for( propGroup pg : m_propGroups )
     {
         if( !Circuit::self()->getBoard() )     // Not a Subcircit Board
         {
@@ -155,17 +162,16 @@ QString CompBase::toString() // Used to save circuit
             QString val = prop->toString();
             if( val.isEmpty() ) continue;
             item += "; "+prop->idStr()+"="+val;
-    }   }
+        }
+    }*/
+
+    for( ComProperty* prop : m_propVector )
+    {
+        QString val = prop->toString();
+        /// if( val.isEmpty() ) continue;
+        item += "; "+prop->idStr()+"="+val;
+    }
     item += "\n";
 
     return item;
 }
-
-/*int CompBase::getEnumIndex( QString prop )
-{
-    bool ok = false;
-    int index = prop.toInt(&ok); // OLd TODELETE
-    if( !ok ) index = m_enumUids.indexOf( prop );
-    if( index < 0 || index > m_enumUids.size()-1) index = 0;
-    return index;
-}*/

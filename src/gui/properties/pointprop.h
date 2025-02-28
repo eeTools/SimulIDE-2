@@ -9,14 +9,13 @@
 
 class PointProp : public ComProperty
 {
-public:
-    PointProp( CompBase* comp, param_t p, uint8_t idInt );
-    ~PointProp();
+    public:
+        PointProp( CompBase* comp, param_t p, uint8_t idInt );
+        ~PointProp();
 
-    void    setValStr( QString valStr ) override;
-    //QString getValStr() override;
+        void    setValStr( QString valStr ) override;
+        //QString getValStr() override;
 
-private:
-    QString m_defaultVal;
+    private:
 
 };

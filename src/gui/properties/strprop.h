@@ -10,13 +10,13 @@
 class StrProp : public ComProperty
 {
     public:
-        StrProp( CompBase* comp, param_t p, uint8_t idInt );
+        StrProp( CompBase* comp, QString idStr, QString label, QString val, uint8_t flags );
         ~StrProp();
 
         void    setValStr( QString valStr ) override;
-        //QString getValStr() override;
+        QString getValStr() override;
 
     private:
-        QString m_defaultVal;
+        QString m_strVal;
 
 };

@@ -6,17 +6,24 @@
 #include "strprop.h"
 #include "compbase.h"
 
-StrProp::StrProp( CompBase* comp, param_t p, uint8_t idInt )
-       : ComProperty( comp, p, idInt )
+StrProp::StrProp( CompBase* comp, QString idStr, QString label, QString val, uint8_t flags )
+       : ComProperty( comp, idStr, label, flags )
 {
-    m_value.strVal = (QString*)p.data;
-    m_defaultVal = *m_value.strVal;
+    m_type = P_String;
+    m_strVal = val;
+
+    m_value.strVal = &m_strVal;
+    m_defaultVal = m_value;
 }
 StrProp::~StrProp(){}
 
 void StrProp::setValStr( QString valStr )
 {
-    m_dispValStr = valStr;
-    if( m_value.strVal ) *m_value.strVal = valStr;
-    else                 m_compBase->setValue( m_idInt, {.strVal=&valStr} );
+    m_strVal = valStr;
+    if( m_flags & P_NoSet ) m_compBase->propertyChanged( this );
+}
+
+QString StrProp::getValStr()
+{
+    return m_strVal;
 }
